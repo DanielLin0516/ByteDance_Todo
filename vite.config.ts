@@ -1,9 +1,20 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
+import pxtovw from 'postcss-px-to-viewport'
+const loder_pxtovw = pxtovw({
+  viewportWidth: 1920,
+  viewportHeight: 1080,
+  viewportUnit: 'vw'
+})
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    postcss: {
+      plugins: [loder_pxtovw]
+    }
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
@@ -16,5 +27,6 @@ export default defineConfig({
       // "layout": path.resolve(__dirname, "src/layout"),
     },
   },
-  plugins: [vue()]
+  plugins: [vue()],
+
 })
