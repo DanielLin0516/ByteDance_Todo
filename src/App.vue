@@ -1,16 +1,26 @@
 <template>
-  <div class="header">Hello</div>
+  <top-bar></top-bar>
 </template>
-<script setup lang="ts">
+<script lang="ts">
+import { defineComponent } from 'vue';
+import TopBar from './components/layout/TopBar.vue';
+export default defineComponent({
+  name:'App',
+  components: {
+    TopBar
+  },
+setup(props) {
+    console.log(props)
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>
-.header {
-  width: 1900px;
-  height: 100vh;
-  background-color: orange;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.menu-demo {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 40px;
+  background-color: var(--color-neutral-2);
 }
 </style>

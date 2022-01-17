@@ -3,13 +3,21 @@
     <HelloWorld msg="国庆快乐！"></HelloWorld>
   </div>
   <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-
+    <img alt="Vue logo" src="./assets/logo.png" />
+  </template>
 </template>
-</template>
 
-<script setup lang="ts">
-import HelloWorld from "@/components/HelloWorld.vue";
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({
+  name: 'Home',
+  components: {
+    
+  },
+  setup(props) {
+
+  }
+})
 </script>
 <style>
 </style>
