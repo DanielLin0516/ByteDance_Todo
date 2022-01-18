@@ -1,69 +1,95 @@
 <template>
-    <div class="menu-demo">
-        <a-menu mode="horizontal"  :default-selected-keys="['1']">
-            <a-menu-item key="0" :style="{ padding: 0, marginRight: '38px' }" disabled>
-                <div
-                    :style="{
-                        width: '80px',
-                        height: '30px',
-                        borderRadius: '2px',
-                        background: 'var(--color-fill-3)',
-                        cursor: 'text',
-                    }"
-                />
-            </a-menu-item>
-            <a-menu-item key="1">项目</a-menu-item>
-            <a-space direction="vertical" size="large" class="search">
-                <a-input-search class="input-search" placeholder="Please enter something" />
-            </a-space>
-            <a-badge :count="9" dot :offset="[2, -2]" class="icon-badge">
-                <IconNotification
-                    :style="{ color: '#888', fontSize: '18px', verticalAlign: '-3px' }"
-                />
-            </a-badge>
-            <a-avatar :style="{ backgroundColor: '#3370ff' }" class="icon-acatar">
+    <div class="top-bar">
+        <div class="left-bar">
+            <icon-bytedance-color class="icon-byte" />
+            <span class="link">项目</span>
+        </div>
+        <div class="right-bar">
+            <a-input-search placeholder="Please enter something" class="input" />
+            <icon-notification class="notifacte" />
+            <a-avatar :style="{ backgroundColor: '#3370ff' }" class="avatar">
                 <IconUser />
             </a-avatar>
-        </a-menu>
+        </div>
     </div>
 </template>
 <script lang="ts">
-import { IconUser } from '@arco-design/web-vue/es/icon';
-import { IconNotification } from '@arco-design/web-vue/es/icon';
+import { IconBytedanceColor, IconNotification, IconUser } from '@arco-design/web-vue/es/icon';
 import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'TopBar',
     components: {
+        IconBytedanceColor,
+        IconNotification,
         IconUser,
-        IconNotification
+    },
+    setup(props) {
+        console.log(999)
     }
 })
 
 </script>
 
 <style lang="scss" scoped>
-.menu-demo {
-    box-sizing: border-box;
+.top-bar {
+    position: relative;
+    display: flex;
+    height: 80px;
     width: 100%;
-    padding: 40px;
-    background-color: var(--color-neutral-2);
-
-    .input-search {
-        width: 300px;
+    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(10px);
+    .left-bar {
+        height: 100%;
+        width: 50%;
+        display: flex;
+        align-items: center;
+        .icon-byte {
+            margin-left: 50px;
+            width: 50px;
+            height: 50px;
+        }
+        .link {
+            margin-left: 50px;
+            font-family: "PingFang-Regular";
+            font-size: 24px;
+            color: white;
+            line-height: 20px;
+            border-radius: 5px;
+            padding: 20px;
+            cursor: pointer;
+            border: 1px solid white;
+            width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .link:hover {
+            background-color: rgba(0, 0, 0, 0.45);
+        }
     }
-
-    .search {
-        position: absolute;
-        right: 220px;        
-    }
-    .icon-badge {
-        position: absolute;
-        right: 120px;
-
-    }
-    .icon-acatar {
-        position: absolute;
-        right: 30px;
+    .right-bar {
+        height: 100%;
+        width: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        .notifacte {
+            width: 50px;
+            height: 50px;
+            color: white;
+            margin-right: 35px;
+            cursor: pointer;
+        }
+        .input {
+            margin-right: 40px;
+            width: 360px;
+            height: 50px;
+        }
+        .avatar {
+            margin-right: 35px;
+            width: 50px;
+            height: 50px;
+        }
     }
 }
 </style>

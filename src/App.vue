@@ -1,26 +1,29 @@
 <template>
-  <top-bar></top-bar>
+  <div class="bgc">
+    <layout></layout>
+  </div>
 </template>
+
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TopBar from './components/layout/TopBar.vue';
+import Layout from './components/layout/Layout.vue';
+
 export default defineComponent({
-  name:'App',
+  name: 'App',
   components: {
-    TopBar
+    Layout,
   },
-setup(props) {
-    console.log(props)
+  setup(props) {
+    console.log(123)
   }
 })
 
 </script>
 
 <style lang="scss" scoped>
-.menu-demo {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 40px;
-  background-color: var(--color-neutral-2);
+.bgc {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgb(235, 163, 8);
 }
 </style>

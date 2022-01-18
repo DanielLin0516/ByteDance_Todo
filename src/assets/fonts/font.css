@@ -1,0 +1,34 @@
+@font-face {
+    font-family:'Alibaba PuHuiTi';
+    src: url('./Alibaba-PuHuiTi-Light.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'FZBaoSong-Z04S';
+    src: url('./FZBaoSong-Z04S.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'PingFang-Bold-2';
+    src: url('./PingFang-Bold-2.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'PingFang-ExtraLight-2';
+    src: url('./PingFang-ExtraLight-2.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'PingFang-Regular';
+    src: url('./PingFang-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
