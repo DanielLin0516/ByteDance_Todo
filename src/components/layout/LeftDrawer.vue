@@ -87,7 +87,8 @@ export default defineComponent({
 .left-drawer-sitck:hover {
     background-color: rgba(252, 249, 249, 0.552);
 }
-.left-drawer-stick-open {
+
+.left-drawer-stick-open   {
     width: 250px !important;
     height: calc(100% - 80px);
     position: relative;
@@ -105,6 +106,9 @@ export default defineComponent({
         color: rgba(255, 255, 255, 0.7);
         cursor: pointer;
     }
+}
+::v-deep .arco-drawer {
+    width: 250px !important;
 }
 .drawer {
     background-color: rgba(0, 0, 0, 0.45) !important;

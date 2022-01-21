@@ -1,5 +1,6 @@
 <template>
     <div class="small-bar">
+        <!-- 第二个菜单栏 -->
         <div class="second-bar">
             <span>项目名称</span>
             <div class="user">
@@ -9,15 +10,20 @@
                 <icon-moon-fill class="icon-moon-fill" />切换夜间模式
             </div>
         </div>
+        <!-- 主要的卡片区域 -->
+        <router-view />
+        <!-- <main-card/> -->
     </div>
 </template>
 
 <script lang="ts">
+// import MainCard from '../card/MainCard.vue'
 import { IconUser, IconMoonFill } from '@arco-design/web-vue/es/icon';
 import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'SmallBar',
     components: {
+
         IconUser,
         IconMoonFill
     }
@@ -25,10 +31,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@import url('../card/scrollCss/scroll.scss');
 .small-bar {
     display: flex;
     height: calc(100% - 80px);
     opacity: 1;
+    flex-direction: column;
+    overflow-y: hidden;
+    overflow-x: visible;
     .second-bar {
         display: flex;
         width: 100%;
@@ -59,7 +69,7 @@ export default defineComponent({
         .change {
             margin-left: 30px;
             color: black;
-            background-color:white;
+            background-color: white;
             padding: 15px;
             border-radius: 10px;
             cursor: pointer;

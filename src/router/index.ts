@@ -1,15 +1,18 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
       path: "/",
-      component: () => import("@/views/Home.vue"),
-    },
-    {
-      path: "/test",
-      component: () => import("@/views/Test.vue"),
+      name:'board',
+      component: () => import("../components/card/MainCard.vue"),
+      children:[
+        {
+          path:'task/:id',
+          name:'task',
+          component: () => import("../components/card/Task.vue")
+        }
+      ]
     },
   ],
 });

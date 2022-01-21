@@ -14,7 +14,7 @@ export default defineComponent({
     Layout,
   },
   setup(props) {
-    console.log(123)
+    
   }
 })
 
@@ -24,6 +24,6 @@ export default defineComponent({
 .bgc {
   height: 100vh;
   width: 100vw;
-  background-color: rgb(235, 163, 8);
+  background-color: rgb(0,121,191);
 }
 </style>
