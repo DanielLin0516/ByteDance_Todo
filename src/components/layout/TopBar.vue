@@ -5,6 +5,7 @@
             <span class="link">项目</span>
         </div>
         <div class="right-bar">
+            <card-detail />
             <a-input-search placeholder="Please enter something" class="input" />
             <icon-notification class="notifacte" />
             <a-avatar :style="{ backgroundColor: '#3370ff' }" class="avatar">
@@ -15,6 +16,7 @@
 </template>
 <script lang="ts">
 import { IconBytedanceColor, IconNotification, IconUser } from '@arco-design/web-vue/es/icon';
+import CardDetail from '../card/CardDetail.vue'
 import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'TopBar',
@@ -22,6 +24,7 @@ export default defineComponent({
         IconBytedanceColor,
         IconNotification,
         IconUser,
+        CardDetail
     },
     setup(props) {
         console.log(999)
