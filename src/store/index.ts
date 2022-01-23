@@ -5,7 +5,8 @@ import { saveStatePlugins, uuid } from "./utils";
 export default createStore({
   plugins: [saveStatePlugins],
   state: {
-    board: defaultBoard
+    board: defaultBoard,
+    userEvent:[]
   },
   getters: {
     getTask(state) {

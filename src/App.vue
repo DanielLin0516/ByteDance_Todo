@@ -5,7 +5,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router'
 import Layout from './components/layout/Layout.vue';
 
 export default defineComponent({
@@ -14,7 +16,7 @@ export default defineComponent({
     Layout,
   },
   setup(props) {
-    
+
   }
 })
 
@@ -24,6 +26,6 @@ export default defineComponent({
 .bgc {
   height: 100vh;
   width: 100vw;
-  background-color: rgb(0,121,191);
+  background-color: rgb(0, 121, 191);
 }
 </style>

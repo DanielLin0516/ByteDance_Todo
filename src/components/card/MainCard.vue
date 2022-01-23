@@ -19,28 +19,28 @@
                 enter-active-class="animate__backInLeft"
                 leave-active-class="animate__backOutUp"
                 appear
-            > -->
-                <div
-                    v-for=" (task,$taskIndex) of column.items"
-                    :key="$taskIndex"
-                    @click="goToTask(task)"
-                    draggable="true"
-                    @dragstart="pickupTask($event, $taskIndex, $columnIndex)"
-                    @dragover.prevent
-                    @dragenter.prevent
-                    @drop.stop="moveTaskOrColumn($event, column.items, $columnIndex, $taskIndex)"
-                >
-                    <div class="card-menu">
-                        {{ task.content }}
-                        <div class="des">{{ task.description }}</div>
-                    </div>
-                    <div
-                        class="kanban-dropzon"
-                        @dragover.prevent="height($event)"
-                        @dragleave.prevent="height1($event)"
-                        @drop="height1($event)"
-                    ></div>
+            >-->
+            <div
+                v-for=" (task,$taskIndex) of column.items"
+                :key="$taskIndex"
+                @click="goToTask(task)"
+                draggable="true"
+                @dragstart="pickupTask($event, $taskIndex, $columnIndex)"
+                @dragover.prevent
+                @dragenter.prevent
+                @drop.stop="moveTaskOrColumn($event, column.items, $columnIndex, $taskIndex)"
+            >
+                <div class="card-menu">
+                    {{ task.content }}
+                    <div class="des">{{ task.description }}</div>
                 </div>
+                <div
+                    class="kanban-dropzon"
+                    @dragover.prevent="height($event)"
+                    @dragleave.prevent="height1($event)"
+                    @drop="height1($event)"
+                ></div>
+            </div>
             <!-- </transition-group> -->
             <!-- 添加卡片按钮 -->
             <input
@@ -69,7 +69,7 @@
 <script lang="ts">
 import 'animate.css'
 import { IconPlus } from '@arco-design/web-vue/es/icon';
-import { computed, defineComponent, ref, TransitionGroup } from 'vue';
+import { computed, defineComponent, ref, TransitionGroup,watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router'
 export default defineComponent({
@@ -83,6 +83,12 @@ export default defineComponent({
         const route = useRoute();
         const router = useRouter();
         const newColumnName = ref('');
+        // const task = computed(() => {
+        //     return store.getters.getTask(route.params.id);
+        // })
+        // watch(task, (newVal, oldVal) => {
+        //     console.log('newVal, oldVal', newVal, oldVal)
+        // }, { immediate: true, deep: true });
         const isTaskOpen = computed(() => {
             return route.name === 'task';
         })
@@ -145,7 +151,7 @@ export default defineComponent({
             })
         }
         const height = (e: any) => {
-            e.target.style.height = "80px";
+            e.target.style.height = "4vw";
             e.target.style.border = "1px solid grey"
         }
         const height1 = (e: any) => {
@@ -225,6 +231,7 @@ export default defineComponent({
         .kanban-dropzon {
             height: 10px;
             background-color: transparent;
+            width: 370px;
             border-radius: 10px;
         }
     }
