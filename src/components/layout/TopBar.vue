@@ -5,6 +5,7 @@
             <span class="link">项目</span>
         </div>
         <div class="right-bar">
+            <card-detail />
             <a-input-search placeholder="Please enter something" class="input" />
             <icon-notification class="notifacte" @click="show = !show" />
             <div class="changeEvent" v-if="show">
@@ -26,12 +27,14 @@ import { IconBytedanceColor, IconNotification, IconUser } from '@arco-design/web
 import { defineComponent, computed, watch, ref } from 'vue';
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import CardDetail from '../card1/CardDetail.vue'
 export default defineComponent({
     name: 'TopBar',
     components: {
         IconBytedanceColor,
         IconNotification,
         IconUser,
+        CardDetail
     },
     setup(props) {
         const store = useStore();
