@@ -16,7 +16,7 @@
 </template>
 <script lang="ts">
 import { IconBytedanceColor, IconNotification, IconUser } from '@arco-design/web-vue/es/icon';
-import CardDetail from '../card/CardDetail.vue'
+import CardDetail from '../card1/CardDetail.vue'
 import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'TopBar',
