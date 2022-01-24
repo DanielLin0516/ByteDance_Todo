@@ -1,32 +1,46 @@
 <template>
     <div class="flex">
         <icon-close-circle class="icon-close-circle" @click.self="close" />
-        <input
-            type="text"
-            v-model="content"
-            class="content"
-            @change="updateTaskProperty($event, 'name')"
-            @keyup.enter="updateTaskProperty($event, 'name')"
-        />
-        <span>描述：</span>
+        <div class="header">
+            <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
+            <input
+                type="text"
+                v-model="content"
+                class="content"
+                @change="updateTaskProperty($event, 'name')"
+                @keyup.enter="updateTaskProperty($event, 'name')"
+            />
+        </div>
+        <div class="des">
+            <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
+            <span>描述：</span>
+        </div>
         <textarea
             class="text"
             v-model="task.description"
+            placeholder="添加详细描述..."
             @change="updateTaskProperty($event, 'description')"
         ></textarea>
+        <card-action></card-action>
+        <card-detail-fuction></card-detail-fuction>
     </div>
 </template>
-
 <script lang="ts">
-import { IconCloseCircle } from '@arco-design/web-vue/es/icon';
-import { useRoute ,useRouter} from 'vue-router'
+import { IconCloseCircle, IconRobot, IconAlignLeft } from '@arco-design/web-vue/es/icon';
+import { useRoute, useRouter } from 'vue-router'
 import { defineComponent, computed } from 'vue';
 import { useStore } from 'vuex';
 import debouceRef from '../../hooks/debounce'
+import CardAction from './CardAction.vue'
+import CardDetailFuction from './CardDetailFuction.vue'
 export default defineComponent({
     name: 'NewCardButton',
     components: {
-        IconCloseCircle
+        IconCloseCircle,
+        IconRobot,
+        IconAlignLeft,
+        CardAction,
+        CardDetailFuction
     },
     setup() {
         const store = useStore();
@@ -68,11 +82,12 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .flex {
-    height: 600px;
+    height: 750px;
+    border-radius: 10px;
     width: 800px;
-    background-color: rgb(244, 245, 247);
+    background-color: #f4f5f7;
     padding: 10px;
-    margin: 150px auto;
+    margin: 50px auto;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -91,27 +106,52 @@ export default defineComponent({
     .icon-close-circle:hover {
         background-color: rgba(0, 0, 0, 0.1);
     }
-    .content {
-        width: 650px;
-        line-height: 50px;
-        border-radius: 10px;
-        outline: 0;
-        background-color: transparent;
-        border: none;
-        border-color: transparent;
-        color: rgb(23, 43, 77);
-        padding: 20px;
-        font-size: 30px;
-        margin-bottom: 10px;
-    }
-    span {
-        font-size: 35px;
+    .header {
+        display: flex;
+        align-items: center;
         margin-bottom: 20px;
-        margin-left: 20px;
+        .robot {
+            height: 30px;
+            width: 30px;
+        }
+        .content {
+            width: 650px;
+            line-height: 30px;
+            border-radius: 10px;
+            outline: 0;
+            background-color: transparent;
+            border: none;
+            border-color: transparent;
+            color: rgb(23, 43, 77);
+            padding: 20px;
+            font-size: 30px;
+            // margin-bottom: 10px;
+            margin-left: -20px;
+        }
+    }
+    .des {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        font-weight: 700;
+        span {
+            font-size: 30px;
+            text-align: left;
+        }
+        .icon-left {
+            width: 30px;
+            height: 30px;
+        }
     }
     .text {
+        border: none;
+        outline: 0;
+        background-color: transparent;
         margin-left: 20px;
         width: 600px;
+    }
+    .text:hover {
+        background-color: rgba(255, 255, 255, 0.8);
     }
 }
 </style>

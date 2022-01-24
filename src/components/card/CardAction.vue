@@ -23,7 +23,6 @@
 
 <script lang="ts">
 import { IconLink, IconUser} from '@arco-design/web-vue/es/icon';
-
 export default {
     components: {
         IconLink,IconUser

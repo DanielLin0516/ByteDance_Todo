@@ -9,17 +9,9 @@
           <icon-tag />
           <span class="sidebar-text">标签</span>
       </a>
-      <a class="button-link" href="#" title="清单">
-          <icon-unordered-list />
-          <span class="sidebar-text">清单</span>
-      </a>
       <a class="button-link" href="#" title="日期">
           <icon-schedule />
           <span class="sidebar-text">日期</span>
-      </a>
-      <a class="button-link" href="#" title="附件">
-          <icon-file />
-          <span class="sidebar-text">附件</span>
       </a>
   </div>
 </template>
@@ -39,6 +31,9 @@ export default {
     flex-direction: column;
     text-align: left;
     color: #575a5f;
+    position: absolute;
+    right: 50px;
+    top: 120px;
 }
 .sidebar-tip {
     font-weight: 700;

@@ -14,7 +14,8 @@
                     class="event"
                     v-for="event in store.state.userEvent"
                     :key="event.id"
-                >{{ event.content }}发生改变，请查收</div>
+                >{{ event.content }}发生改变，请查收
+                </div>
             </div>
             <a-avatar :style="{ backgroundColor: '#3370ff' }" class="avatar">
                 <IconUser />
@@ -27,14 +28,12 @@ import { IconBytedanceColor, IconNotification, IconUser } from '@arco-design/web
 import { defineComponent, computed, watch, ref } from 'vue';
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import CardDetail from '../card1/CardDetail.vue'
 export default defineComponent({
     name: 'TopBar',
     components: {
         IconBytedanceColor,
         IconNotification,
         IconUser,
-        CardDetail
     },
     setup(props) {
         const store = useStore();
