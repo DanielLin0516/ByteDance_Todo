@@ -23,7 +23,7 @@
             <div
                 v-for=" (task,$taskIndex) of column.items"
                 :key="$taskIndex"
-                @click="goToTask(task)"
+                @click="goToTask(task,column.id)"
                 draggable="true"
                 @dragstart="pickupTask($event, $taskIndex, $columnIndex)"
                 @dragover.prevent
@@ -92,8 +92,8 @@ export default defineComponent({
         const isTaskOpen = computed(() => {
             return route.name === 'task';
         })
-        const goToTask = (task: { id: any; }) => {
-            router.push({ name: 'task', params: { id: task.id } });
+        const goToTask = (task: { id: any; }, columnID: string) => {
+            router.push({ name: 'task', params: { cid: columnID, id: task.id } });
         }
         const close = () => {
             router.push({ name: 'board' });

@@ -10,17 +10,25 @@
                 @change="updateTaskProperty($event, 'name')"
                 @keyup.enter="updateTaskProperty($event, 'name')"
             />
+             <div class="listName">在列表<span class="listNameSpan">{{listName}}</span>中</div>
         </div>
         <div class="des">
             <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
-            <span>描述：</span>
+            <span>描述</span>
         </div>
-        <textarea
+        <!-- <textarea
             class="text"
             v-model="task.description"
             placeholder="添加详细描述..."
             @change="updateTaskProperty($event, 'description')"
-        ></textarea>
+        ></textarea> -->
+        <a-textarea 
+            default-value="添加详细描述..." 
+            class="text"
+            v-model="task.description"
+            placeholder="添加详细描述..."
+            @change="updateTaskProperty($event, 'description')"
+			:auto-size="{ minRows:2, maxRows:5 }" />
         <card-action></card-action>
         <card-detail-fuction></card-detail-fuction>
     </div>
@@ -33,6 +41,7 @@ import { useStore } from 'vuex';
 import debouceRef from '../../hooks/debounce'
 import CardAction from './CardAction.vue'
 import CardDetailFuction from './CardDetailFuction.vue'
+import { log } from 'console';
 export default defineComponent({
     name: 'NewCardButton',
     components: {
@@ -48,6 +57,9 @@ export default defineComponent({
         const router = useRouter();
         const task = computed(() => {
             return store.getters.getTask(route.params.id);
+        })
+        const listName = computed(() => {
+            return store.getters.getColumnName(route.params.cid)
         })
         const content = computed({
             get() {
@@ -72,8 +84,9 @@ export default defineComponent({
         }
         return {
             task,
-            updateTaskProperty,
+            listName,
             content,
+            updateTaskProperty,
             close
         }
     }
@@ -107,9 +120,9 @@ export default defineComponent({
         background-color: rgba(0, 0, 0, 0.1);
     }
     .header {
-        display: flex;
+        // display: flex;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
         .robot {
             height: 30px;
             width: 30px;
@@ -124,9 +137,19 @@ export default defineComponent({
             border-color: transparent;
             color: rgb(23, 43, 77);
             padding: 20px;
+            padding-bottom: 10px;
             font-size: 30px;
             // margin-bottom: 10px;
             margin-left: -20px;
+        }
+        .listName {
+            margin-left: 60px;
+            text-align: left;
+            color: #444546;
+        }
+        .listNameSpan {
+            margin: 0 5px;
+            text-decoration: underline;
         }
     }
     .des {
@@ -147,8 +170,9 @@ export default defineComponent({
         border: none;
         outline: 0;
         background-color: transparent;
-        margin-left: 20px;
+        margin-left: 40px;
         width: 600px;
+        font-size: 20px;
     }
     .text:hover {
         background-color: rgba(255, 255, 255, 0.8);

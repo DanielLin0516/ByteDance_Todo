@@ -20,6 +20,15 @@ export default createStore({
           }
         }
       }
+    },
+    getColumnName(state) {
+      return (cid:any) => {
+        for(const column of state.board.columns) {;
+          if(column.id == cid) {
+            return column.title
+          }
+        }
+      }
     }
   },
   mutations: {
