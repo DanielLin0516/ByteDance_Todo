@@ -29,7 +29,7 @@
             placeholder="添加详细描述..."
             @change="updateTaskProperty($event, 'description')"
 			:auto-size="{ minRows:2, maxRows:5 }" />
-        <card-action></card-action>
+        <card-action :task="task"></card-action>
         <card-detail-fuction></card-detail-fuction>
     </div>
 </template>

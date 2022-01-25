@@ -68,6 +68,7 @@
 
 <script lang="ts">
 import 'animate.css'
+import { getTimeStamp,timetrans } from '../../store/utils'
 import { IconPlus } from '@arco-design/web-vue/es/icon';
 import { computed, defineComponent, ref, TransitionGroup,watch } from 'vue';
 import { useStore } from 'vuex';
@@ -99,12 +100,16 @@ export default defineComponent({
             router.push({ name: 'board' });
         }
         const createTask = (e: any, tasks: any) => {
+            var timestamp = getTimeStamp()
             store.commit('CREATE_TASK', {
                 tasks,
                 content: e.target.value
             })
+            console.log(timetrans(getTimeStamp));
+            
             e.target.value = '';
         }
+        
         const createColumn = () => {
             store.commit('CREATE_COLUMN', {
                 title: newColumnName.value

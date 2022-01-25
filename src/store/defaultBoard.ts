@@ -10,7 +10,23 @@ export default {
                     {
                         id: uuid(),
                         content: "the first thing xxxxxxxx",
-                        description:"oooooo"
+                        description:"oooooo",
+                        actions:[
+                            {
+                                username: '没想好叫啥',
+                                action: '把任务从 A移动到B',
+                                // action: 有人 创建了任务 2022-01-25
+                                //         有人 把任务从A移动到了B 2022-01-25
+                                actionTime: '2022-01-25 21:05:24'
+                            },
+                            {
+                                username: '没想好叫啥',
+                                action: '把任务从 A移动到B',
+                                // action: 有人 创建了任务 2022-01-25
+                                //         有人 把任务从A移动到了B 2022-01-25
+                                actionTime: '2022-01-25 21:05:24'
+                            }
+                        ]
                     },
                     {
                         id: uuid(),
