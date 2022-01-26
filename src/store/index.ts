@@ -42,8 +42,10 @@ export default createStore({
       })
     },
     CREATE_COLUMN(state,{ title }) {
+
       state.board.columns.push({
         title,
+        id:uuid(),
         items:[]
       })
     },
