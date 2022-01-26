@@ -5,8 +5,8 @@
             <icon-link :style="{fontSize:'1em', margin:'0 10px 0 0'}"/>
             <span class="desc-title">活动</span>
           </div>
-          <div class="header-button" >
-            <a-button>隐藏详情</a-button>
+          <div class="header-button">
+            <a-button @click="changeActionListIsShow($event)">隐藏详情</a-button>
           </div>
       </header>
       <main>
@@ -14,27 +14,34 @@
               <a-avatar :style="{ backgroundColor: '#3370ff', float: 'left' }">
                 <IconUser />
               </a-avatar>
-              <a-input :style="{width:'320px', background: '#fff', margin: '5px 10px 0 10px'}" placeholder="添加评论..." allow-clear />
+              <a-input 
+                :style="{width:'320px', background: '#fff', margin: '5px 10px 0 10px'}" 
+                placeholder="添加评论..." 
+                allow-clear
+                v-model="curComment"
+               />
           </div>
           <div class="main-action-item"></div>
       </main>
-      <div
-        v-for=" (action,$actionIndex) of actions"
-        :key="$actionIndex"
-        >
-          <div class="actionItem">
-            <a-avatar :style="{ backgroundColor: '#3370ff', float: 'left' }">
-                <IconUser />
-            </a-avatar>
-            <div class="action">
-                <div class="action-header">
-                     <span class="action-username">{{action.username}}</span>{{action.action}}
-                </div>
-                <div action-timer>
-                    {{action.actionTime}}
+      <div class="actionList" v-if="isShowActionList">
+          <div
+            v-for=" (action,$actionIndex) of actions"
+            :key="$actionIndex"
+            >
+            <div class="actionItem">
+                <a-avatar :style="{ backgroundColor: '#3370ff', float: 'left' }">
+                    <IconUser />
+                </a-avatar>
+                <div class="action">
+                    <div class="action-header">
+                        <span class="action-username">{{action.username}}</span>{{action.action}}
+                    </div>
+                    <div action-timer>
+                        {{action.actionTime}}
+                    </div>
                 </div>
             </div>
-          </div>
+        </div>
       </div>
   </div>
 </template>
@@ -50,11 +57,18 @@ export default {
         task: Object
     },
     setup(props) {
+        let isShowActionList = ref(true)
+        let curComment = ref('')
         const actions= props.task ? props.task.actions : {}
-        let username = ref('临时用户')
-        let action = ref('把任务移动了')
-        let actionTime = ref('1月20日21:21:20')
-        return { username, action, actionTime, actions }
+        const changeActionListIsShow = (e:any) => {
+            if (e.target.innerHTML == '<!--v-if-->隐藏详情') {
+                e.target.innerHTML = '<!--v-if-->查看详情'
+            } else {
+                e.target.innerHTML = '<!--v-if-->隐藏详情'
+            }
+            isShowActionList.value = !isShowActionList.value
+        }
+        return { actions, isShowActionList, curComment, changeActionListIsShow }
     }
 }
 </script>
