@@ -19,7 +19,7 @@
                 enter-active-class="animate__backInLeft"
                 leave-active-class="animate__backOutUp"
                 appear
-            >-->
+            > -->
             <div
                 v-for=" (task,$taskIndex) of column.items"
                 :key="$taskIndex"
@@ -184,7 +184,7 @@ export default defineComponent({
     .card-item {
         overflow-x: hidden;
         overflow-y: visible;
-        max-height: 640px;
+        max-height: 630px;
         width: 380px;
         float: left !important;
         flex-direction: column;
