@@ -11,32 +11,19 @@ export default {
                         id: uuid(),
                         content: "the first thing xxxxxxxx",
                         description:"oooooo",
-                        actions:[
-                            {
-                                username: '没想好叫啥',
-                                action: '把任务从 A移动到B',
-                                // action: 有人 创建了任务 2022-01-25
-                                //         有人 把任务从A移动到了B 2022-01-25
-                                actionTime: '2022-01-25 21:05:24'
-                            },
-                            {
-                                username: '没想好叫啥',
-                                action: '把任务从 A移动到B',
-                                // action: 有人 创建了任务 2022-01-25
-                                //         有人 把任务从A移动到了B 2022-01-25
-                                actionTime: '2022-01-25 21:05:24'
-                            }
-                        ]
+                        actions:[]
                     },
                     {
                         id: uuid(),
                         content: "the second thingxxxxxxxxx",
-                        description:"1111111111"
+                        description:"1111111111",
+                        actions:[]
                     },
                     {
                         id: uuid(),
                         content: '我爱你',
-                        description:"2222222222"
+                        description:"2222222222",
+                        actions:[]
                     }
                 ],
             },
@@ -47,12 +34,14 @@ export default {
                     {
                         id: uuid(),
                         content: "the 3333 thing xxxxxxxx",
-                        description:"333333333333"
+                        description:"333333333333",
+                        actions:[]
                     },
                     {
                         id: uuid(),
                         content: "the 4444 thing xxxxxx",
-                        description:"44444www"
+                        description:"44444www",
+                        actions:[]
                     },
                 ],
             },

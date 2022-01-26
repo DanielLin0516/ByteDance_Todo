@@ -51,7 +51,6 @@ export default {
     },
     setup(props) {
         const actions= props.task ? props.task.actions : {}
-        console.log(actions)
         let username = ref('临时用户')
         let action = ref('把任务移动了')
         let actionTime = ref('1月20日21:21:20')

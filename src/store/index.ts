@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import defaultBoard from "./defaultBoard";
-import { saveStatePlugins, uuid } from "./utils";
+import { saveStatePlugins, uuid, timetrans, getTimeStamp } from "./utils";
 // const board = JSON.parse(localStorage.getItem('board')) || defaultBoard
 export default createStore({
   plugins: [saveStatePlugins],
@@ -32,11 +32,13 @@ export default createStore({
     }
   },
   mutations: {
-    CREATE_TASK(state, { tasks, content }) {
+    CREATE_TASK(state, { tasks,createAction, content }) {
+      createAction.actionTime = timetrans(createAction.actionTime)
       tasks.push({
         content,
         id:uuid(),
-        description:''
+        description:'',
+        actions:[createAction]
       })
     },
     CREATE_COLUMN(state,{ title }) {
@@ -48,8 +50,18 @@ export default createStore({
     UPDATE_TASK(state,{task,key,value}) {
       task[key] = value;
     },
-    MOVE_TASK(state,{fromTasks,toTasks,fromTaskIndex,toTaskIndex}) {
+    MOVE_TASK(state,{fromTasks,toTasks,fromTaskIndex,toTaskIndex,toTaskColumnName, fromTaskColumnName}) {
       const taskTOMove = fromTasks.splice(fromTaskIndex,1)[0];
+      console.log(taskTOMove);
+
+      const moveAction = {
+        username: '没想好叫啥',
+        action: '把任务卡从'+fromTaskColumnName+'移动到'+toTaskColumnName,
+        actionTime: timetrans(getTimeStamp())
+      }
+      if(fromTaskColumnName != toTaskColumnName) {
+        taskTOMove.actions.unshift(moveAction)
+      }
       toTasks.splice(toTaskIndex,0,taskTOMove);
     },
     MOVE_COLUMN(state,{fromColumnIndex,toColumnIndex}) {
