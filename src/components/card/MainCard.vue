@@ -23,7 +23,7 @@
             <div
                 v-for=" (task,$taskIndex) of column.items"
                 :key="$taskIndex"
-                @click="goToTask(task)"
+                @click="goToTask(task,column.id)"
                 draggable="true"
                 @dragstart="pickupTask($event, $taskIndex, $columnIndex)"
                 @dragover.prevent
@@ -68,6 +68,7 @@
 
 <script lang="ts">
 import 'animate.css'
+import { getTimeStamp,timetrans } from '../../store/utils'
 import { IconPlus } from '@arco-design/web-vue/es/icon';
 import { computed, defineComponent, ref, TransitionGroup,watch } from 'vue';
 import { useStore } from 'vuex';
@@ -92,19 +93,36 @@ export default defineComponent({
         const isTaskOpen = computed(() => {
             return route.name === 'task';
         })
-        const goToTask = (task: { id: any; }) => {
-            router.push({ name: 'task', params: { id: task.id } });
+        // 工具函数 获取当前column的name
+        const getCurColumnName = (e:any) => {
+            if(e.currentTarget.parentElement.className == 'card-wrapper') {
+                return e.currentTarget.firstElementChild.innerHTML
+            } else {
+                return e.currentTarget.parentElement.firstElementChild.innerHTML
+            }
+        }
+        const goToTask = (task: { id: any; }, columnID: string) => {
+            router.push({ name: 'task', params: { cid: columnID, id: task.id } });
         }
         const close = () => {
             router.push({ name: 'board' });
         }
         const createTask = (e: any, tasks: any) => {
+            var timestamp = getTimeStamp()
+            const curColumnName = getCurColumnName(e)
+            const createAction = {
+                username:'没想好叫啥',
+                actionTime:timestamp,
+                action:'在'+ curColumnName + '中创建了这张卡'
+            }
             store.commit('CREATE_TASK', {
                 tasks,
+                createAction,
                 content: e.target.value
             })
             e.target.value = '';
         }
+        
         const createColumn = () => {
             store.commit('CREATE_COLUMN', {
                 title: newColumnName.value
@@ -117,6 +135,7 @@ export default defineComponent({
             e.dataTransfer.setData('from-task-index', taskIndex);
             e.dataTransfer.setData('from-column-index', fromColumnIndex);
             e.dataTransfer.setData('type', 'task');
+            e.dataTransfer.setData('from-column-name', getCurColumnName(e));            
         }
         const pickupColumn = (e: any, fromColumnIndex: any) => {
             e.dataTransfer.effctAllowed = 'move';
@@ -125,6 +144,7 @@ export default defineComponent({
             e.dataTransfer.setData('type', 'column');
         }
         const moveTaskOrColumn = (e: any, toTasks: any, toColumnIndex: any, toTaskIndex: any) => {
+            
             const type = e.dataTransfer.getData('type')
             if (type === 'task') {
                 moveTask(e, toTasks, toTaskIndex !== 'undefined' ? toTaskIndex : toTasks.length);
@@ -136,11 +156,15 @@ export default defineComponent({
             const fromColumnIndex = e.dataTransfer.getData('from-column-index');
             const fromTasks = store.state.board.columns[fromColumnIndex].items;
             const fromTaskIndex = e.dataTransfer.getData('from-task-index')
+            const toTaskColumnName = getCurColumnName(e)
+            const fromTaskColumnName = e.dataTransfer.getData('from-column-name')
             store.commit('MOVE_TASK', {
                 fromTasks,
                 fromTaskIndex,
                 toTasks,
-                toTaskIndex
+                toTaskIndex,
+                toTaskColumnName,
+                fromTaskColumnName
             })
         }
         const moveColumn = (e: { dataTransfer: { getData: (arg0: string) => any; }; }, toColumnIndex: any) => {

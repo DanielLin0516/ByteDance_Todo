@@ -8,7 +8,7 @@ const router = createRouter({
       component: () => import("../components/card/MainCard.vue"),
       children:[
         {
-          path:'task/:id',
+          path:'task/:cid/:id',
           name:'task',
           component: () => import("../components/card/Task.vue")
         }

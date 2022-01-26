@@ -10,17 +10,20 @@ export default {
                     {
                         id: uuid(),
                         content: "the first thing xxxxxxxx",
-                        description:"oooooo"
+                        description:"oooooo",
+                        actions:[]
                     },
                     {
                         id: uuid(),
                         content: "the second thingxxxxxxxxx",
-                        description:"1111111111"
+                        description:"1111111111",
+                        actions:[]
                     },
                     {
                         id: uuid(),
                         content: '我爱你',
-                        description:"2222222222"
+                        description:"2222222222",
+                        actions:[]
                     }
                 ],
             },
@@ -31,12 +34,14 @@ export default {
                     {
                         id: uuid(),
                         content: "the 3333 thing xxxxxxxx",
-                        description:"333333333333"
+                        description:"333333333333",
+                        actions:[]
                     },
                     {
                         id: uuid(),
                         content: "the 4444 thing xxxxxx",
-                        description:"44444www"
+                        description:"44444www",
+                        actions:[]
                     },
                 ],
             },
