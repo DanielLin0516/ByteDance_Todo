@@ -69,7 +69,10 @@ export default {
                 id: 3,
                 title: "已完成!!",
                 items: [],
-                time: ""
+                time: {
+                    done: false,
+                    timePeriod: ""
+                }
             },
         ]
 }

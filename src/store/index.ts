@@ -39,10 +39,15 @@ export default createStore({
         content,
         id:uuid(),
         description:'',
-        actions:[createAction]
+        actions:[createAction],
+        time:{
+          done:false,
+          timePeriod:""
+        }
       })
     },
     CREATE_COLUMN(state,{ title }) {
+
       state.board.columns.push({
         title,
         id:uuid(),

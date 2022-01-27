@@ -284,10 +284,10 @@ export default defineComponent({
                 background-color: rgb(217, 181, 28);
             }
             .timedone {
-                background-color: rgb(97,189,79);
+                background-color: rgb(97, 189, 79);
             }
             .timedone:hover {
-                background-color: rgb(81,152,57);
+                background-color: rgb(81, 152, 57);
             }
         }
         .card-menu:hover {
