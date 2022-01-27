@@ -1,0 +1,136 @@
+<template>
+    <div class="date">
+        <div class="header">
+            <span>日期</span>
+            <icon-close-circle
+                class="icon-close"
+                @click.self="store.state.show = !store.state.show"
+            />
+        </div>
+        <span>请选择任务开始和结束时间</span>
+        <a-range-picker
+            show-time
+            :time-picker-props="{ defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('00:00:00', 'HH:mm:ss')] }"
+            format="YYYY-MM-DD HH:mm"
+            @change="onChange"
+            @select="onSelect"
+            @ok="onOk"
+            class="range"
+        />
+        <a-button type="primary" class="save" @click.self="save">保存</a-button>
+        <a-button type="primary" class="delete" @click.self="del">移除</a-button>
+    </div>
+</template>
+<script lang="ts">
+import dayjs from 'dayjs';
+import { IconCloseCircle } from '@arco-design/web-vue/es/icon';
+import { defineComponent, computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter, useRoute } from 'vue-router'
+export default defineComponent({
+    components: {
+        IconCloseCircle
+    },
+    setup() {
+        const store = useStore();
+        let time = ref(null);
+        const route = useRoute();
+        const task = computed(() => {
+            return store.getters.getTask(route.params.id);
+        })
+        function onSelect(dateString: any, date: any) {
+            console.log('onSelect', dateString, date);
+        }
+        function onChange(dateString: any, date: any) {
+            console.log('onChange: ', dateString, date);
+        }
+        function onOk(dateString: any, date: any) {
+            time = dateString;
+        }
+        function save() {
+            task.value.time.timePeriod = time;
+            console.log(task.value.time)
+            store.state.show = false;
+        }
+        function del() {
+            task.value.time.timePeriod = "";
+            store.state.show = false;
+        }
+        return {
+            onSelect,
+            onChange,
+            onOk,
+            dayjs,
+            store,
+            save,
+            del
+        };
+    }
+})
+</script>
+
+<style lang="scss" scoped>
+$color: red;
+$white: rgb(255, 255, 255);
+.date {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    height: 730px;
+    padding: 20px;
+    position: absolute;
+    border-radius: 5px;
+    top: 0px;
+    right: -200px;
+    background-color: $white;
+    border-left: 1px solid rgba(0, 0, 0, 0.3);
+    .header {
+        display: flex;
+        height: 80px;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        border-bottom: 1px solid black;
+        margin-bottom: 30px;
+        .icon-close {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            padding: 10px;
+            color: rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+        }
+        .icon-close:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+    span {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+    .range {
+        width: 360px;
+        margin: 0 24px 24px 0;
+    }
+    .save {
+        margin-top: 20px;
+        width: 200px;
+        height: 50px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    .delete {
+        width: 200px;
+        height: 50px;
+        border-radius: 5px;
+    }
+    :deep(span.arco-panel-date-view-tab-pane-text) {
+        margin-left: 2px;
+    }
+}
+</style>

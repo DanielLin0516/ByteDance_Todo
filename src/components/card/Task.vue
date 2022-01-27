@@ -10,7 +10,14 @@
                 @change="updateTaskProperty($event, 'name')"
                 @keyup.enter="updateTaskProperty($event, 'name')"
             />
-             <div class="listName">在列表<span class="listNameSpan">{{listName}}</span>中</div>
+            <div class="listName">
+                在列表
+                <span class="listNameSpan">{{ listName }}</span>中
+            </div>
+        </div>
+        <div :class="date" v-if="task.time.timePeriod">
+            <span>日期</span>
+            <div>{{ task.time.timePeriod[0] }} - {{ task.time.timePeriod[1] }}</div>
         </div>
         <div class="des">
             <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
@@ -21,14 +28,15 @@
             v-model="task.description"
             placeholder="添加详细描述..."
             @change="updateTaskProperty($event, 'description')"
-        ></textarea> -->
-        <a-textarea 
-            default-value="添加详细描述..." 
+        ></textarea>-->
+        <a-textarea
+            default-value="添加详细描述..."
             class="text"
             v-model="task.description"
             placeholder="添加详细描述..."
             @change="updateTaskProperty($event, 'description')"
-			:auto-size="{ minRows:2, maxRows:5 }" />
+            :auto-size="{ minRows: 2, maxRows: 5 }"
+        />
         <card-action :task="task"></card-action>
         <card-detail-fuction></card-detail-fuction>
     </div>
@@ -41,7 +49,6 @@ import { useStore } from 'vuex';
 import debouceRef from '../../hooks/debounce'
 import CardAction from './CardAction.vue'
 import CardDetailFuction from './CardDetailFuction.vue'
-import { log } from 'console';
 export default defineComponent({
     name: 'NewCardButton',
     components: {
@@ -82,12 +89,19 @@ export default defineComponent({
         const close = () => {
             router.push({ name: 'board' });
         }
+        const date = computed(() => {
+            return {
+                'date': true,
+                
+            }
+        })
         return {
             task,
             listName,
             content,
             updateTaskProperty,
-            close
+            close,
+            date
         }
     }
 })
@@ -150,6 +164,25 @@ export default defineComponent({
         .listNameSpan {
             margin: 0 5px;
             text-decoration: underline;
+        }
+    }
+    .date {
+        span {
+            display: inline-block;
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            color: rgb(94, 108, 132);
+            margin-bottom: 10px;
+        }
+        div {
+            padding: 10px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+        div:hover {
+            background-color: rgba(0, 0, 0, 0.1);
         }
     }
     .des {

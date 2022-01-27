@@ -3,7 +3,7 @@
         <!-- 要渲染的卡片 -->
         <div
             class="card-item"
-            v-for="(column,$columnIndex) of store.state.board.columns"
+            v-for="(column, $columnIndex) of store.state.board.columns"
             :key="$columnIndex"
             draggable="true"
             @drop="moveTaskOrColumn($event, column.items, $columnIndex, undefined)"
@@ -19,11 +19,11 @@
                 enter-active-class="animate__backInLeft"
                 leave-active-class="animate__backOutUp"
                 appear
-            > -->
+            >-->
             <div
-                v-for=" (task,$taskIndex) of column.items"
+                v-for=" (task, $taskIndex) of column.items"
                 :key="$taskIndex"
-                @click="goToTask(task,column.id)"
+                @click="goToTask(task, column.id)"
                 draggable="true"
                 @dragstart="pickupTask($event, $taskIndex, $columnIndex)"
                 @dragover.prevent
@@ -33,6 +33,13 @@
                 <div class="card-menu">
                     {{ task.content }}
                     <div class="des">{{ task.description }}</div>
+                    <div v-if="task.time.timePeriod" :class="time" @click.prevent.stop="done">
+                        <div class="time1">
+                            <div>{{ task.time.timePeriod[0] }}</div>
+                            <div>{{ task.time.timePeriod[1] }}</div>
+                        </div>
+                        <icon-schedule class="time2" />
+                    </div>
                 </div>
                 <div
                     class="kanban-dropzon"
@@ -59,7 +66,6 @@
                 @keyup.enter="createColumn"
             />
         </div>
-
         <div class="task-bg" v-if="isTaskOpen" @click.self="close">
             <router-view />
         </div>
@@ -68,34 +74,39 @@
 
 <script lang="ts">
 import 'animate.css'
-import { getTimeStamp,timetrans } from '../../store/utils'
-import { IconPlus } from '@arco-design/web-vue/es/icon';
-import { computed, defineComponent, ref, TransitionGroup,watch } from 'vue';
+import { getTimeStamp } from '../../store/utils'
+import { IconPlus, IconSchedule } from '@arco-design/web-vue/es/icon';
+import { computed, defineComponent, ref, TransitionGroup, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router'
 export default defineComponent({
     name: 'MainCard',
     components: {
         IconPlus,
-        TransitionGroup
+        TransitionGroup,
+        IconSchedule
     },
     setup() {
         const store = useStore();
         const route = useRoute();
         const router = useRouter();
         const newColumnName = ref('');
-        // const task = computed(() => {
-        //     return store.getters.getTask(route.params.id);
-        // })
-        // watch(task, (newVal, oldVal) => {
-        //     console.log('newVal, oldVal', newVal, oldVal)
-        // }, { immediate: true, deep: true });
+        let cur = ref(true)
+        const time = computed(() => {
+            return {
+                'time': true,
+                'timedone': !cur.value
+            }
+        })
+        const done = () => {
+            cur.value = !cur.value;
+        }
         const isTaskOpen = computed(() => {
             return route.name === 'task';
         })
         // 工具函数 获取当前column的name
-        const getCurColumnName = (e:any) => {
-            if(e.currentTarget.parentElement.className == 'card-wrapper') {
+        const getCurColumnName = (e: any) => {
+            if (e.currentTarget.parentElement.className == 'card-wrapper') {
                 return e.currentTarget.firstElementChild.innerHTML
             } else {
                 return e.currentTarget.parentElement.firstElementChild.innerHTML
@@ -111,9 +122,9 @@ export default defineComponent({
             var timestamp = getTimeStamp()
             const curColumnName = getCurColumnName(e)
             const createAction = {
-                username:'没想好叫啥',
-                actionTime:timestamp,
-                action:'在'+ curColumnName + '中创建了这张卡'
+                username: '没想好叫啥',
+                actionTime: timestamp,
+                action: '在' + curColumnName + '中创建了这张卡'
             }
             store.commit('CREATE_TASK', {
                 tasks,
@@ -122,7 +133,7 @@ export default defineComponent({
             })
             e.target.value = '';
         }
-        
+
         const createColumn = () => {
             store.commit('CREATE_COLUMN', {
                 title: newColumnName.value
@@ -135,7 +146,7 @@ export default defineComponent({
             e.dataTransfer.setData('from-task-index', taskIndex);
             e.dataTransfer.setData('from-column-index', fromColumnIndex);
             e.dataTransfer.setData('type', 'task');
-            e.dataTransfer.setData('from-column-name', getCurColumnName(e));            
+            e.dataTransfer.setData('from-column-name', getCurColumnName(e));
         }
         const pickupColumn = (e: any, fromColumnIndex: any) => {
             e.dataTransfer.effctAllowed = 'move';
@@ -144,7 +155,7 @@ export default defineComponent({
             e.dataTransfer.setData('type', 'column');
         }
         const moveTaskOrColumn = (e: any, toTasks: any, toColumnIndex: any, toTaskIndex: any) => {
-            
+
             const type = e.dataTransfer.getData('type')
             if (type === 'task') {
                 moveTask(e, toTasks, toTaskIndex !== 'undefined' ? toTaskIndex : toTasks.length);
@@ -195,7 +206,9 @@ export default defineComponent({
             newColumnName,
             createColumn,
             height,
-            height1
+            height1,
+            time,
+            done
         }
     }
 })
@@ -243,10 +256,38 @@ export default defineComponent({
             font-size: 24px;
             border-bottom: 2px solid rgba(117, 116, 116, 0.45);
             .des {
-                font-size: 16px;
+                font-size: 12px;
                 color: grey;
                 margin-top: 5px;
                 font-style: italic;
+            }
+            .time {
+                margin-top: 10px;
+                display: flex;
+                font-size: 12px;
+                width: 200px;
+                align-items: center;
+                background-color: rgb(242, 214, 0);
+                padding: 5px;
+                border-radius: 10px;
+                color: white;
+                .time1 {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .time2 {
+                    height: 30px;
+                    width: 30px;
+                }
+            }
+            .time:hover {
+                background-color: rgb(217, 181, 28);
+            }
+            .timedone {
+                background-color: rgb(97,189,79);
+            }
+            .timedone:hover {
+                background-color: rgb(81,152,57);
             }
         }
         .card-menu:hover {

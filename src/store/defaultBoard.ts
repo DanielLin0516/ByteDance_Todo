@@ -10,20 +10,32 @@ export default {
                     {
                         id: uuid(),
                         content: "the first thing xxxxxxxx",
-                        description:"oooooo",
-                        actions:[]
+                        description: "oooooo",
+                        actions: [],
+                        time: {
+                            done: false,
+                            timePeriod: ""
+                        }
                     },
                     {
                         id: uuid(),
                         content: "the second thingxxxxxxxxx",
-                        description:"1111111111",
-                        actions:[]
+                        description: "1111111111",
+                        actions: [],
+                        time: {
+                            done: false,
+                            timePeriod: ""
+                        }
                     },
                     {
                         id: uuid(),
                         content: '我爱你',
-                        description:"2222222222",
-                        actions:[]
+                        description: "2222222222",
+                        actions: [],
+                        time: {
+                            done: false,
+                            timePeriod: ""
+                        }
                     }
                 ],
             },
@@ -34,14 +46,22 @@ export default {
                     {
                         id: uuid(),
                         content: "the 3333 thing xxxxxxxx",
-                        description:"333333333333",
-                        actions:[]
+                        description: "333333333333",
+                        actions: [],
+                        time: {
+                            done: false,
+                            timePeriod: ""
+                        }
                     },
                     {
                         id: uuid(),
                         content: "the 4444 thing xxxxxx",
-                        description:"44444www",
-                        actions:[]
+                        description: "44444www",
+                        actions: [],
+                        time: {
+                            done: false,
+                            timePeriod: ""
+                        }
                     },
                 ],
             },
@@ -49,6 +69,7 @@ export default {
                 id: 3,
                 title: "已完成!!",
                 items: [],
+                time: ""
             },
         ]
 }

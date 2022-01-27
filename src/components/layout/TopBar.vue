@@ -5,7 +5,7 @@
             <span class="link">项目</span>
         </div>
         <div class="right-bar">
-            <card-detail />
+
             <a-input-search placeholder="Please enter something" class="input" />
             <icon-notification class="notifacte" @click="show = !show" />
             <div class="changeEvent" v-if="show">

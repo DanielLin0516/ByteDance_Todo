@@ -7,7 +7,8 @@ export default createStore({
   state: {
     board: defaultBoard,
     userEvent:[],
-    isCardDetailShow: false
+    isCardDetailShow: false,
+    show:false
   },
   getters: {
     getTask(state) {
@@ -23,7 +24,7 @@ export default createStore({
     },
     getColumnName(state) {
       return (cid:any) => {
-        for(const column of state.board.columns) {;
+        for(const column of state.board.columns) {
           if(column.id == cid) {
             return column.title
           }
@@ -44,6 +45,7 @@ export default createStore({
     CREATE_COLUMN(state,{ title }) {
       state.board.columns.push({
         title,
+        id:uuid(),
         items:[]
       })
     },
