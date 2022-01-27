@@ -32,3 +32,13 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'iconfont';  /* project id 3164951 */
+    src: url('');
+    src: url('?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_3164951_8fqhkmsoe9b.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_3164951_8fqhkmsoe9b.woff') format('woff'),
+    url('//at.alicdn.com/t/font_3164951_8fqhkmsoe9b.ttf') format('truetype'),
+    url('#iconfont') format('svg');
+  }

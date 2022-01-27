@@ -19,6 +19,7 @@ export default defineComponent({
     setup() {
         console.log(456)
     }
+    
 })
 </script>
 

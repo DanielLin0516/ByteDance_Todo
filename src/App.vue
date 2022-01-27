@@ -5,10 +5,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue';
+import { defineComponent, computed, watch, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import Layout from './components/layout/Layout.vue';
+import { setTheme } from './theme/theme'
 
 export default defineComponent({
   name: 'App',
@@ -16,16 +17,20 @@ export default defineComponent({
     Layout,
   },
   setup(props) {
-
-  }
+    const init = () => {
+      setTheme("default")
+    }
+    onMounted(() => { init() })
+  },
+  
 })
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .bgc {
   height: 100vh;
   width: 100vw;
-  background-color: rgb(0, 121, 191);
+  background-color: rgba(@primaryColor, 1);
 }
 </style>

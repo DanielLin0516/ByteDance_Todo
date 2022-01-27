@@ -13,6 +13,15 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [loder_pxtovw]
+    },
+    preprocessorOptions: {
+      // 配置全局less
+      less: {
+        modifyVars: {
+          hack: `true; @import (reference) "${path.resolve('src/theme/style.less')}";`,
+        },
+        javascriptEnabled: true,
+      }
     }
   },
   resolve: {

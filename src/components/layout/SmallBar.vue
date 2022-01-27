@@ -6,8 +6,8 @@
             <div class="user">
                 <icon-user class="icon-user" />邀请朋友
             </div>
-            <div class="change">
-                <icon-moon-fill class="icon-moon-fill" />切换夜间模式
+            <div class="change" @click="changeTheme($event)">
+                切换夜间模式
             </div>
         </div>
         <!-- 主要的卡片区域 -->
@@ -19,13 +19,27 @@
 <script lang="ts">
 // import MainCard from '../card/MainCard.vue'
 import { IconUser, IconMoonFill } from '@arco-design/web-vue/es/icon';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { setTheme } from '../../theme/theme'
 export default defineComponent({
     name: 'SmallBar',
     components: {
-
         IconUser,
         IconMoonFill
+    },
+    setup() {
+        const isDark = ref(false)
+        const changeTheme = (e:any) => {
+            if(!isDark.value) {
+                e.currentTarget.innerText = '切换默认模式'
+                setTheme('dark')
+            } else {
+                e.currentTarget.innerText = '切换夜间模式'
+                setTheme('default')
+            }
+            isDark.value = !isDark.value
+        }
+        return { changeTheme }
     }
 })
 </script>
@@ -78,6 +92,12 @@ export default defineComponent({
                 width: 26px;
                 height: 26px;
                 color: black;
+            }
+            .changr-text {
+                color: black;
+            }
+            .changr-text:hover{
+                color: white;
             }
         }
         .change:hover {

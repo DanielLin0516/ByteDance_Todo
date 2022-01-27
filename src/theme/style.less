@@ -1,0 +1,9 @@
+// 默认的主题颜色
+@primaryColor: var(--primaryColor, #000);
+@primaryTextColor: var(--primaryTextColor, green);
+// 导出变量
+:export {
+  name: "less";
+  primaryColor: @primaryColor;
+  primaryTextColor: @primaryTextColor;
+}
