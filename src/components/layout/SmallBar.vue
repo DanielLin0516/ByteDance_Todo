@@ -62,11 +62,11 @@ export default defineComponent({
             font-size: 26px;
             margin-left: 20px;
             font-family: PingFang-Regular;
-            color: rgba(@cardColorMain, 0.9);
+            color: #fff
         }
         .user {
             margin-left: 30px;
-            color: rgba(@cardColorMain, 0.9);
+            color: #fff;
             background-color: rgba(@cardColorMain, 0.3);
             padding: 15px;
             border-radius: 10px;
@@ -74,7 +74,7 @@ export default defineComponent({
             .icon-user {
                 width: 26px;
                 height: 26px;
-                color: rgba(@cardColorMain, 0.9);
+                color: #fff;
             }
         }
         .user:hover {

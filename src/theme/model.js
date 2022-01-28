@@ -15,6 +15,6 @@ export const themes = {
       cardColorWrapper: `${30}, ${30},${30}`,
       cardColorMain: `${50}, ${50},${50}`,
       cardTextColorMain:`${255}, ${255},${255}`,
-      cardTextColorSub:`${255}, ${255},${255}`,
+      cardTextColorSub:`${200}, ${200},${200}`,
     },
   };

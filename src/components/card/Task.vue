@@ -23,12 +23,6 @@
             <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
             <span>描述</span>
         </div>
-        <!-- <textarea
-            class="text"
-            v-model="task.description"
-            placeholder="添加详细描述..."
-            @change="updateTaskProperty($event, 'description')"
-        ></textarea>-->
         <a-textarea
             default-value="添加详细描述..."
             class="text"
@@ -149,7 +143,7 @@ export default defineComponent({
             background-color: transparent;
             border: none;
             border-color: transparent;
-            color: rgb(23, 43, 77);
+            color: rgba(@cardTextColorMain, 0.8);
             padding: 20px;
             padding-bottom: 10px;
             font-size: 30px;
@@ -205,6 +199,7 @@ export default defineComponent({
         background-color: transparent;
         margin-left: 40px;
         width: 600px;
+        color: rgba(@cardTextColorSub, 1);
         font-size: 20px;
     }
     .text:hover {

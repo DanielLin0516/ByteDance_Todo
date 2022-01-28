@@ -336,7 +336,7 @@ export default defineComponent({
             align-items: center;
             width: 380px;
             background-color: rgba(@cardColorWrapper, 0.45);
-            // color: white;
+            color: rgba(@cardTextColorSub, 1);;
             margin-top: 5px;
             border: none;
             outline: 0;

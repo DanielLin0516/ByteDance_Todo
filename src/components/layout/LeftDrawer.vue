@@ -80,7 +80,7 @@ export default defineComponent({
         position: absolute;
         left: 10px;
         top: 30px;
-        color: rgba(@cardColorMain, 0.5);
+        color: rgba(255,255,255, 0.4);
         cursor: pointer;
     }
 }
@@ -107,10 +107,27 @@ export default defineComponent({
         cursor: pointer;
     }
 }
+::v-deep .arco-icon-hover::before {
+    background: #fff
+}
 ::v-deep .arco-drawer {
     width: 250px !important;
 }
-.drawer {
-    background-color: rgba(@cardTextColorMain, 0.45) !important;
+::v-deep .drawer {
+    background-color: rgba(@cardTextColorMain, 0.16);
+}
+::v-deep .arco-drawer-body {
+    color: rgba(@cardTextColorSub, 1);
+    background-color: rgba(@cardColorWrapper, 1);
+}
+::v-deep .arco-drawer-header {
+    background-color: rgba(@cardColorWrapper, 1);
+    .arco-drawer-title {
+         color: rgba(@cardTextColorMain, 1);
+    }
+}
+::v-deep .arco-drawer-footer {
+    background-color: rgba(@cardColorWrapper, 1);
+    color: rgba(@cardTextColorMain, 1);
 }
 </style>
