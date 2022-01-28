@@ -31,6 +31,7 @@ export default defineComponent({
 .bgc {
   height: 100vh;
   width: 100vw;
+  color: rgba(@cardTextColorMain, 1);
   background-color: rgba(@primaryColor, 1);
 }
 </style>

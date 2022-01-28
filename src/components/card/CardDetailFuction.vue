@@ -42,12 +42,13 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+
 .sidebar {
     display: flex;
     flex-direction: column;
     text-align: left;
-    color: #575a5f;
+    color: rgba(@cardTextColorSub, 1);
     position: absolute;
     right: 50px;
     top: 120px;
@@ -56,8 +57,8 @@ export default defineComponent({
     font-weight: 700;
 }
 .button-link {
-    color: #18181a;
-    background-color: #091e420a;
+    color: rgba(@cardTextColorMain, 1);
+    background-color: rgba(@cardColorWrapper, 1);
     border-radius: 3px;
     box-sizing: border-box;
     cursor: pointer;
@@ -73,11 +74,11 @@ export default defineComponent({
     transition-timing-function: ease;
 }
 .button-link:hover {
-    background: #c8cacd;
+    background: rgba(@cardTextColorSub, 0.4);
 }
 .sidebar-text {
     margin-left: 10px;
     font-size: 16px;
-    color: #575a5f;
+    color: rgba(@cardTextColorMain, 1);
 }
 </style>

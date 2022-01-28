@@ -107,12 +107,12 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .flex {
     height: 750px;
     border-radius: 10px;
     width: 800px;
-    background-color: #f4f5f7;
+    background-color: rgba(@cardColorMain, 1);
     padding: 10px;
     margin: 50px auto;
     display: flex;
@@ -127,11 +127,11 @@ export default defineComponent({
         width: 40px;
         border-radius: 50%;
         padding: 10px;
-        color: rgba(0, 0, 0, 0.5);
+        color: rgba(@cardTextColorMain, 0.5);
         cursor: pointer;
     }
     .icon-close-circle:hover {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(@cardTextColorMain, 0.1);
     }
     .header {
         // display: flex;
@@ -159,7 +159,7 @@ export default defineComponent({
         .listName {
             margin-left: 60px;
             text-align: left;
-            color: #444546;
+            color: rgba(@cardTextColorMain, 0.8);
         }
         .listNameSpan {
             margin: 0 5px;
@@ -172,7 +172,7 @@ export default defineComponent({
             margin-left: 20px;
             font-size: 18px;
             font-weight: 500;
-            color: rgb(94, 108, 132);
+            color: rgba(@cardTextColorMain, 0.7);
             margin-bottom: 10px;
         }
         div {
@@ -182,7 +182,7 @@ export default defineComponent({
             border-radius: 10px;
         }
         div:hover {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(@cardTextColorMain, 0.1);
         }
     }
     .des {
@@ -208,7 +208,7 @@ export default defineComponent({
         font-size: 20px;
     }
     .text:hover {
-        background-color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(@cardColorWrapper, 0.8);
     }
 }
 </style>

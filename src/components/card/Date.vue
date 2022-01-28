@@ -69,9 +69,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
-$color: red;
-$white: rgb(255, 255, 255);
+<style lang="less" scoped>
 .date {
     display: flex;
     flex-direction: column;
@@ -82,8 +80,8 @@ $white: rgb(255, 255, 255);
     border-radius: 5px;
     top: 0px;
     right: -200px;
-    background-color: $white;
-    border-left: 1px solid rgba(0, 0, 0, 0.3);
+    background-color: rgba(@cardColorMain, 1);
+    border-left: 1px solid rgba(@cardTextColorMain, 0.3);
     .header {
         display: flex;
         height: 80px;
@@ -91,21 +89,21 @@ $white: rgb(255, 255, 255);
         align-items: center;
         justify-content: center;
         position: relative;
-        border-bottom: 1px solid black;
+        border-bottom: 1px solid rgba(@cardTextColorMain, 1);
         margin-bottom: 30px;
         .icon-close {
             height: 40px;
             width: 40px;
             border-radius: 50%;
             padding: 10px;
-            color: rgba(0, 0, 0, 0.5);
+            color: rgba(@cardTextColorMain, 0.5);
             cursor: pointer;
             position: absolute;
             right: 0px;
             top: 0px;
         }
         .icon-close:hover {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(@cardTextColorMain, 0.1);
         }
     }
     span {

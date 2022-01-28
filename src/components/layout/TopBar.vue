@@ -62,14 +62,14 @@ export default defineComponent({
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 @import "../card/scrollCss/scroll.scss";
 .top-bar {
     position: relative;
     display: flex;
     height: 80px;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.45);
+    background-color: rgba(@cardTextColorMain, 0.45);
     backdrop-filter: blur(10px);
     .left-bar {
         height: 100%;
@@ -85,19 +85,19 @@ export default defineComponent({
             margin-left: 50px;
             font-family: "PingFang-Regular";
             font-size: 24px;
-            color: white;
+            color: rgba(@cardColorMain, 1);
             line-height: 20px;
             border-radius: 5px;
             padding: 20px;
             cursor: pointer;
-            border: 1px solid white;
+            border: 1px solid rgba(@cardColorMain, 1);
             width: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .link:hover {
-            background-color: rgba(0, 0, 0, 0.45);
+            background-color: rgba(@cardTextColorMain, 0.45);
         }
     }
     .right-bar {
@@ -109,7 +109,7 @@ export default defineComponent({
         .notifacte {
             width: 50px;
             height: 50px;
-            color: white;
+            color: rgba(@cardColorMain, 1);
             margin-right: 35px;
             cursor: pointer;
             position: relative;
@@ -124,7 +124,7 @@ export default defineComponent({
             min-height: 100px;
             max-height: 700px;
             border-radius: 10px;
-            background-color: rgb(252, 246, 246);
+            background-color: rgba(@cardColorWrapper, 1);
             z-index: 10000;
             display: flex;
             flex-direction: column;
@@ -132,12 +132,12 @@ export default defineComponent({
             padding: 20px;
             transition: all 0.5s ease-in-out;
             .event {
-                font-size: 20px;
+                font-size: 200px;
                 padding: 10px;
                 flex-shrink: 0;
                 width: 700px;
                 height: 50px;
-                background-color: rgba(247, 165, 165, 0.2);
+                background-color: rgba(@cardColorWrapper, 0.2);
                 border-radius: 10px;
                 margin-top: 10px;
                 margin-bottom: 10px;

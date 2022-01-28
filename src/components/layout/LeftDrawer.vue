@@ -64,13 +64,13 @@ export default defineComponent({
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .left-drawer-sitck {
     width: 30px;
     height: calc(100% - 80px);
     position: relative;
-    background-color: rgba(255, 255, 255, 0.16);
-    border-right: 1px solid rgba(252, 245, 245, 0.5);
+    background-color: rgba(@cardColorMain, 0.16);
+    border-right: 1px solid rgba(@cardColorWrapper, 0.5);
     display: flex;
     float: left;
     cursor: pointer;
@@ -80,20 +80,20 @@ export default defineComponent({
         position: absolute;
         left: 10px;
         top: 30px;
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(@cardColorMain, 0.5);
         cursor: pointer;
     }
 }
 .left-drawer-sitck:hover {
-    background-color: rgba(252, 249, 249, 0.552);
+    background-color: rgba(@cardColorWrapper, 0.552);
 }
 
 .left-drawer-stick-open   {
     width: 250px !important;
     height: calc(100% - 80px);
     position: relative;
-    background-color: rgba(255, 255, 255, 0.16);
-    border-right: 1px solid rgba(252, 245, 245, 0.5);
+    background-color: rgba(@cardColorMain, 0.16);
+    border-right: 1px solid rgba(@cardColorWrapper, 0.5);
     display: flex;
     cursor: pointer;
     float: left;
@@ -103,7 +103,7 @@ export default defineComponent({
         position: absolute;
         left: 380px;
         top: 20px;
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(@cardColorMain, 0.7);
         cursor: pointer;
     }
 }
@@ -111,6 +111,6 @@ export default defineComponent({
     width: 250px !important;
 }
 .drawer {
-    background-color: rgba(0, 0, 0, 0.45) !important;
+    background-color: rgba(@cardTextColorMain, 0.45) !important;
 }
 </style>

@@ -23,7 +23,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .wrapper {
     height: 100vh;
     width: 100vw;
@@ -34,7 +34,8 @@ export default defineComponent({
         display: flex;
         height: 80px;
         width: 100%;
-        background-color: rgba(0, 0, 0, 0.45);
+        // background-color: rgba(0, 0, 0, 0.45);
+        background-color: rgba(@cardTextColorMain, 0.45);
         backdrop-filter: blur(10px);
         .left-bar {
             height: 100%;
@@ -50,19 +51,19 @@ export default defineComponent({
                 margin-left: 50px;
                 font-family: "PingFang-Regular";
                 font-size: 24px;
-                color: white;
+                color: rgba(@cardTextColorMain, 1);
                 line-height: 20px;
                 border-radius: 5px;
                 padding: 20px;
                 cursor: pointer;
-                border: 1px solid white;
+                border: 1px solid rgba(@cardTextColorMain, 1);
                 width: 100px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
             .link:hover {
-                background-color: rgba(0, 0, 0, 0.45);
+                background-color: rgba(@cardTextColorMain, 0.45);
             }
         }
         .right-bar {
@@ -74,7 +75,7 @@ export default defineComponent({
             .notifacte {
                 width: 50px;
                 height: 50px;
-                color: white;
+                color: rgba(@cardTextColorMain, 1);
                 margin-right: 35px;
                 cursor: pointer;
             }

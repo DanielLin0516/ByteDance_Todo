@@ -1,9 +1,18 @@
 // 默认的主题颜色
 @primaryColor: var(--primaryColor, #000);
 @primaryTextColor: var(--primaryTextColor, green);
+@cardColorWrapper: var(--cardColorWrapper, rgb(122, 120, 120));
+@cardColorMain: var(--cardColorMain, rgb(255, 255, 255));
+@cardTextColorMain: var(--cardTextColorMain, rgb(11, 11, 11));
+@cardTextColorSub: var(--cardTextColorSub, rgb(128, 128, 128));
+
 // 导出变量
 :export {
   name: "less";
   primaryColor: @primaryColor;
   primaryTextColor: @primaryTextColor;
+  cardColorWrapper:@cardColorWrapper;
+  cardColorMain: @cardColorMain;
+  cardTextColorMain: @cardTextColorMain;
+  cardTextColorSub: @cardTextColorSub;
 }

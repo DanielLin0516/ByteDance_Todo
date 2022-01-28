@@ -44,7 +44,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 @import url('../card/scrollCss/scroll.scss');
 .small-bar {
     display: flex;
@@ -62,28 +62,28 @@ export default defineComponent({
             font-size: 26px;
             margin-left: 20px;
             font-family: PingFang-Regular;
-            color: rgba($color: #ffffff, $alpha: 0.9);
+            color: rgba(@cardColorMain, 0.9);
         }
         .user {
             margin-left: 30px;
-            color: rgba($color: #ffffff, $alpha: 0.9);
-            background-color: rgba(255, 255, 255, 0.3);
+            color: rgba(@cardColorMain, 0.9);
+            background-color: rgba(@cardColorMain, 0.3);
             padding: 15px;
             border-radius: 10px;
             cursor: pointer;
             .icon-user {
                 width: 26px;
                 height: 26px;
-                color: rgba($color: #ffffff, $alpha: 0.9);
+                color: rgba(@cardColorMain, 0.9);
             }
         }
         .user:hover {
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(@cardColorMain, 0.5);
         }
         .change {
             margin-left: 30px;
-            color: black;
-            background-color: white;
+            color: rgba(@cardTextColorMain, 1);
+            background-color: rgba(@cardColorMain, 1);;
             padding: 15px;
             border-radius: 10px;
             cursor: pointer;
@@ -91,20 +91,20 @@ export default defineComponent({
                 margin-right: 10px;
                 width: 26px;
                 height: 26px;
-                color: black;
+                color: rgba(@cardTextColorMain, 1);
             }
             .changr-text {
-                color: black;
+                color: rgba(@cardTextColorMain, 1);
             }
             .changr-text:hover{
-                color: white;
+                color: rgba(@cardColorMain, 1);
             }
         }
         .change:hover {
-            background-color: black;
-            color: white;
+            background-color: rgba(@cardTextColorMain, 1);
+            color: rgba(@cardColorMain, 1);
             .icon-moon-fill {
-                color: white;
+                color: rgba(@cardColorMain, 1);
             }
         }
     }

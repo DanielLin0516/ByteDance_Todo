@@ -10,15 +10,16 @@
             </div>
         </header>
         <main>
-            <div class="main-input-wrapper">
+            <div>
                 <a-avatar :style="{ backgroundColor: '#3370ff', float: 'left' }">
                     <IconUser />
                 </a-avatar>
                 <a-input
-                    :style="{ width: '320px', background: '#fff', margin: '5px 10px 0 10px' }"
+                    :style="{ width: '300px', margin: '5px 10px 0 10px' }"
                     placeholder="添加评论..."
                     allow-clear
                     v-model="curComment"
+                    class="input"
                 />
             </div>
             <div class="main-action-item"></div>
@@ -34,7 +35,7 @@
                             <span class="action-username">{{ action.username }}</span>
                             {{ action.action }}
                         </div>
-                        <div action-timer>{{ action.actionTime }}</div>
+                        <div class="action-timer">{{ action.actionTime }}</div>
                     </div>
                 </div>
             </div>
@@ -69,7 +70,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .addFile-container {
     margin: 30px 10px;
 }
@@ -84,13 +85,17 @@ export default defineComponent({
 }
 main {
     margin: 15px auto;
+    .input {
+        background: rgba(@cardColorMain, 1);
+        color: rgba(@cardTextColorMain, 1);
+    }
 }
 .actionItem {
     display: flex;
     align-items: center;
 }
 .action {
-    width: 320px;
+    width: 400px;
     height: 40px;
     margin: 15px;
     .action-header {
@@ -102,7 +107,7 @@ main {
         display: block;
     }
     .action-timer {
-        color: rgb(112, 109, 109);
+        color: rgba(@cardTextColorSub, 1);
     }
 }
 </style>

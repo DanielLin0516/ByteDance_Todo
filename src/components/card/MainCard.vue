@@ -213,7 +213,7 @@ export default defineComponent({
     }
 })
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 @import url("./scrollCss/scroll.scss");
 .card-wrapper {
     width: max-content;
@@ -230,7 +230,7 @@ export default defineComponent({
         margin-top: 5px;
         margin-left: 20px;
         margin-right: 20px;
-        background-color: rgb(235, 236, 240);
+        background-color: rgba(@cardColorWrapper, 1);
         border-radius: 10px;
         cursor: pointer;
         padding: 30px 20px 20px 20px;
@@ -246,18 +246,18 @@ export default defineComponent({
         .card-menu {
             height: auto;
             width: 350px;
-            background-color: white;
+            background-color: rgba(@cardColorMain, 1);
             padding: 10px;
             margin-top: 10px;
             margin-bottom: 10px;
             border-radius: 10px;
-            box-shadow: 4px 2px 2px 1px rgba(0, 0, 0, 0.2);
+            box-shadow: 4px 2px 2px 1px rgba(@cardTextColorMain, 0.2);
             cursor: pointer;
             font-size: 24px;
-            border-bottom: 2px solid rgba(117, 116, 116, 0.45);
+            border-bottom: 2px solid rgba(@cardTextColorSub, 0.45);
             .des {
                 font-size: 12px;
-                color: grey;
+                color: rgba(@cardTextColorMain, 0.5);
                 margin-top: 5px;
                 font-style: italic;
             }
@@ -270,7 +270,7 @@ export default defineComponent({
                 background-color: rgb(242, 214, 0);
                 padding: 5px;
                 border-radius: 10px;
-                color: white;
+                color: rgba(@cardColorMain, 1);
                 .time1 {
                     display: flex;
                     flex-direction: column;
@@ -291,7 +291,7 @@ export default defineComponent({
             }
         }
         .card-menu:hover {
-            background-color: rgba(255, 255, 255, 0.45);
+            background-color: rgba(@cardColorMain, 0.45);
         }
         .kanban-dropzon {
             height: 10px;
@@ -313,7 +313,7 @@ export default defineComponent({
         padding: 10px;
     }
     .new-button:hover {
-        background-color: rgba(255, 250, 250, 0.4);
+        background-color: rgba(@cardColorMain, 0.4);
     }
 
     .task-bg {
@@ -322,7 +322,7 @@ export default defineComponent({
         right: 0px;
         top: 0px;
         bottom: 0px;
-        background-color: rgba(7, 7, 7, 0.45);
+        background-color: rgba(@cardTextColorMain, 0.45)
     }
     .btn-add {
         float: left;
@@ -335,14 +335,14 @@ export default defineComponent({
             display: flex;
             align-items: center;
             width: 380px;
-            background-color: rgba(236, 219, 219, 0.44);
+            background-color: rgba(@cardColorWrapper, 0.45);
             // color: white;
             margin-top: 5px;
             border: none;
             outline: 0;
         }
         .add-item:hover {
-            background-color: rgba(255, 250, 250, 0.4);
+            background-color:  rgba(@cardColorMain, 0.40);
         }
     }
 }
