@@ -15,7 +15,7 @@
                     <IconUser />
                 </a-avatar>
                 <a-input
-                    :style="{ width: '300px', margin: '5px 10px 0 10px' }"
+                    :style="{ width: '520px', margin: '5px 10px 0 10px' }"
                     placeholder="添加评论..."
                     allow-clear
                     v-model="curComment"
@@ -95,7 +95,7 @@ main {
     align-items: center;
 }
 .action {
-    width: 400px;
+    width: 500px;
     height: 40px;
     margin: 15px;
     .action-header {
