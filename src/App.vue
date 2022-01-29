@@ -1,31 +1,28 @@
 <template>
   <div class="bgc">
-    <top-bar></top-bar>
     <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch, onMounted } from 'vue';
-import { useStore } from 'vuex';
-import { useRoute } from 'vue-router'
-import TopBar from './components/layout/TopBar.vue';
-import { setTheme } from './theme/theme'
+import TopBar from "./components/layout/TopBar.vue";
+import { defineComponent, onMounted } from "vue";
+import { setTheme } from "./theme/theme";
 
 export default defineComponent({
-  name: 'App',
+  name: "App",
   components: {
-    TopBar
+    TopBar,
   },
-  setup(props) {
+  setup() {
     const init = () => {
-      setTheme("default")
-    }
-    onMounted(() => { init() })
+      setTheme("default");
+    };
+    onMounted(() => {
+      init();
+    });
   },
-  
-})
-
+});
 </script>
 
 <style lang="less" scoped>

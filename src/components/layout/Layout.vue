@@ -1,91 +1,71 @@
 <template>
-    <left-drawer />
-    <small-bar />
+  <TopBar></TopBar>
+  <!-- 抽屉 -->
+  <LeftDrawer></LeftDrawer>
+  <div class="main-area">
+    <div class="right">
+      <SmallBar></SmallBar>
+      <div class="right_down">
+        <MainCard></MainCard>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script lang="ts">
-import LeftDrawer from './LeftDrawer.vue'
-import SmallBar from './SmallBar.vue'
-import MainCard from '../card/MainCard.vue'
-import { defineComponent } from 'vue';
+import TopBar from "@/components/layout/TopBar.vue";
+import LeftDrawer from "./LeftDrawer.vue";
+import MainCard from "../card/MainCard.vue";
+import SmallBar from "@/components/layout/SmallBar.vue";
+import { IconUser, IconMoonFill } from "@arco-design/web-vue/es/icon";
+import { defineComponent, ref } from "vue";
+import { setTheme } from "../../theme/theme";
 export default defineComponent({
-    name: 'TopBar',
-    components: {
-        LeftDrawer,
-        SmallBar,
-    },
-    setup() {
-    }
-    
-})
+  name: "Layout",
+  components: {
+    IconUser,
+    IconMoonFill,
+    TopBar,
+    MainCard,
+    LeftDrawer,
+    SmallBar,
+  },
+  setup() {
+    const isDark = ref(false);
+    const changeTheme = (e: any) => {
+      if (!isDark.value) {
+        e.currentTarget.innerText = "切换默认模式";
+        setTheme("dark");
+      } else {
+        e.currentTarget.innerText = "切换夜间模式";
+        setTheme("default");
+      }
+      isDark.value = !isDark.value;
+    };
+    return { changeTheme };
+  },
+});
 </script>
 
 <style lang="less" scoped>
-.wrapper {
-    height: 100vh;
-    width: 100vw;
-    background-color: orange;
+@import url("../card/scrollCss/scroll.scss");
+.main-area {
+  position: relative;
+  display: flex;
+  .right {
+    position: relative;
+    height: calc(100vh - 80px);
+    width: 100%;
+    // left: 100px;
 
-    .top-bar {
-        position: relative;
-        display: flex;
-        height: 80px;
-        width: 100%;
-        // background-color: rgba(0, 0, 0, 0.45);
-        background-color: rgba(@cardTextColorMain, 0.45);
-        backdrop-filter: blur(10px);
-        .left-bar {
-            height: 100%;
-            width: 50%;
-            display: flex;
-            align-items: center;
-            .icon-byte {
-                margin-left: 50px;
-                width: 50px;
-                height: 50px;
-            }
-            .link {
-                margin-left: 50px;
-                font-family: "PingFang-Regular";
-                font-size: 24px;
-                color: rgba(@cardTextColorMain, 1);
-                line-height: 20px;
-                border-radius: 5px;
-                padding: 20px;
-                cursor: pointer;
-                border: 1px solid rgba(@cardTextColorMain, 1);
-                width: 100px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .link:hover {
-                background-color: rgba(@cardTextColorMain, 0.45);
-            }
-        }
-        .right-bar {
-            height: 100%;
-            width: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            .notifacte {
-                width: 50px;
-                height: 50px;
-                color: rgba(@cardTextColorMain, 1);
-                margin-right: 35px;
-                cursor: pointer;
-            }
-            .input {
-                margin-right: 40px;
-                width: 360px;
-                height: 50px;
-            }
-            .avatar {
-                margin-right: 35px;
-                width: 50px;
-                height: 50px;
-            }
-        }
+    .right_down {
+      position: relative;
+      width: 100%;
+      height: 90%;
+      background-color: rgb(247, 164, 164);
+      overflow-x: scroll;
+      overflow-y: hidden;
     }
+  }
 }
 </style>
