@@ -1,23 +1,19 @@
 <template>
-    <top-bar1 />
     <left-drawer />
     <small-bar />
 </template>
-
 <script lang="ts">
-import TopBar1 from './TopBar.vue'
 import LeftDrawer from './LeftDrawer.vue'
 import SmallBar from './SmallBar.vue'
+import MainCard from '../card/MainCard.vue'
 import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'TopBar',
     components: {
-        TopBar1,
         LeftDrawer,
-        SmallBar
+        SmallBar,
     },
     setup() {
-        console.log(456)
     }
     
 })

@@ -81,12 +81,11 @@ export default defineComponent({
             })
         }
         const close = () => {
-            router.push({ name: 'board' });
+            router.push({ name: 'Layout' });
         }
         const date = computed(() => {
             return {
                 'date': true,
-                
             }
         })
         return {

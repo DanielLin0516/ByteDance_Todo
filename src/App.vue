@@ -1,6 +1,7 @@
 <template>
   <div class="bgc">
-    <layout></layout>
+    <top-bar></top-bar>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -8,13 +9,13 @@
 import { defineComponent, computed, watch, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
-import Layout from './components/layout/Layout.vue';
+import TopBar from './components/layout/TopBar.vue';
 import { setTheme } from './theme/theme'
 
 export default defineComponent({
   name: 'App',
   components: {
-    Layout,
+    TopBar
   },
   setup(props) {
     const init = () => {

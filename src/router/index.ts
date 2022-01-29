@@ -3,17 +3,22 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: "/",
-      name:'board',
-      component: () => import("../components/card/MainCard.vue"),
-      children:[
+      path: '/',
+      name: 'Layout',
+      component: () => import('../components/layout/Layout.vue'),
+      children: [
         {
-          path:'task/:cid/:id',
-          name:'task',
+          path: 'task/:cid/:id',
+          name: 'task',
           component: () => import("../components/card/Task.vue")
         }
       ]
     },
+    {
+      path:'/Login',
+      name:'Login',
+      component:() => import('../view/Login.vue'),
+    }
   ],
 });
 export default router;

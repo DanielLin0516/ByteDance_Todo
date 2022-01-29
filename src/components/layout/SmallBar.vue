@@ -11,13 +11,13 @@
             </div>
         </div>
         <!-- 主要的卡片区域 -->
-        <router-view />
-        <!-- <main-card/> -->
+        <main-card></main-card>
+        <!-- <router-view /> -->
     </div>
 </template>
 
 <script lang="ts">
-// import MainCard from '../card/MainCard.vue'
+import MainCard from '../card/MainCard.vue'
 import { IconUser, IconMoonFill } from '@arco-design/web-vue/es/icon';
 import { defineComponent, ref } from 'vue';
 import { setTheme } from '../../theme/theme'
@@ -25,7 +25,8 @@ export default defineComponent({
     name: 'SmallBar',
     components: {
         IconUser,
-        IconMoonFill
+        IconMoonFill,
+        MainCard
     },
     setup() {
         const isDark = ref(false)

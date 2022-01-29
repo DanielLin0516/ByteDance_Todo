@@ -116,7 +116,7 @@ export default defineComponent({
             router.push({ name: 'task', params: { cid: columnID, id: task.id } });
         }
         const close = () => {
-            router.push({ name: 'board' });
+            router.push({ name: 'Layout' });
         }
         const createTask = (e: any, tasks: any) => {
             var timestamp = getTimeStamp()
@@ -322,7 +322,7 @@ export default defineComponent({
         right: 0px;
         top: 0px;
         bottom: 0px;
-        background-color: rgba(@cardTextColorMain, 0.45)
+        background-color: rgba(@cardTextColorMain, 0.45);
     }
     .btn-add {
         float: left;
@@ -336,13 +336,13 @@ export default defineComponent({
             align-items: center;
             width: 380px;
             background-color: rgba(@cardColorWrapper, 0.45);
-            color: rgba(@cardTextColorSub, 1);;
+            color: rgba(@cardTextColorSub, 1);
             margin-top: 5px;
             border: none;
             outline: 0;
         }
         .add-item:hover {
-            background-color:  rgba(@cardColorMain, 0.40);
+            background-color: rgba(@cardColorMain, 0.4);
         }
     }
 }

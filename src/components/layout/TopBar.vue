@@ -5,7 +5,6 @@
             <span class="link">项目</span>
         </div>
         <div class="right-bar">
-
             <a-input-search placeholder="Please enter something" class="input" />
             <icon-notification class="notifacte" @click="show = !show" />
             <div class="changeEvent" v-if="show">
@@ -14,10 +13,9 @@
                     class="event"
                     v-for="event in store.state.userEvent"
                     :key="event.id"
-                >{{ event.content }}发生改变，请查收
-                </div>
+                >{{ event.content }}发生改变，请查收</div>
             </div>
-            <a-avatar :style="{ backgroundColor: '#3370ff' }" class="avatar">
+            <a-avatar :style="{ backgroundColor: '#3370ff' }" class="avatar" @click="toboard">
                 <IconUser />
             </a-avatar>
         </div>
@@ -27,7 +25,7 @@
 import { IconBytedanceColor, IconNotification, IconUser } from '@arco-design/web-vue/es/icon';
 import { defineComponent, computed, watch, ref } from 'vue';
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 export default defineComponent({
     name: 'TopBar',
     components: {
@@ -38,10 +36,14 @@ export default defineComponent({
     setup(props) {
         const store = useStore();
         const route = useRoute();
+        const router = useRouter();
         const task = computed(() => {
             return store.getters.getTask(route.params.id);
         })
-        const show = ref(false)
+        const show = ref(false);
+        const toboard = ()=> {
+            router.push({ name: 'Login' });
+        }
         watch(task, (newVal, oldVal) => {
             if (oldVal && newVal) {
                 store.state.userEvent.unshift({
@@ -55,7 +57,8 @@ export default defineComponent({
         }, { deep: true })
         return {
             show,
-            store
+            store,
+            toboard
         }
     }
 })

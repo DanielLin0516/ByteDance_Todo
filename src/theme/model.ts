@@ -1,6 +1,6 @@
 // 一套默认主题以及一套暗黑主题
 // 一套默认主题以及一套暗黑主题
-export const themes = {
+export const themes:any = {
     default: {
       primaryColor: `${74}, ${144},${226}`,
       cardColorWrapper: `${235}, ${236},${240}`,

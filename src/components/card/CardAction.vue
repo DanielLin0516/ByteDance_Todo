@@ -15,7 +15,7 @@
                     <IconUser />
                 </a-avatar>
                 <a-input
-                    :style="{ width: '520px', margin: '5px 10px 0 10px' }"
+                    :style="{margin: '5px 10px 0 10px' }"
                     placeholder="添加评论..."
                     allow-clear
                     v-model="curComment"
@@ -73,6 +73,7 @@ export default defineComponent({
 <style scoped lang="less">
 .addFile-container {
     margin: 30px 10px;
+    width: 760px;
 }
 .addFile-header {
     font-size: 30px;
@@ -88,6 +89,7 @@ main {
     .input {
         background: rgba(@cardColorMain, 1);
         color: rgba(@cardTextColorMain, 1);
+        width: 450px !important;
     }
 }
 .actionItem {
