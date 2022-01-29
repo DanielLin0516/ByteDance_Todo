@@ -239,11 +239,6 @@ export default defineComponent({
       const flag = ("" + e.deltaY)[0];
       let elP = el.parentElement;
       flag === "1" ? (elP.scrollLeft += 30) : (elP.scrollLeft -= 50);
-      //   if (flag === "1") {
-      //     el.parentElement.scrollLeft += 30;
-      //   } else {
-      //     el.parentElement.scrollLeft -= 50;
-      //   }
     };
     return {
       store,

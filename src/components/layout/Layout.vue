@@ -56,13 +56,11 @@ export default defineComponent({
     position: relative;
     height: calc(100vh - 80px);
     width: 100%;
-    // left: 100px;
 
     .right_down {
       position: relative;
       width: 100%;
       height: 90%;
-      background-color: rgb(247, 164, 164);
       overflow-x: scroll;
       overflow-y: hidden;
     }
