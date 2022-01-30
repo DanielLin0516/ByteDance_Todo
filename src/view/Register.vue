@@ -6,19 +6,22 @@
                 <span>Todo</span>
             </header>
             <div class="login">
-                <span class="title">登录到Todo</span>
+                <span class="title">注册您的账户</span>
                 <form class="form">
+                    <input type="text" name="fullname" placeholder="输入你的全名" class="fullname" v-model="form.fullname"/>
                     <input
                         type="text"
                         name="username"
                         style="display: block;"
+                        placeholder="输入你的邮箱"
                         class="username"
                         v-model="form.username"
                     />
-                    <input type="password" name="password" class="password" v-model="form.password" />
-                    <input class="submit" value="登录" @click="login" />
+                    <input type="text" name="verifyCode" class="password" placeholder="输入你的邮箱验证码" v-model="form.verifyCode"/>
+                    <input type="password" name="password" placeholder="输入你的密码" class="password" v-model="form.password"/>
+                    <input class="submit" value="注册" @click="register"/>
                 </form>
-                <router-link to="Register" class="rebuilt">注册新账号</router-link>
+                <router-link to="Login" class="rebuilt">已有账号？登录</router-link>
             </div>
         </div>
     </div>
@@ -28,32 +31,35 @@
 import { IconBytedanceColor } from '@arco-design/web-vue/es/icon';
 import { Message } from '@arco-design/web-vue';
 import { useStore } from 'vuex'
-import { reactive, ref, defineComponent, toRefs, toRef } from 'vue';
-import { getUser } from '../axios/api'
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
+import { reactive, ref, defineComponent } from 'vue';
+import {registerUser} from '../axios/api'
+import router from '@/router';
 export default defineComponent({
     components: {
         IconBytedanceColor
     },
     setup(props) {
-        const router = useRouter();
         const form = reactive({
+            fullname:"",
             username: "",
+            verifyCode:"",
             password: ""
         })
-        async function login() {
+        const json = JSON.stringify(form);
+        async function register() {
             try {
-                const res = await getUser(form);
-                localStorage.setItem('token', `${res.token}`);
-                Message.success({content:"登陆成功！"});
-                router.push("/Layout");
+                const res = await registerUser(form);
+                Message.success({content:"注册成功！"});
+                localStorage.setItem('token',`${res}`);
+                router.push('/Layout');
             } catch (error) {
-                Message.error({content:"账号或密码错误！重新输入"});
-            }
+                Message.error({content:"账号已经存在"})
+            }  
         }
-        return {
+        return{
             form,
-            login
+            register
         }
     }
 })
@@ -110,11 +116,20 @@ export default defineComponent({
                     outline: none;
                     border: 5px solid rgb(76, 154, 255);
                 }
+                .fullname {
+                    width: 100%;
+                    border: 5px solid #dfe1e6;
+                    background-color: rgb(232, 240, 254);
+                    height: 60px;
+                    border-radius: 5px;
+                    margin-bottom: 40px;
+                    font-size: 24px;
+                }
                 .username {
                     width: 100%;
                     border: 5px solid #dfe1e6;
                     background-color: rgb(232, 240, 254);
-                    height: 80px;
+                    height: 60px;
                     border-radius: 5px;
                     margin-bottom: 40px;
                     font-size: 24px;
@@ -123,7 +138,7 @@ export default defineComponent({
                     width: 100%;
                     border: 5px solid #dfe1e6;
                     background-color: rgb(232, 240, 254);
-                    height: 80px;
+                    height: 60px;
                     border-radius: 5px;
                     font-size: 24px;
                     margin-bottom: 30px;
@@ -133,8 +148,8 @@ export default defineComponent({
                     background-color: rgb(90, 172, 68);
                     height: 60px;
                     border-radius: 5px;
-                    text-align: center;
                     color: white;
+                    text-align: center;
                     font-size: 24px;
                     font-weight: 800;
                     border: none;

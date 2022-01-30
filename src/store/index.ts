@@ -5,6 +5,7 @@ import { saveStatePlugins, uuid, timetrans, getTimeStamp } from "./utils";
 export default createStore({
   plugins: [saveStatePlugins],
   state: {
+    token:'',
     board: defaultBoard,
     userEvent:[],
     isCardDetailShow: false,

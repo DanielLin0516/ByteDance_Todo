@@ -42,7 +42,7 @@ export default defineComponent({
         })
         const show = ref(false);
         const toboard = ()=> {
-            router.push({ name: 'Login' });
+            router.push({ name: 'Home' });
         }
         watch(task, (newVal, oldVal) => {
             if (oldVal && newVal) {
