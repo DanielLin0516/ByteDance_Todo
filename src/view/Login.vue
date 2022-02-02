@@ -50,7 +50,7 @@ export default defineComponent({
                 Message.success({content:"登陆成功！"});
                 router.push("/Layout/WorkPlace");
             } catch (error) {
-                Message.error({content:`${error}`});
+              console.trace(error);
             }
         }
         return {

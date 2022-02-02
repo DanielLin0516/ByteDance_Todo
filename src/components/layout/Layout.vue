@@ -26,6 +26,7 @@ export default defineComponent({
   },
   setup() {
     const isDark = ref(false);
+
     currentUser().then(res => {
       store.commit('USER_ID', res.userId);
     });

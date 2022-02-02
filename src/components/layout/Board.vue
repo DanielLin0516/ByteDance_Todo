@@ -17,6 +17,7 @@ import SmallBar from "@/components/layout/SmallBar.vue";
 
 import { defineComponent, ref } from "vue";
 import { setTheme } from "../../theme/theme";
+
 export default defineComponent({
   name: "Layout",
   components: {
