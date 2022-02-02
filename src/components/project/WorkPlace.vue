@@ -210,7 +210,6 @@ export default defineComponent({
     }
 
     onMounted(() => {
-
       getProduct().then((res) => {
         res.productList.forEach((item) => {
           productList.push(item);
