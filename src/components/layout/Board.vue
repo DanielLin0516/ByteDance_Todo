@@ -53,6 +53,7 @@ export default defineComponent({
         Message.success({ content: "获取页面成功！" })
         store.state.showInviteButton = showInvite.isOwner
         console.log(store.state.showInviteButton)
+        
         store.state.cardList = res.cardList;
         store.state.lists = res.lists;
         store.state.lists.forEach((item: any) => {

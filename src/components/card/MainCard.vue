@@ -5,7 +5,7 @@
       class="card-item"
       v-for="column of store.state.lists"
       :key="column.id"
-            draggable="true"
+      draggable="true"
       @drop="moveTaskOrColumn($event, column.items, column.id, undefined)"
       @dragover.prevent
       @dragenter.prevent
@@ -17,7 +17,7 @@
       <div
         v-for="task of column.items"
         :key="task.cardId"
-                draggable="true"
+        draggable="true"
         @dragstart="pickupTask($event, task.cardId, column.id)"
         @dragover.prevent
         @dragenter.prevent
@@ -34,7 +34,7 @@
               <div>{{ task.time.timePeriod[1] }}</div>
             </div>
             <icon-schedule class="time2" />
-          </div> -->
+          </div>-->
         </div>
         <div
           class="kanban-dropzon"

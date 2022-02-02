@@ -20,7 +20,7 @@ export default createStore({
   getters: {
     getTask(state) {
       return (id: any) => {
-        for (const column of state.board.columns) {
+        for (const column of state.lists) {
           for (const task of column.items) {
             if (task.id === id) {
               return task;
@@ -80,7 +80,7 @@ export default createStore({
       toTasks.splice(toTaskIndex,0,taskTOMove);
     },
     MOVE_COLUMN(state,{fromColumnIndex,toColumnIndex}) {
-      const columnList = state.board.columns;
+      const columnList = state.lists;
       const columnToMove = columnList.splice(fromColumnIndex,1)[0]
       columnList.splice(toColumnIndex, 0, columnToMove)
     },
