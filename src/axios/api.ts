@@ -8,7 +8,7 @@ import instance from "./request";
 export function getUser(obj: {
   username: String;
   password: String;
-}): Promise<{ token: String; userId: number }> {
+}): Promise<{ token: string; userId: number }> {
   return instance.post(
     `/login?username=${obj.username}&password=${obj.password}`
   );

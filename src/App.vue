@@ -25,7 +25,10 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+body {
+  font-size: 24px !important;
+}
 .bgc {
   height: 100vh;
   width: 100vw;

@@ -39,7 +39,7 @@
               :style="{ background: choose.color }"
               v-for="choose in color"
               :key="choose.id"
-              @click="yourchoice(choose.color)"
+              @click="yourChoice(choose.color)"
             ></div>
           </div>
           <div
@@ -162,7 +162,7 @@ export default defineComponent({
     const enterInto = (id: string) => {
       router.push({ name: "Board", params: { productId: id } });
     };
-    let yourchoice = (c: string) => {
+    const yourChoice = (c: string) => {
       upSquare.value = c;
     };
 
@@ -174,8 +174,16 @@ export default defineComponent({
         await deleteProject(id);
         Message.success({ content: `删除成功！` });
         let res = await getProduct();
-        store.state.productList = res.productList;
-        store.state.shareProductList = res.shareProductList;
+        productList.length = 0;
+        shareProductList.length = 0;
+        res.productList.forEach((item) => {
+          productList.push(item);
+        });
+        res.shareProductList.forEach((item) => {
+          shareProductList.push(item);
+        });
+        store.commit("setProductList", res.productList);
+        store.commit("setShareProductList", res.shareProductList);
       } catch (error) {
         console.trace(error);
       }
@@ -194,18 +202,26 @@ export default defineComponent({
       try {
         obj.ownerId = store.state.userId;
         let res = await createProduct(obj);
-        store.state.productId = res.id;
-        Message.success({ content: "创建成功" });
-        getProduct().then((res) => {
-          store.state.productList = res.productList;
-          store.state.shareProductList = res.shareProductList;
+        const productRes = await getProduct();
+        // Vue3中清空响应式数组唯一方法
+        productList.length = 0;
+        shareProductList.length = 0;
+        productRes.productList.forEach((item) => {
+          productList.push(item);
         });
+        productRes.shareProductList.forEach((item) => {
+          shareProductList.push(item);
+        });
+        Message.success({ content: "创建成功" });
+        store.commit("setProductList", productRes.productList);
+        store.commit("setShareProductList", productRes.shareProductList);
         router.push({
           name: "Board",
-          params: { productId: store.state.productId },
+          params: { productId: res.id },
         });
       } catch (error) {
-        Message.error({ content: `${error}` });
+        // Message.error({ content: `${error}` });
+        console.trace(error);
       }
     }
 
@@ -217,27 +233,14 @@ export default defineComponent({
       res.shareProductList.forEach((item) => {
         shareProductList.push(item);
       });
-      store.state.productList = res.productList;
-      store.state.shareProductList = res.shareProductList;
+      store.commit("setProductList", res.productList);
+      store.commit("setShareProductList", res.shareProductList);
     });
-
-    // onMounted(() => {
-    //   getProduct().then((res) => {
-    //     res.productList.forEach((item) => {
-    //       productList.push(item);
-    //     });
-    //     res.shareProductList.forEach((item) => {
-    //       shareProductList.push(item);
-    //     });
-    //     store.state.productList = res.productList;
-    //     store.state.shareProductList = res.shareProductList;
-    //   });
-    // });
     return {
       create,
       show,
       color,
-      yourchoice,
+      yourChoice,
       productList,
       shareProductList,
       upSquare,
