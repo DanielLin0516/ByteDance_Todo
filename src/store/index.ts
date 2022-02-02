@@ -9,6 +9,8 @@ export default createStore({
     productList:"",
     shareProductList:"",
     productId:"",
+    cardList:"",
+    lists:"",
     board: defaultBoard,
     userEvent:[],
     isCardDetailShow: false,

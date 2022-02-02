@@ -14,9 +14,11 @@
 import LeftDrawer from "./LeftDrawer.vue";
 import MainCard from "../card/MainCard.vue";
 import SmallBar from "@/components/layout/SmallBar.vue";
-
-import { defineComponent, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { defineComponent, ref, computed } from "vue";
 import { setTheme } from "../../theme/theme";
+import { getProductInfo } from '../../axios/api';
+import { useStore } from "vuex";
 export default defineComponent({
   name: "Layout",
   components: {
@@ -26,6 +28,8 @@ export default defineComponent({
   },
   setup() {
     const isDark = ref(false);
+    const route = useRoute();
+    const store = useStore();
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";
@@ -36,7 +40,19 @@ export default defineComponent({
       }
       isDark.value = !isDark.value;
     };
-    return { changeTheme };
+    const productId = computed(() => {
+      return route.params.productId;
+    });
+    store.state.productId = productId;
+     getProductInfo(store.state.productId).then(res => {
+      console.log(res)
+      store.state.cardList = res.cardList;
+      store.state.lists = res.lists;
+     },error => {
+       console.log(error,'123')
+     })
+
+    return { changeTheme};
   },
 });
 </script>
