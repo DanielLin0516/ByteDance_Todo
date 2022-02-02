@@ -92,7 +92,7 @@ export default defineComponent({
       });
     };
     const close = () => {
-      router.push({ name: "Layout" });
+      router.push({ name: "/Layout/Board"});
     };
     const date = computed(() => {
       return {

@@ -45,6 +45,8 @@ export default defineComponent({
   opacity: 1;
   flex-direction: column;
   overflow-y: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
   overflow-x: visible;
   .second-bar {
     display: flex;

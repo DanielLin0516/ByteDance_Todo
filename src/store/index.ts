@@ -5,7 +5,10 @@ import { saveStatePlugins, uuid, timetrans, getTimeStamp } from "./utils";
 export default createStore({
   plugins: [saveStatePlugins],
   state: {
-    token:'',
+    userId:'',
+    productList:"",
+    shareProductList:"",
+    productId:"",
     board: defaultBoard,
     userEvent:[],
     isCardDetailShow: false,
@@ -34,6 +37,9 @@ export default createStore({
     }
   },
   mutations: {
+    USER_ID(state,value) {
+      state.userId = value;
+    },
     CREATE_TASK(state, { tasks,createAction, content }) {
       createAction.actionTime = timetrans(createAction.actionTime)
       tasks.push({

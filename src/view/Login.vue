@@ -31,6 +31,7 @@ import { useStore } from 'vuex'
 import { reactive, ref, defineComponent, toRefs, toRef } from 'vue';
 import { getUser } from '../axios/api'
 import { useRouter } from 'vue-router';
+import store from '@/store';
 export default defineComponent({
     components: {
         IconBytedanceColor
@@ -44,11 +45,12 @@ export default defineComponent({
         async function login() {
             try {
                 const res = await getUser(form);
+                store.commit('USER_ID', res.userId);
                 localStorage.setItem('token', `${res.token}`);
                 Message.success({content:"登陆成功！"});
-                router.push("/Layout");
+                router.push("/Layout/WorkPlace");
             } catch (error) {
-                Message.error({content:"账号或密码错误！重新输入"});
+                Message.error({content:`${error}`});
             }
         }
         return {

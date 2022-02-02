@@ -2,7 +2,7 @@
     <div class="top-bar">
         <div class="left-bar">
             <icon-bytedance-color class="icon-byte" />
-            <span class="link">项目</span>
+            <span class="link" @click="project">项目</span>
         </div>
         <div class="right-bar">
             <a-input-search placeholder="Please enter something" class="input" />
@@ -14,7 +14,7 @@
                     v-for="event in store.state.userEvent"
                     :key="event.id"
                 >{{ event.content }}发生改变，请查收</div>
-            </div>
+            </div> 
             <a-avatar :style="{ backgroundColor: '#3370ff' }" class="avatar" @click="toboard">
                 <IconUser />
             </a-avatar>
@@ -42,7 +42,11 @@ export default defineComponent({
         })
         const show = ref(false);
         const toboard = ()=> {
+            localStorage.removeItem('token');
             router.push({ name: 'Home' });
+        }
+        const project = () => {
+            router.push("/Layout/WorkPlace");
         }
         watch(task, (newVal, oldVal) => {
             if (oldVal && newVal) {
@@ -58,7 +62,8 @@ export default defineComponent({
         return {
             show,
             store,
-            toboard
+            toboard,
+            project
         }
     }
 })

@@ -1,4 +1,3 @@
-import { nextTick } from "process";
 import { createRouter, createWebHashHistory } from "vue-router";
 const router = createRouter({
   history: createWebHashHistory(),
@@ -24,10 +23,15 @@ const router = createRouter({
       component: () => import("../components/layout/Layout.vue"),
       children: [
         {
-          path: "task/:cid/:id",
-          name: "task",
-          component: () => import("../components/card/Task.vue"),
+          path: "Board/:productId",
+          name: "Board",
+          component: () => import("../components/layout/Board.vue"),
         },
+        {
+          path:"WorkPlace",
+          name:"WorkPlace",
+          component:() => import("../components/project/WorkPlace.vue")
+        }
       ],
     },
 

@@ -8,18 +8,61 @@
             <div class="login">
                 <span class="title">注册您的账户</span>
                 <form class="form">
-                    <input type="text" name="fullname" placeholder="输入你的全名" class="fullname" v-model="form.fullname"/>
                     <input
                         type="text"
-                        name="username"
-                        style="display: block;"
-                        placeholder="输入你的邮箱"
-                        class="username"
-                        v-model="form.username"
+                        name="fullname"
+                        placeholder="输入你的全名"
+                        class="fullname"
+                        v-model="form.fullname"
                     />
-                    <input type="text" name="verifyCode" class="password" placeholder="输入你的邮箱验证码" v-model="form.verifyCode"/>
-                    <input type="password" name="password" placeholder="输入你的密码" class="password" v-model="form.password"/>
-                    <input class="submit" value="注册" @click="register"/>
+                    <div class="email">
+                        <input
+                            type="text"
+                            name="username"
+                            style="display: block;"
+                            placeholder="输入你的邮箱"
+                            class="username"
+                            v-model="form.username"
+                        />
+                        <a-button
+                            type="outline"
+                            style="width: 7.7vw; margin-left: 1vw;height: 3vw;padding: 0.2vw;"
+                            @click="count"
+                            :loading="time.button_loading"
+                            :disabled="time.button_disabled"
+                        >{{ time.content }}</a-button>
+                    </div>
+                    <div class="rule">{{ rule }}</div>
+                    <input
+                        type="text"
+                        name="verifyCode"
+                        class="password"
+                        placeholder="输入你的邮箱验证码"
+                        v-model="form.verifyCode"
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="输入你的密码"
+                        class="password"
+                        v-model="form.password"
+                    />
+
+                    <a-button
+                        type="primary"
+                        @click="register"
+                        :disabled="disabled"
+                        style="
+                        width: 100%;
+                    background-color: rgb(90, 172, 68);
+                    height: 3.5vw;
+                    border-radius: 1vw;
+                    color: white;
+                    text-align: center;
+                    font-size: 1.5vw;
+                    font-weight: 400;
+                    border: none;"
+                    >注册</a-button>
                 </form>
                 <router-link to="Login" class="rebuilt">已有账号？登录</router-link>
             </div>
@@ -32,34 +75,90 @@ import { IconBytedanceColor } from '@arco-design/web-vue/es/icon';
 import { Message } from '@arco-design/web-vue';
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-import { reactive, ref, defineComponent } from 'vue';
-import {registerUser} from '../axios/api'
+import { reactive, ref, defineComponent, watch } from 'vue';
+import { registerUser } from '../axios/api'
 import router from '@/router';
+import { sendEmail } from '../axios/api'
 export default defineComponent({
     components: {
         IconBytedanceColor
     },
     setup(props) {
         const form = reactive({
-            fullname:"",
+            fullname: "",
             username: "",
-            verifyCode:"",
+            verifyCode: "",
             password: ""
         })
-        const json = JSON.stringify(form);
+        let rule = ref('请输入邮箱');
+        let disabled = ref(true);
+        let time = reactive({
+            content: "获取验证码",
+            button_loading: false,
+            button_disabled: true,
+            sec: 60
+        });
+        let timer: any = null;
+        const getTime = () => {
+            // 避免重复执行 setTimeout
+            timer && clearTimeout(timer)
+            timer = setTimeout(() => {
+                if (time.sec > 0) {
+                    time.sec--
+                    getTime() // 递归调用
+                    time.content = "剩余" + time.sec + "秒";
+                    time.button_disabled = true;
+                } else {
+                    time.content = "重新获取验证码"
+                    time.sec = 60;
+                    time.button_disabled = false;
+                }
+            }, 1000)
+        }
+        async function count() {
+            getTime();
+            try {
+                time.button_loading = true;
+                const res = await sendEmail(form.username);
+                time.button_loading = false;
+                Message.success('邮件发送成功！')
+                console.log(res)
+            } catch (error) {
+                Message.error(`${error}`)
+            }
+        }
+        watch(() => [form.fullname, form.username, form.verifyCode, form.password], () => {
+            const regEmail = /^([A-Za-z0-9_\-\.\u4e00-\u9fa5])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,8})$/;
+            if (regEmail.test(form.username)) {
+                rule.value = "邮箱格式正确";
+                time.button_disabled = false;
+            } else {
+                rule.value = "请输入正确的邮箱地址！";
+                time.button_disabled = true;
+            }
+            if (form.fullname && regEmail.test(form.username) && form.verifyCode && form.password) {
+                disabled.value = false;
+            } else {
+                disabled.value = true;
+            }
+        })
         async function register() {
             try {
                 const res = await registerUser(form);
-                Message.success({content:"注册成功！"});
-                localStorage.setItem('token',`${res}`);
-                router.push('/Layout');
+                Message.success({ content: "注册成功！" });
+                localStorage.setItem('token', `${res}`);
+                router.push('/Layout/WorkPlace');
             } catch (error) {
-                Message.error({content:"账号已经存在"})
-            }  
+                Message.error({ content: `${error}` })
+            }
         }
-        return{
+        return {
             form,
-            register
+            register,
+            rule,
+            disabled,
+            time,
+            count
         }
     }
 })
@@ -125,14 +224,34 @@ export default defineComponent({
                     margin-bottom: 40px;
                     font-size: 24px;
                 }
-                .username {
-                    width: 100%;
-                    border: 5px solid #dfe1e6;
-                    background-color: rgb(232, 240, 254);
-                    height: 60px;
-                    border-radius: 5px;
-                    margin-bottom: 40px;
-                    font-size: 24px;
+                .email {
+                    display: flex;
+                    align-items: center;
+                    .username {
+                        width: 290px;
+                        border: 5px solid #dfe1e6;
+                        background-color: rgb(232, 240, 254);
+                        height: 60px;
+                        border-radius: 5px;
+                        // margin-bottom: 40px;
+                        font-size: 24px;
+                    }
+                    span {
+                        width: 150px;
+                        line-height: 50px;
+                        background-color: rgb(232, 240, 254);
+                        text-align: center;
+                        border-radius: 10px;
+                        margin-left: 10px;
+                        cursor: pointer;
+                    }
+                    span:hover {
+                        background-color: rgb(213, 224, 243);
+                    }
+                }
+                .rule {
+                    line-height: 40px;
+                    align-self: flex-start;
                 }
                 .password {
                     width: 100%;

@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="card-wrapper"
-    @mousedown="columnsMouseMove"
-    @wheel="columnsMouseWheel"
-  >
+  <div class="card-wrapper" @mousedown="columnsMouseMove" @wheel="columnsMouseWheel">
     <!-- 要渲染的卡片 -->
     <div
       class="card-item"
@@ -23,7 +19,7 @@
                 enter-active-class="animate__backInLeft"
                 leave-active-class="animate__backOutUp"
                 appear
-            >-->
+      >-->
       <div
         v-for="(task, $taskIndex) of column.items"
         :key="$taskIndex"
@@ -39,11 +35,7 @@
         <div class="card-menu">
           {{ task.content }}
           <div class="des">{{ task.description }}</div>
-          <div
-            v-if="task.time.timePeriod"
-            :class="time"
-            @click.prevent.stop="done"
-          >
+          <div v-if="task.time.timePeriod" :class="time" @click.prevent.stop="done">
             <div class="time1">
               <div>{{ task.time.timePeriod[0] }}</div>
               <div>{{ task.time.timePeriod[1] }}</div>
@@ -126,7 +118,7 @@ export default defineComponent({
       router.push({ name: "task", params: { cid: columnID, id: task.id } });
     };
     const close = () => {
-      router.push({ name: "Layout" });
+      router.push({ name: "Layout/Board" });
     };
     const createTask = (e: any, tasks: any) => {
       var timestamp = getTimeStamp();

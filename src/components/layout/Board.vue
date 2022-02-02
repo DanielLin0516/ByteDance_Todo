@@ -1,35 +1,31 @@
 <template>
-  <TopBar></TopBar>
-  <router-view></router-view>
-  <!-- 抽屉 -->
+  <LeftDrawer></LeftDrawer>
+  <div class="main-area">
+    <div class="right">
+      <SmallBar></SmallBar>
+      <div class="right_down">
+        <MainCard></MainCard>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import TopBar from "@/components/layout/TopBar.vue";
 import LeftDrawer from "./LeftDrawer.vue";
 import MainCard from "../card/MainCard.vue";
 import SmallBar from "@/components/layout/SmallBar.vue";
-import { IconUser, IconMoonFill } from "@arco-design/web-vue/es/icon";
+
 import { defineComponent, ref } from "vue";
 import { setTheme } from "../../theme/theme";
-import { currentUser } from '../../axios/api'
-import store from "@/store";
 export default defineComponent({
   name: "Layout",
   components: {
-    IconUser,
-    IconMoonFill,
-    TopBar,
     MainCard,
     LeftDrawer,
     SmallBar,
   },
   setup() {
     const isDark = ref(false);
-    currentUser().then(res => {
-      store.commit('USER_ID', res.userId);
-    });
-
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";

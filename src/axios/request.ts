@@ -30,20 +30,36 @@ instance.interceptors.response.use(function (res) {
     // 对响应数据做点什么
     if (code == 200) {
         return data;
+    } else if (success == false) {
+        return Promise.reject(message);
     } else if (code == 2003) {
         return Promise.reject(message);
-    } else if (code === 90002) {
+    } else if (code === 4011) {
         Message.info({
             content: "未登录或登录超时，请重新登录哦"
         });
         localStorage.removeItem('token');
         router.push("/login");
         return Promise.reject("error");
-    }else if(code === 10004) {
-        throw new Error(message);
+    } else if (code === 10004) {
+        return Promise.reject(message);
+    } else if (code === 4012) {
+        return Promise.reject(message);
+    } else if (code === 4013) {
+        return Promise.reject(message);
+    } else if (code === 4014) {
+        return Promise.reject(message);
+    } else if (code === 4015) {
+        return Promise.reject(message);
+    } else if (code === 4016) {
+        return Promise.reject(message);
+    } else if (code === 4017) {
+        return Promise.reject(message);
+    } else if (code === 21000) {
+        return Promise.reject(message);
     }
 }, function (error) {
-    // 对响应错误做点什么
+    Message.error({ content: `${error}` })
     return Promise.reject(error);
 });
 
