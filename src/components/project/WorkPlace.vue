@@ -233,7 +233,6 @@ export default defineComponent({
     //     store.state.shareProductList = res.shareProductList;
     //   });
     // });
-
     return {
       create,
       show,
