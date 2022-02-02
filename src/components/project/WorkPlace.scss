@@ -9,7 +9,8 @@
         display: inline-block;
         margin-left: 120px;
         margin-top: 50px;
-        width: 350px;
+        // width: 350px;
+        flex: 1;
         height: 300px;
         padding: 10px;
 
@@ -37,9 +38,10 @@
     }
 
     .right {
-        margin-top: 60px;
-        margin-left: 80px;
+        padding-top: 60px;
+        padding-left: 80px;
         // width: 100%;
+        flex: 6;
         display: flex;
         flex-direction: column;
         overflow-y: visible;
@@ -48,9 +50,8 @@
         .work {
             display: flex;
             flex-direction: column;
-            width: 1000px;
+            width: 90%;
             height: auto;
-            position: reactive;
 
             span {
                 font-size: 30px;
@@ -63,6 +64,7 @@
                 flex-wrap: wrap;
                 // height: 200px;
                 display: flex;
+                width: 100%;
 
                 // padding: 20px;
                 .item {
@@ -84,6 +86,7 @@
                         position: absolute;
                         right: 10px;
                         bottom: 10px;
+                        padding: 5px;
                     }
                     .delete:hover {
                         color: black;
@@ -207,7 +210,7 @@
         .join {
             display: flex;
             flex-direction: column;
-            width: 1000px;
+            width: 90%;
 
             span {
                 font-size: 30px;

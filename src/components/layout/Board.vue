@@ -4,7 +4,14 @@
     <div class="right">
       <SmallBar></SmallBar>
       <div class="right_down">
-        <MainCard></MainCard>
+        <div class="container">
+          <div class="loading" v-if="productLoading">
+            <a-spin dot :loading="productLoading" size="25" />
+          </div>
+          <div v-else>
+            <MainCard></MainCard>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -17,9 +24,11 @@ import SmallBar from "@/components/layout/SmallBar.vue";
 import { useRoute, useRouter } from "vue-router";
 import { defineComponent, ref, computed, reactive } from "vue";
 import { setTheme } from "../../theme/theme";
-import { getProductInfo, owner } from '../../axios/api';
+import { getProductInfo, owner } from "../../axios/api";
 import { useStore } from "vuex";
 import { Message } from "@arco-design/web-vue";
+import { useRequest } from "@/hooks/useRequest";
+
 export default defineComponent({
   name: "Layout",
   components: {
@@ -44,35 +53,42 @@ export default defineComponent({
     const productId = computed(() => {
       return route.params.productId;
     });
-    store.state.productId = productId;
+    const {
+      data,
+      loading: productLoading,
+      error,
+      run,
+    } = useRequest(getProductInfo, {
+      onError: () => {
+        console.trace(error);
+      },
+    });
     //获取页面渲染数据与处理数据
     async function getInfo() {
       try {
-        let res = await getProductInfo(store.state.productId);
-        let showInvite = await owner(store.state.productId);
-        Message.success({ content: "获取页面成功！" })
-        store.state.showInviteButton = showInvite.isOwner
-        console.log(store.state.showInviteButton)
-        
+        const res = await run(productId.value);
+        // let res = await getProductInfo(productId.value);
+        const showInvite = await owner(productId.value);
+        Message.success({ content: "获取页面成功！" });
+        store.commit("setShowInviteButton", showInvite.isOwner);
         store.state.cardList = res.cardList;
         store.state.lists = res.lists;
         store.state.lists.forEach((item: any) => {
           item.items = [];
-        })
+        });
         store.state.cardList.forEach((item: any) => {
           store.state.lists.forEach((item1: any) => {
             if (item.listId === item1.id) {
               item1.items.push(item);
             }
-          })
-        })
+          });
+        });
       } catch (error) {
-
+        console.trace(error);
       }
-
     }
     getInfo();
-    return { changeTheme };
+    return { changeTheme, getInfo, productLoading };
   },
 });
 </script>
@@ -93,6 +109,20 @@ export default defineComponent({
       height: 90%;
       overflow-x: visible;
       overflow-y: hidden;
+      display: flex;
+      justify-content: center;
+      .container {
+        width: 97%;
+        display: flex;
+        // position: relative;
+        .loading {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: inherit;
+        }
+      }
     }
   }
 }

@@ -12,7 +12,7 @@ import SmallBar from "@/components/layout/SmallBar.vue";
 import { IconUser, IconMoonFill } from "@arco-design/web-vue/es/icon";
 import { defineComponent, ref } from "vue";
 import { setTheme } from "../../theme/theme";
-import { currentUser } from '../../axios/api'
+import { currentUser } from "../../axios/api";
 import store from "@/store";
 export default defineComponent({
   name: "Layout",
@@ -26,9 +26,8 @@ export default defineComponent({
   },
   setup() {
     const isDark = ref(false);
-    console.log("layout")
-    currentUser().then(res => {
-      store.commit('USER_ID', res.userId);
+    currentUser().then((res) => {
+      store.commit("setUserId", res.userId);
     });
 
     const changeTheme = (e: any) => {
