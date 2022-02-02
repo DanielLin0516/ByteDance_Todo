@@ -209,18 +209,31 @@ export default defineComponent({
       }
     }
 
-    onMounted(() => {
-      getProduct().then((res) => {
-        res.productList.forEach((item) => {
-          productList.push(item);
-        });
-        res.shareProductList.forEach((item) => {
-          shareProductList.push(item);
-        });
-        store.state.productList = res.productList;
-        store.state.shareProductList = res.shareProductList;
+    getProduct().then((res) => {
+      console.log("work");
+      res.productList.forEach((item) => {
+        productList.push(item);
       });
+      res.shareProductList.forEach((item) => {
+        shareProductList.push(item);
+      });
+      store.state.productList = res.productList;
+      store.state.shareProductList = res.shareProductList;
     });
+
+    // onMounted(() => {
+    //   getProduct().then((res) => {
+    //     res.productList.forEach((item) => {
+    //       productList.push(item);
+    //     });
+    //     res.shareProductList.forEach((item) => {
+    //       shareProductList.push(item);
+    //     });
+    //     store.state.productList = res.productList;
+    //     store.state.shareProductList = res.shareProductList;
+    //   });
+    // });
+
     return {
       create,
       show,
