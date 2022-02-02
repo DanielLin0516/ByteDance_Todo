@@ -28,7 +28,6 @@ const useRequest = <T extends any, U = unknown>(
 ) => {
   const state = reactive<StateProps<T>>(initState as StateProps<T>);
   const { onSuccess, onError } = options;
-
   const setSuccess = (data: UnwrapRef<T>) => {
     state.data = data;
     state.error = null;
