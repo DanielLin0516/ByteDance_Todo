@@ -15,10 +15,11 @@ import LeftDrawer from "./LeftDrawer.vue";
 import MainCard from "../card/MainCard.vue";
 import SmallBar from "@/components/layout/SmallBar.vue";
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, reactive } from "vue";
 import { setTheme } from "../../theme/theme";
-import { getProductInfo } from '../../axios/api';
+import { getProductInfo, owner } from '../../axios/api';
 import { useStore } from "vuex";
+import { Message } from "@arco-design/web-vue";
 export default defineComponent({
   name: "Layout",
   components: {
@@ -44,15 +45,33 @@ export default defineComponent({
       return route.params.productId;
     });
     store.state.productId = productId;
-     getProductInfo(store.state.productId).then(res => {
-      console.log(res)
-      store.state.cardList = res.cardList;
-      store.state.lists = res.lists;
-     },error => {
-       console.log(error,'123')
-     })
+    //获取页面渲染数据与处理数据
+    async function getInfo() {
+      try {
+        let res = await getProductInfo(store.state.productId);
+        let showInvite = await owner(store.state.productId);
+        Message.success({ content: "获取页面成功！" })
+        store.state.showInviteButton = showInvite.isOwner
+        console.log(store.state.showInviteButton)
+        store.state.cardList = res.cardList;
+        store.state.lists = res.lists;
+        store.state.lists.forEach((item: any) => {
+          item.items = [];
+        })
+        store.state.cardList.forEach((item: any) => {
+          store.state.lists.forEach((item1: any) => {
+            if (item.listId === item1.id) {
+              item1.items.push(item);
+            }
+          })
+        })
+      } catch (error) {
 
-    return { changeTheme};
+      }
+
+    }
+    getInfo();
+    return { changeTheme };
   },
 });
 </script>

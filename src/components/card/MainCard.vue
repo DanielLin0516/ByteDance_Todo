@@ -3,45 +3,38 @@
     <!-- 要渲染的卡片 -->
     <div
       class="card-item"
-      v-for="(column, $columnIndex) of store.state.board.columns"
-      :key="$columnIndex"
-      draggable="true"
-      @drop="moveTaskOrColumn($event, column.items, $columnIndex, undefined)"
+      v-for="column of store.state.lists"
+      :key="column.id"
+            draggable="true"
+      @drop="moveTaskOrColumn($event, column.items, column.id, undefined)"
       @dragover.prevent
       @dragenter.prevent
-      @dragstart.self="pickupColumn($event, $columnIndex)"
+      @dragstart.self="pickupColumn($event, column.id)"
     >
       <!-- 卡片标题 -->
-      <div class="card-title">{{ column.title }}</div>
+      <div class="card-title">{{ column.listName }}</div>
       <!-- 卡片任务栏也要渲染 -->
-      <!-- <transition-group
-                name="animate__animated animate__bounce"
-                enter-active-class="animate__backInLeft"
-                leave-active-class="animate__backOutUp"
-                appear
-      >-->
       <div
-        v-for="(task, $taskIndex) of column.items"
-        :key="$taskIndex"
-        @click="goToTask(task, column.id)"
-        draggable="true"
-        @dragstart="pickupTask($event, $taskIndex, $columnIndex)"
+        v-for="task of column.items"
+        :key="task.cardId"
+                draggable="true"
+        @dragstart="pickupTask($event, task.cardId, column.id)"
         @dragover.prevent
         @dragenter.prevent
         @drop.stop="
-          moveTaskOrColumn($event, column.items, $columnIndex, $taskIndex)
+          moveTaskOrColumn($event, column.items, task.cardId, column.id)
         "
       >
         <div class="card-menu">
-          {{ task.content }}
+          {{ task.cardname }}
           <div class="des">{{ task.description }}</div>
-          <div v-if="task.time.timePeriod" :class="time" @click.prevent.stop="done">
+          <!-- <div v-if="task.time.timePeriod" :class="time" @click.prevent.stop="done">
             <div class="time1">
               <div>{{ task.time.timePeriod[0] }}</div>
               <div>{{ task.time.timePeriod[1] }}</div>
             </div>
             <icon-schedule class="time2" />
-          </div>
+          </div> -->
         </div>
         <div
           class="kanban-dropzon"
@@ -50,7 +43,6 @@
           @drop="height1($event)"
         ></div>
       </div>
-      <!-- </transition-group> -->
       <!-- 添加卡片按钮 -->
       <input
         class="new-button"
@@ -175,7 +167,7 @@ export default defineComponent({
     };
     const moveTask = (e: any, toTasks: any, toTaskIndex?: any) => {
       const fromColumnIndex = e.dataTransfer.getData("from-column-index");
-      const fromTasks = store.state.board.columns[fromColumnIndex].items;
+      const fromTasks = store.state.lists[fromColumnIndex].items;
       const fromTaskIndex = e.dataTransfer.getData("from-task-index");
       const toTaskColumnName = getCurColumnName(e);
       const fromTaskColumnName = e.dataTransfer.getData("from-column-name");
@@ -259,6 +251,7 @@ export default defineComponent({
 .card-wrapper {
   width: max-content;
   height: 100%;
+  margin-top: 10px;
   .card-item {
     overflow-x: hidden;
     overflow-y: visible;

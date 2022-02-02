@@ -81,6 +81,19 @@ export function sendEmail(email: String) {
 export function deleteProject(id: String) {
   return instance.delete(`/product/delete?id=${id}`);
 }
+/**
+ * 获取页面信息
+ * @param productId
+ * @returns
+ */
 export function getProductInfo(productId:any):Promise<{cardList: Array<{}>,lists:Array<{}>}> {
   return instance.get(`/product/getProductShowInfo/${productId}`)
+}
+/**
+ * 获取是否是自己创建的项目
+ * @param productId
+ * @returns
+ */
+export function owner(productId:any):Promise<{ isOwner:boolean}> {
+  return instance.get(`/product/getMemberStatus/${productId}`)
 }

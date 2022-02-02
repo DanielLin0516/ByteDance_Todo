@@ -11,6 +11,7 @@ export default createStore({
     productId:"",
     cardList:"",
     lists:"",
+    showInviteButton:false,
     board: defaultBoard,
     userEvent:[],
     isCardDetailShow: false,
@@ -57,7 +58,7 @@ export default createStore({
     },
     CREATE_COLUMN(state,{ title }) {
 
-      state.board.columns.push({
+      state.board.lists.push({
         title,
         id:uuid(),
         items:[]
@@ -68,8 +69,6 @@ export default createStore({
     },
     MOVE_TASK(state,{fromTasks,toTasks,fromTaskIndex,toTaskIndex,toTaskColumnName, fromTaskColumnName}) {
       const taskTOMove = fromTasks.splice(fromTaskIndex,1)[0];
-      console.log(taskTOMove);
-
       const moveAction = {
         username: '没想好叫啥',
         action: '把任务卡从'+fromTaskColumnName+'移动到'+toTaskColumnName,

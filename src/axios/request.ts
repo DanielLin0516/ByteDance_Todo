@@ -31,8 +31,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   function (res) {
     const { code, data, message, success } = res.data;
-    Message.clear();
-
+    // Message.clear();
     // 对响应数据做点什么
     if (code == 200) {
       return data;
