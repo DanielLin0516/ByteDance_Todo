@@ -12,6 +12,7 @@ instance.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded;charset=UTF-8";
 
 // 添加请求拦截器
+
 instance.interceptors.request.use(
   function (config) {
     Message.loading({ content: "加载中" });

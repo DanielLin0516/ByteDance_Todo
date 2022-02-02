@@ -106,7 +106,7 @@ import {
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { getProduct, createProduct, deleteProject } from "../../axios/api";
-import { ProductElement } from "@/axios/globalInterface";
+import { ProductElement } from "../../axios/globalInterface";
 
 export default defineComponent({
   name: "App",

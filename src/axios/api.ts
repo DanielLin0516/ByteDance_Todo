@@ -81,3 +81,6 @@ export function sendEmail(email: String) {
 export function deleteProject(id: String) {
   return instance.delete(`/product/delete?id=${id}`);
 }
+export function getProductInfo(productId:any):Promise<{cardList: Array<{}>,lists:Array<{}>}> {
+  return instance.get(`/product/getProductShowInfo/${productId}`)
+}
