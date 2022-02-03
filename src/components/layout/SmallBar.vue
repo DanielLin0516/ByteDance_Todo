@@ -15,7 +15,7 @@
 import { IconUser, IconMoonFill } from "@arco-design/web-vue/es/icon";
 import { defineComponent, ref } from "vue";
 import { useStore } from "vuex";
-import { setTheme } from "../../theme/theme";
+import { setTheme } from "@/theme/theme";
 export default defineComponent({
   name: "SmallBar",
   components: {
@@ -45,6 +45,7 @@ export default defineComponent({
 .small-bar {
   position: relative;
   display: flex;
+  width: 100%;
   height: 7%;
   opacity: 1;
   flex-direction: column;
@@ -54,9 +55,9 @@ export default defineComponent({
   overflow-x: visible;
   .second-bar {
     display: flex;
-    width: 100%;
     height: 80px;
     align-items: center;
+    padding-left: 15px;
     span {
       font-size: 26px;
       margin-left: 20px;

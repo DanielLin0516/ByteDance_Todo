@@ -1,6 +1,6 @@
 <template>
   <div class="card-wrapper" @mousedown="columnsMouseMove" @wheel="columnsMouseWheel">
-    <!-- 要渲染的卡片 -->
+    <!-- 要渲染的列表 -->
     <div
       class="card-item"
       v-for="column of store.state.lists"

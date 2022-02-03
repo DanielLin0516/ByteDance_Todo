@@ -6,7 +6,7 @@
       <div class="right_down">
         <div class="container">
           <div class="loading" v-if="productLoading">
-            <a-spin dot :loading="productLoading" size="25" />
+            <a-spin dot :loading="productLoading" :size="25" />
           </div>
           <div v-else>
             <MainCard></MainCard>
@@ -30,7 +30,7 @@ import { Message } from "@arco-design/web-vue";
 import { useRequest } from "@/hooks/useRequest";
 
 export default defineComponent({
-  name: "Layout",
+  name: "Board",
   components: {
     MainCard,
     LeftDrawer,
