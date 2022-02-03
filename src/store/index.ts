@@ -8,9 +8,8 @@ export default createStore({
     return {
       userId: "",
       productList: [],
+      currentProductName: "",
       shareProductList: [],
-      cardList: [],
-      lists: [],
       showInviteButton: false,
       board: defaultBoard,
       userEvent: [],
@@ -52,6 +51,9 @@ export default createStore({
     },
     setShowInviteButton(state, value) {
       state.showInviteButton = value;
+    },
+    setCurrentProductName(state,value){
+      state.currentProductName = value;
     },
     CREATE_TASK(state, { tasks, createAction, content }) {
       createAction.actionTime = timetrans(createAction.actionTime);

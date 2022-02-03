@@ -1,28 +1,32 @@
 <template>
-  <div class="card-wrapper" @mousedown="columnsMouseMove" @wheel="columnsMouseWheel">
-    <!-- 要渲染的卡片 -->
+  <div
+    class="card-wrapper"
+    @mousedown="columnsMouseMove"
+    @wheel="columnsMouseWheel"
+  >
+    <!-- 要渲染的列表 -->
     <div
       class="card-item"
       v-for="column of lists"
-      :key="column.id"
+      :key="column.listId"
       draggable="true"
-      @drop="moveTaskOrColumn($event, column.items, column.id, undefined)"
+      @drop="moveTaskOrColumn($event, column.items, column.listId, undefined)"
       @dragover.prevent
       @dragenter.prevent
-      @dragstart.self="pickupColumn($event, column.id)"
+      @dragstart.self="pickupColumn($event, column.listId)"
     >
-      <!-- 卡片标题 -->
+      <!-- 列表标题 -->
       <div class="card-title">{{ column.listName }}</div>
-      <!-- 卡片任务栏也要渲染 -->
+      <!-- 列表任务栏也要渲染 -->
       <div
         v-for="task of column.items"
         :key="task.cardId"
         draggable="true"
-        @dragstart="pickupTask($event, task.cardId, column.id)"
+        @dragstart="pickupTask($event, task.cardId, column.listId)"
         @dragover.prevent
         @dragenter.prevent
         @drop.stop="
-          moveTaskOrColumn($event, column.items, task.cardId, column.id)
+          moveTaskOrColumn($event, column.items, task.cardId, column.listId)
         "
       >
         <div class="card-menu">
@@ -70,9 +74,24 @@
 import "animate.css";
 import { getTimeStamp } from "../../store/utils";
 import { IconPlus, IconSchedule } from "@arco-design/web-vue/es/icon";
-import { computed, defineComponent, ref, TransitionGroup, watch, toRefs, PropType } from "vue";
+import {
+  computed,
+  defineComponent,
+  ref,
+  TransitionGroup,
+  watch,
+  PropType,
+  reactive,
+} from "vue";
+
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import { ProductShowElement } from "@/axios/globalInterface";
+import { useRequest } from "@/hooks/useRequest";
+import { getProductInfo, owner } from "@/axios/api";
+import { Message } from "@arco-design/web-vue";
+import { getCipherInfo } from "crypto";
+
 export default defineComponent({
   name: "MainCard",
   components: {
@@ -80,36 +99,14 @@ export default defineComponent({
     TransitionGroup,
     IconSchedule,
   },
-  props: {
-    lists: {
-      type: Array as PropType<Array<{
-        id: number,
-        productId: number,
-        pos: number,
-        closed: boolean,
-        listName: string,
-        backgroundColor: string,
-        createdTime: string
-        items: Array<{
-          cardId: number,
-          cardname: string,
-          description: string,
-          listId: number,
-          productId: number,
-          closed: boolean,
-          pos: number,
-          deadline: string,
-          tagList: Array<{}>,
-          executorList: Array<{}>,
-          begintime: string,
-          expired: boolean
-        }>
-      }>>
-    }
-  },
-  setup(props) {
-    let lists = props.lists;
-    console.log(lists, '12121212')
+  // props: {
+  //   lists: {
+  //     type: Array as PropType<ProductShowElement[]>,
+  //     required: true,
+  //   },
+  // },
+  emits: ["loadingOver"],
+  setup(props, context) {
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
@@ -127,6 +124,62 @@ export default defineComponent({
     const isTaskOpen = computed(() => {
       return route.name === "task";
     });
+    // 传给MainCard的列数组
+    const lists = reactive<ProductShowElement[]>([]);
+    // 路由中的项目Id
+    const productId = computed(() => {
+      return route.params.productId;
+    });
+
+    // useRequest钩子
+    const {
+      data,
+      loading: productLoading,
+      error,
+      run,
+    } = useRequest(getProductInfo, {
+      onError: () => {
+        console.trace(error);
+      },
+    });
+
+    //获取页面渲染数据与处理数据
+    async function getInfo() {
+      try {
+        const res = await run(productId.value);
+        const showInvite = await owner(productId.value);
+        Message.success({ content: "获取页面成功！" });
+        store.commit("setCurrentProductName", res.productName);
+        store.commit("setShowInviteButton", showInvite.isOwner);
+        // 清空lists
+        lists.length = 0;
+
+        res.lists.forEach((item) => {
+          const tempObj: ProductShowElement = {
+            listName: "",
+            listId: 0,
+            productId: 0,
+            closed: false,
+            pos: 0,
+            items: [],
+          };
+          Object.assign(tempObj, item);
+          tempObj.listId = item.id;
+          lists.push(tempObj);
+        });
+        res.cardList.forEach((cardItem) => {
+          lists.forEach((listItem) => {
+            cardItem.listId === listItem.listId &&
+              listItem.items.push(cardItem);
+          });
+        });
+        // 告知父组件，加载完毕
+        context.emit("loadingOver");
+      } catch (error) {
+        console.trace(error);
+      }
+    }
+
     // 工具函数 获取当前column的name
     const getCurColumnName = (e: any) => {
       if (e.currentTarget.parentElement.className == "card-wrapper") {
@@ -253,6 +306,9 @@ export default defineComponent({
       let elP = el.parentElement;
       flag === "1" ? (elP.scrollLeft += 30) : (elP.scrollLeft -= 50);
     };
+
+    getInfo();
+
     return {
       store,
       isTaskOpen,
@@ -271,7 +327,9 @@ export default defineComponent({
       done,
       columnsMouseMove,
       columnsMouseWheel,
-      lists
+      lists,
+      getInfo,
+      productLoading,
     };
   },
 });
@@ -281,7 +339,6 @@ export default defineComponent({
 .card-wrapper {
   width: max-content;
   height: 100%;
-  margin-top: 10px;
   .card-item {
     overflow-x: hidden;
     overflow-y: visible;

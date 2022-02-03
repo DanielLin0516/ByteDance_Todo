@@ -51,7 +51,7 @@ export default defineComponent({
       username: "",
       password: "",
     });
-    const { loading, error, run } = useRequest(getUser, {
+    const { data, loading, error, run } = useRequest(getUser, {
       onError: () => {
         console.trace(error);
       },
