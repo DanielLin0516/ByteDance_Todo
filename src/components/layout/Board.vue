@@ -9,7 +9,7 @@
             <a-spin dot :loading="productLoading" size="25" />
           </div>
           <div v-else>
-            <MainCard></MainCard>
+            <MainCard :lists="lists"></MainCard>
           </div>
         </div>
       </div>
@@ -40,6 +40,8 @@ export default defineComponent({
     const isDark = ref(false);
     const route = useRoute();
     const store = useStore();
+    let cardList:Array<{}> = reactive([]);
+    let lists:Array<{}> = reactive([]);
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";
@@ -71,13 +73,13 @@ export default defineComponent({
         const showInvite = await owner(productId.value);
         Message.success({ content: "获取页面成功！" });
         store.commit("setShowInviteButton", showInvite.isOwner);
-        store.state.cardList = res.cardList;
-        store.state.lists = res.lists;
-        store.state.lists.forEach((item: any) => {
+        res.cardList.forEach((item) => cardList.push(item));
+        res.lists.forEach((item) => lists.push(item));
+        lists.forEach((item: any) => {
           item.items = [];
         });
-        store.state.cardList.forEach((item: any) => {
-          store.state.lists.forEach((item1: any) => {
+        cardList.forEach((item: any) => {
+          lists.forEach((item1: any) => {
             if (item.listId === item1.id) {
               item1.items.push(item);
             }
@@ -88,7 +90,7 @@ export default defineComponent({
       }
     }
     getInfo();
-    return { changeTheme, getInfo, productLoading };
+    return { changeTheme, getInfo, productLoading, lists };
   },
 });
 </script>

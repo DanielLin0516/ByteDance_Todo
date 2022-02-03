@@ -1,4 +1,4 @@
-import { ProductElement } from "@/axios/globalInterface";
+import { ProductElement, getInfo, getInfoLists } from "@/axios/globalInterface";
 import instance from "./request";
 /**
  * 登录
@@ -86,7 +86,7 @@ export function deleteProject(id: String) {
  * @param productId
  * @returns
  */
-export function getProductInfo(productId:any):Promise<{cardList: Array<{}>,lists:Array<{}>}> {
+export function getProductInfo(productId: any): Promise<{ cardList: getInfo[], lists: getInfoLists[]}> {
   return instance.get(`/product/getProductShowInfo/${productId}`)
 }
 /**
@@ -94,6 +94,6 @@ export function getProductInfo(productId:any):Promise<{cardList: Array<{}>,lists
  * @param productId
  * @returns
  */
-export function owner(productId:any):Promise<{ isOwner:boolean}> {
+export function owner(productId: any): Promise<{ isOwner: boolean }> {
   return instance.get(`/product/getMemberStatus/${productId}`)
 }

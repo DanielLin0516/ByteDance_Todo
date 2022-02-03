@@ -3,7 +3,7 @@
     <!-- 要渲染的卡片 -->
     <div
       class="card-item"
-      v-for="column of store.state.lists"
+      v-for="column of lists"
       :key="column.id"
       draggable="true"
       @drop="moveTaskOrColumn($event, column.items, column.id, undefined)"
@@ -70,7 +70,7 @@
 import "animate.css";
 import { getTimeStamp } from "../../store/utils";
 import { IconPlus, IconSchedule } from "@arco-design/web-vue/es/icon";
-import { computed, defineComponent, ref, TransitionGroup, watch } from "vue";
+import { computed, defineComponent, ref, TransitionGroup, watch, toRefs, PropType } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 export default defineComponent({
@@ -80,7 +80,36 @@ export default defineComponent({
     TransitionGroup,
     IconSchedule,
   },
-  setup() {
+  props: {
+    lists: {
+      type: Array as PropType<Array<{
+        id: number,
+        productId: number,
+        pos: number,
+        closed: boolean,
+        listName: string,
+        backgroundColor: string,
+        createdTime: string
+        items: Array<{
+          cardId: number,
+          cardname: string,
+          description: string,
+          listId: number,
+          productId: number,
+          closed: boolean,
+          pos: number,
+          deadline: string,
+          tagList: Array<{}>,
+          executorList: Array<{}>,
+          begintime: string,
+          expired: boolean
+        }>
+      }>>
+    }
+  },
+  setup(props) {
+    let lists = props.lists;
+    console.log(lists, '12121212')
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
@@ -242,6 +271,7 @@ export default defineComponent({
       done,
       columnsMouseMove,
       columnsMouseWheel,
+      lists
     };
   },
 });
