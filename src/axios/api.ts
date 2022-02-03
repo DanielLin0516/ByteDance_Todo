@@ -88,6 +88,7 @@ export function sendEmail(email: String) {
 export function deleteProject(id: String) {
   return instance.delete(`/product/delete?id=${id}`);
 }
+
 /**
  * 获取页面信息
  * @param productId
@@ -105,6 +106,7 @@ export function getProductInfo(productId: any): Promise<{
 }> {
   return instance.get(`/product/getProductShowInfo/${productId}`);
 }
+
 /**
  * 获取是否是自己创建的项目
  * @param productId
@@ -112,4 +114,29 @@ export function getProductInfo(productId: any): Promise<{
  */
 export function owner(productId: any): Promise<{ isOwner: boolean }> {
   return instance.get(`/product/getMemberStatus/${productId}`);
+}
+
+/**
+ *
+ * @param param 创建列
+ * @returns
+ */
+export function createList(param: {
+  listName: string;
+  pos: number;
+  productId: number;
+}): Promise<ListElement> {
+  return instance.post("/list/addList", param);
+}
+
+/**
+ * 修改列的名称
+ * @param listId 
+ * @param listNName 
+ * @returns 
+ */
+export function editListName(listId: number, listNName: string): Promise<any> {
+  return instance.post(
+    `/list/editListName?listId=${listId}&listName=${listNName}`
+  );
 }

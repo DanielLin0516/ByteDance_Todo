@@ -9,7 +9,7 @@
 
     <div class="right">
       <div class="work">
-        <span class="id">您创建的项目</span>
+        <span class="work-title">您创建的项目</span>
         <div class="project">
           <div
             class="item"
@@ -72,7 +72,7 @@
         </div>
       </div>
       <div class="join">
-        <span>参与的项目</span>
+        <span class="work-title">参与的项目</span>
         <div class="part">
           <div
             class="parttime"

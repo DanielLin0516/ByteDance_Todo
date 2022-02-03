@@ -27,7 +27,7 @@ export default defineComponent({
 
 <style lang="less">
 body {
-  font-size: 20px !important;
+  font-size: 18px !important;
 }
 .bgc {
   height: 100vh;
