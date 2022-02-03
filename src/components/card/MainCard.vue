@@ -38,7 +38,7 @@
               <div>{{ task.time.timePeriod[1] }}</div>
             </div>
             <icon-schedule class="time2" />
-          </div>-->
+          </div> -->
         </div>
         <div
           class="kanban-dropzon"
@@ -83,7 +83,6 @@ import {
   PropType,
   reactive,
 } from "vue";
-
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { ProductShowElement } from "@/axios/globalInterface";
@@ -91,7 +90,6 @@ import { useRequest } from "@/hooks/useRequest";
 import { getProductInfo, owner } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
 import { getCipherInfo } from "crypto";
-
 export default defineComponent({
   name: "MainCard",
   components: {
@@ -130,7 +128,6 @@ export default defineComponent({
     const productId = computed(() => {
       return route.params.productId;
     });
-
     // useRequest钩子
     const {
       data,
@@ -142,7 +139,6 @@ export default defineComponent({
         console.trace(error);
       },
     });
-
     //获取页面渲染数据与处理数据
     async function getInfo() {
       try {
@@ -153,7 +149,6 @@ export default defineComponent({
         store.commit("setShowInviteButton", showInvite.isOwner);
         // 清空lists
         lists.length = 0;
-
         res.lists.forEach((item) => {
           const tempObj: ProductShowElement = {
             listName: "",
@@ -179,7 +174,6 @@ export default defineComponent({
         console.trace(error);
       }
     }
-
     // 工具函数 获取当前column的name
     const getCurColumnName = (e: any) => {
       if (e.currentTarget.parentElement.className == "card-wrapper") {
@@ -209,7 +203,6 @@ export default defineComponent({
       });
       e.target.value = "";
     };
-
     const createColumn = () => {
       store.commit("CREATE_COLUMN", {
         title: newColumnName.value,
@@ -282,12 +275,9 @@ export default defineComponent({
     };
     const columnsMouseMove = (e: any) => {
       const el = e.target;
-
       const startPosition = e.clientX;
       const startScroll = el.parentElement.scrollLeft;
-
       if (!el.classList.contains("card-wrapper")) return;
-
       const onMouseMove = (e: any) => {
         const diff = e.clientX - startPosition;
         el.parentElement.scrollLeft = startScroll - diff;
@@ -301,14 +291,11 @@ export default defineComponent({
     const columnsMouseWheel = (e: any) => {
       const el = e.target;
       if (!el.classList.contains("card-wrapper")) return;
-
       const flag = ("" + e.deltaY)[0];
       let elP = el.parentElement;
       flag === "1" ? (elP.scrollLeft += 30) : (elP.scrollLeft -= 50);
     };
-
     getInfo();
-
     return {
       store,
       isTaskOpen,
@@ -337,7 +324,7 @@ export default defineComponent({
 <style lang="less" scoped>
 @import url("./scrollCss/scroll.scss");
 .card-wrapper {
-  width: max-content;
+  width: 100%;
   height: 100%;
   .card-item {
     overflow-x: hidden;
@@ -421,7 +408,6 @@ export default defineComponent({
       border-radius: 10px;
     }
   }
-
   .new-button {
     background-color: transparent;
     border: none;
@@ -436,7 +422,6 @@ export default defineComponent({
   .new-button:hover {
     background-color: rgba(@cardColorMain, 0.4);
   }
-
   .btn-add {
     float: left;
     .add-item {

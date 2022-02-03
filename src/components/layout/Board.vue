@@ -24,7 +24,6 @@ import MainCard from "../card/MainCard.vue";
 import SmallBar from "@/components/layout/SmallBar.vue";
 import { defineComponent, ref, computed, reactive } from "vue";
 import { setTheme } from "../../theme/theme";
-
 export default defineComponent({
   name: "Board",
   components: {
@@ -34,9 +33,7 @@ export default defineComponent({
   },
   setup() {
     const isDark = ref(false);
-
     const loading = ref(true);
-
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";
@@ -52,7 +49,6 @@ export default defineComponent({
       loading.value = false;
     };
     return { changeTheme, loading, loadingOver };
-
   },
 });
 </script>
@@ -66,7 +62,6 @@ export default defineComponent({
     position: relative;
     height: calc(100vh - 80px);
     width: 100%;
-
     .loading {
       position: absolute;
       display: flex;
