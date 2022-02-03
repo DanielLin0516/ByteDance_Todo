@@ -53,7 +53,7 @@ export default defineComponent({
   position: relative;
   display: flex;
   width: 100%;
-  height: 7%;
+  height: 60px;
   opacity: 1;
   flex-direction: column;
   overflow-y: hidden;
