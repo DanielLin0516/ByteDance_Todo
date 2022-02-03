@@ -76,7 +76,8 @@ export default defineComponent({
     .right_down {
       position: relative;
       width: 100%;
-      height: max-content;
+      // height: 90%;
+      height: calc(100vh - 180px);
       overflow-x: visible;
       overflow-y: hidden;
     }
