@@ -6,8 +6,8 @@
   >
     <!-- 要渲染的列表 -->
     <div
-      class="card-item"
-      v-for="column of lists"
+      class="list-item"
+      v-for="(column, index) of lists"
       :key="column.listId"
       draggable="true"
       @drop="moveTaskOrColumn($event, column.items, column.listId, undefined)"
@@ -16,7 +16,9 @@
       @dragstart.self="pickupColumn($event, column.listId)"
     >
       <!-- 列表标题 -->
-      <div class="card-title">{{ column.listName }}</div>
+      <div class="list-title">
+        {{ column.listName }}
+      </div>
       <!-- 列表任务栏也要渲染 -->
       <div
         v-for="task of column.items"
@@ -87,9 +89,10 @@ import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { ProductShowElement } from "@/axios/globalInterface";
 import { useRequest } from "@/hooks/useRequest";
-import { getProductInfo, owner } from "@/axios/api";
+import { getProductInfo, owner, createList, editListName } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
 import { getCipherInfo } from "crypto";
+import { title } from "process";
 export default defineComponent({
   name: "MainCard",
   components: {
@@ -109,6 +112,8 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const newColumnName = ref("");
+    const isEditListTitle = ref(false);
+    const newListName = ref("");
     let cur = ref(true);
     const time = computed(() => {
       return {
@@ -168,13 +173,22 @@ export default defineComponent({
               listItem.items.push(cardItem);
           });
         });
+        lists.forEach((item) => {
+          item.items.sort((a, b) => {
+            return a.pos - b.pos;
+          });
+        });
+        // console.log(lists);
         // 告知父组件，加载完毕
         context.emit("loadingOver");
       } catch (error) {
         console.trace(error);
       }
     }
-    // 工具函数 获取当前column的name
+    /**
+     * 工具函数 获取当前column的name
+     * @param e
+     */
     const getCurColumnName = (e: any) => {
       if (e.currentTarget.parentElement.className == "card-wrapper") {
         return e.currentTarget.firstElementChild.innerHTML;
@@ -203,11 +217,41 @@ export default defineComponent({
       });
       e.target.value = "";
     };
-    const createColumn = () => {
-      store.commit("CREATE_COLUMN", {
-        title: newColumnName.value,
+    /**
+     * 创建列
+     */
+    const createColumn = async () => {
+      const res = await createList({
+        productId: Number(productId.value),
+        listName: newColumnName.value,
+        pos: 300,
+
       });
+      const temp: ProductShowElement = {
+        listName: "",
+        listId: 0,
+        productId: 0,
+        closed: false,
+        pos: 0,
+        items: [],
+      };
+      Object.assign(temp, res);
+      lists.push(temp);
       newColumnName.value = "";
+    };
+    const editListNameById = async (
+      listId: number,
+      index: number,
+      e: KeyboardEvent
+    ) => {
+      console.log(e);
+      lists[index].listName = newListName.value;
+      await editListName(listId, newListName.value);
+      isEditListTitle.value = false;
+    };
+    const setIsEditListTitle = () => {
+      console.log("415");
+      isEditListTitle.value = true;
     };
     const pickupTask = (e: any, taskIndex: any, fromColumnIndex: any) => {
       e.dataTransfer.effctAllowed = "move";
@@ -307,6 +351,9 @@ export default defineComponent({
       pickupColumn,
       moveTaskOrColumn,
       newColumnName,
+      isEditListTitle,
+      newListName,
+      setIsEditListTitle,
       createColumn,
       height,
       height1,
@@ -317,6 +364,7 @@ export default defineComponent({
       lists,
       getInfo,
       productLoading,
+      editListNameById,
     };
   },
 });
@@ -326,12 +374,12 @@ export default defineComponent({
 .card-wrapper {
   width: 100%;
   height: 100%;
-  .card-item {
+  .list-item {
     overflow-x: hidden;
     overflow-y: visible;
     max-height: 630px;
-    width: 380px;
-    float: left !important;
+    width: 300px;
+    float: left;
     flex-direction: column;
     // flex-shrink: 0;
     display: flex;
@@ -341,27 +389,27 @@ export default defineComponent({
     background-color: rgba(@cardColorWrapper, 1);
     border-radius: 10px;
     cursor: pointer;
-    padding: 30px 20px 20px 20px;
-    .card-title {
+    padding: 10px 15px 10px 15px;
+    .list-title {
       cursor: pointer;
-      width: 350px;
+      // width: 100%;
       height: 30px;
       opacity: 1;
       padding: 10px;
-      font-size: 24px;
+      font-size: 22px;
       font-family: PingFang-Bold-2;
     }
     .card-menu {
       height: auto;
-      width: 350px;
+      // width: 100%;
       background-color: rgba(@cardColorMain, 1);
       padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin-top: 5px;
+      margin-bottom: 5px;
       border-radius: 10px;
       box-shadow: 4px 2px 2px 1px rgba(@cardTextColorMain, 0.2);
       cursor: pointer;
-      font-size: 24px;
+      font-size: 18px;
       border-bottom: 2px solid rgba(@cardTextColorSub, 0.45);
       .des {
         font-size: 12px;
@@ -402,9 +450,8 @@ export default defineComponent({
       background-color: rgba(@cardColorMain, 0.45);
     }
     .kanban-dropzon {
-      height: 10px;
+      height: 8px;
       background-color: transparent;
-      width: 370px;
       border-radius: 10px;
     }
   }
@@ -413,9 +460,8 @@ export default defineComponent({
     border: none;
     outline: 0;
     height: 30px;
-    width: 350px;
     cursor: pointer;
-    font-size: 24px;
+    font-size: 18px;
     border-radius: 10px;
     padding: 10px;
   }
@@ -427,12 +473,12 @@ export default defineComponent({
     .add-item {
       cursor: pointer;
       height: 50px;
-      font-size: 24px;
+      font-size: 18px;
       border-radius: 10px;
       padding: 10px;
       display: flex;
       align-items: center;
-      width: 380px;
+      width: 300px;
       background-color: rgba(@cardColorWrapper, 0.45);
       color: rgba(@cardTextColorSub, 1);
       margin-top: 5px;

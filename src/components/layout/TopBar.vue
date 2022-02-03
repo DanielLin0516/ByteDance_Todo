@@ -93,10 +93,11 @@ export default defineComponent({
             margin-left: 50px;
             font-family: "PingFang-Regular";
             font-size: 24px;
+            font-weight: 700;
             color: rgba(@cardColorMain, 1);
-            line-height: 20px;
+            line-height: 25px;
             border-radius: 5px;
-            padding: 20px;
+            padding: 10px 5px;
             cursor: pointer;
             border: 1px solid rgba(@cardColorMain, 1);
             width: 100px;

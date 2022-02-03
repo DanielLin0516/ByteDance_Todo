@@ -52,7 +52,7 @@ export default createStore({
     setShowInviteButton(state, value) {
       state.showInviteButton = value;
     },
-    setCurrentProductName(state,value){
+    setCurrentProductName(state, value) {
       state.currentProductName = value;
     },
     CREATE_TASK(state, { tasks, createAction, content }) {
@@ -66,13 +66,6 @@ export default createStore({
           done: false,
           timePeriod: "",
         },
-      });
-    },
-    CREATE_COLUMN(state, { title }) {
-      state.board.lists.push({
-        title,
-        id: uuid(),
-        items: [],
       });
     },
     UPDATE_TASK(state, { task, key, value }) {

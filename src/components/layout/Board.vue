@@ -76,8 +76,6 @@ export default defineComponent({
       height: max-content;
       overflow-x: visible;
       overflow-y: hidden;
-      display: flex;
-      justify-content: center;
     }
   }
 }

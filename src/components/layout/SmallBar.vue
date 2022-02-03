@@ -2,9 +2,10 @@
   <div class="small-bar">
     <!-- 第二个菜单栏 -->
     <div class="second-bar">
-      <span>{{ productName }}</span>
-      <div class="user" v-show="showInviteButton">
-        <icon-user class="icon-user" />邀请朋友
+      <span class="product-name">{{ productName }}</span>
+      <div class="inviteUser" v-show="showInviteButton">
+        <icon-user class="icon-user" />
+        <div>邀请朋友</div>
       </div>
       <div class="change" @click="changeTheme($event)">切换夜间模式</div>
     </div>
@@ -64,33 +65,36 @@ export default defineComponent({
     height: 80px;
     align-items: center;
     padding-left: 15px;
-    span {
-      font-size: 26px;
+    .product-name {
+      font-size: 24px;
       margin-left: 20px;
       font-family: PingFang-Regular;
       color: #fff;
+      font-weight: 700;
     }
-    .user {
+    .inviteUser {
       margin-left: 30px;
       color: #fff;
       background-color: rgba(@cardColorMain, 0.3);
-      padding: 15px;
+      padding: 10px 15px;
       border-radius: 10px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
       .icon-user {
         width: 26px;
         height: 26px;
         color: #fff;
       }
     }
-    .user:hover {
+    .inviteUser:hover {
       background-color: rgba(@cardColorMain, 0.5);
     }
     .change {
       margin-left: 30px;
       color: rgba(@cardTextColorMain, 1);
       background-color: rgba(@cardColorMain, 1);
-      padding: 15px;
+      padding: 10px 15px;
       border-radius: 10px;
       cursor: pointer;
       .icon-moon-fill {
