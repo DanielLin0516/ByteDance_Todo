@@ -1,4 +1,11 @@
-import { ProductElement } from "@/axios/globalInterface";
+import {
+  ProductElement,
+  ProductShowElement,
+  CardElement,
+  UserElement,
+  TagElement,
+  ListElement,
+} from "@/axios/globalInterface";
 import instance from "./request";
 /**
  * 登录
@@ -86,14 +93,23 @@ export function deleteProject(id: String) {
  * @param productId
  * @returns
  */
-export function getProductInfo(productId:any):Promise<{cardList: Array<{}>,lists:Array<{}>}> {
-  return instance.get(`/product/getProductShowInfo/${productId}`)
+export function getProductInfo(productId: any): Promise<{
+  cardList: CardElement[];
+  lists: ListElement[];
+  background: string;
+  isPrivate: string;
+  createdTime: string;
+  memberList: UserElement[];
+  productName: string;
+  tagList: TagElement[];
+}> {
+  return instance.get(`/product/getProductShowInfo/${productId}`);
 }
 /**
  * 获取是否是自己创建的项目
  * @param productId
  * @returns
  */
-export function owner(productId:any):Promise<{ isOwner:boolean}> {
-  return instance.get(`/product/getMemberStatus/${productId}`)
+export function owner(productId: any): Promise<{ isOwner: boolean }> {
+  return instance.get(`/product/getMemberStatus/${productId}`);
 }

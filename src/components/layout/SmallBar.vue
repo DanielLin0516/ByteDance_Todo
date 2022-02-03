@@ -2,9 +2,9 @@
   <div class="small-bar">
     <!-- 第二个菜单栏 -->
     <div class="second-bar">
-      <span>项目名称</span>
-      <div class="user" v-if="store.state.showInviteButton">
-        <icon-user class="icon-user"  />邀请朋友
+      <span>{{ productName }}</span>
+      <div class="user" v-show="showInviteButton">
+        <icon-user class="icon-user" />邀请朋友
       </div>
       <div class="change" @click="changeTheme($event)">切换夜间模式</div>
     </div>
@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { IconUser, IconMoonFill } from "@arco-design/web-vue/es/icon";
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 import { setTheme } from "@/theme/theme";
 export default defineComponent({
@@ -25,6 +25,12 @@ export default defineComponent({
   setup() {
     const isDark = ref(false);
     const store = useStore();
+    const showInviteButton = computed(() => {
+      return store.state.showInviteButton;
+    });
+    const productName = computed(() => {
+      return store.state.currentProductName;
+    });
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";
@@ -35,7 +41,7 @@ export default defineComponent({
       }
       isDark.value = !isDark.value;
     };
-    return { changeTheme ,store};
+    return { changeTheme, store, showInviteButton, productName };
   },
 });
 </script>
