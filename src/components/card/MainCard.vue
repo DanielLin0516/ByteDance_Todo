@@ -39,7 +39,7 @@
         :key="task.cardId"
         draggable="true"
         :cardInfo="task"
-        :columnId="column.listId"
+        :columnId="column.listId.toString()"
         @click="openTask(task.cardId, column)"
         @dragstart="pickupTask($event, task.cardId, column.listId)"
         @dragover.prevent
@@ -104,7 +104,7 @@
     </div>
     <div class="task-bg" v-if="isTaskOpen" @click.self="close">
       <!-- <router-view /> -->
-      <Task :id="taskClickId" :columnName="columnName" @close="close"></Task>
+      <Task :id="taskClickId.toString()" :columnName="columnName" @close="close"></Task>
     </div>
   </div>
 </template>
