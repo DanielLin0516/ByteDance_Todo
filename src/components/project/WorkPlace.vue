@@ -48,15 +48,8 @@
               color: rgb(103, 117, 139);
               margin-top: 1vw;
             "
-          >
-            看板标题
-          </div>
-          <input
-            type="text"
-            placeholder="输入看板标题（必填项）"
-            class="title"
-            v-model="title"
-          />
+          >看板标题</div>
+          <input type="text" placeholder="输入看板标题（必填项）" class="title" v-model="title" />
           <a-button
             type="primary"
             :disabled="build"
@@ -67,8 +60,7 @@
               height: 3vw;
             "
             @click="send"
-            >创建</a-button
-          >
+          >创建</a-button>
         </div>
       </div>
       <div class="join">
@@ -79,9 +71,8 @@
             :style="{ background: join.background }"
             v-for="join in shareProductList"
             :key="join.id"
-          >
-            {{ join.productName }}
-          </div>
+            @click="enterInto(join.id)"
+          >{{ join.productName }}</div>
         </div>
       </div>
     </div>
@@ -98,6 +89,7 @@ import {
 import {
   computed,
   defineComponent,
+  onBeforeUpdate,
   onMounted,
   reactive,
   ref,
@@ -152,13 +144,23 @@ export default defineComponent({
       },
     ]);
     const title = ref("");
-    watch(title, () => {
-      if (title.value) {
-        build.value = false;
-      } else {
-        build.value = true;
+    let data = JSON.parse(localStorage.getItem('user'))
+    let url = localStorage.getItem('url')
+    onBeforeUpdate(() => {
+      if (url && data && data.userId === 0) {
+        data.userId = store.state.userId;
+        router.push({name:"Invite",params:{productId:data.productId,link:url}});
+        localStorage.removeItem("user");
+        localStorage.removeItem("url");
       }
-    });
+    }),
+      watch(title, () => {
+        if (title.value) {
+          build.value = false;
+        } else {
+          build.value = true;
+        }
+      });
     const enterInto = (id: string) => {
       router.push({ name: "Board", params: { productId: id } });
     };

@@ -19,11 +19,12 @@
 </template>
 
 <script lang="ts">
-import LeftDrawer from "./LeftDrawer.vue";
+import LeftDrawer from "@/components/layout/LeftDrawer.vue";
 import MainCard from "../card/MainCard.vue";
 import SmallBar from "@/components/layout/SmallBar.vue";
 import { defineComponent, ref, computed, reactive } from "vue";
-import { setTheme } from "../../theme/theme";
+import { setTheme } from "@/theme/theme";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "Board",
   components: {
@@ -34,6 +35,7 @@ export default defineComponent({
   setup() {
     const isDark = ref(false);
     const loading = ref(true);
+    const store = useStore();
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";

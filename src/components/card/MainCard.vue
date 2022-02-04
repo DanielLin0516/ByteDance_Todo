@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="card-wrapper"
-    @mousedown="columnsMouseMove"
-    @wheel="columnsMouseWheel"
-  >
+  <div class="card-wrapper" @mousedown="columnsMouseMove" @wheel="columnsMouseWheel">
     <!-- 要渲染的列表 -->
     <div
       class="list-item"
@@ -16,9 +12,7 @@
       @dragstart.self="pickupColumn($event, column.listId)"
     >
       <!-- 列表标题 -->
-      <div class="list-title">
-        {{ column.listName }}
-      </div>
+      <div class="list-title">{{ column.listName }}</div>
       <!-- 列表任务栏也要渲染 -->
       <div
         v-for="task of column.items"
@@ -40,7 +34,7 @@
               <div>{{ task.time.timePeriod[1] }}</div>
             </div>
             <icon-schedule class="time2" />
-          </div> -->
+          </div>-->
         </div>
         <div
           class="kanban-dropzon"
@@ -84,6 +78,11 @@ import {
   watch,
   PropType,
   reactive,
+  onBeforeUpdate,
+  provide,
+  onBeforeMount,
+onMounted,
+onUpdated
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -91,8 +90,6 @@ import { ProductShowElement } from "@/axios/globalInterface";
 import { useRequest } from "@/hooks/useRequest";
 import { getProductInfo, owner, createList, editListName } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
-import { getCipherInfo } from "crypto";
-import { title } from "process";
 export default defineComponent({
   name: "MainCard",
   components: {
@@ -152,6 +149,8 @@ export default defineComponent({
         Message.success({ content: "获取页面成功！" });
         store.commit("setCurrentProductName", res.productName);
         store.commit("setShowInviteButton", showInvite.isOwner);
+        store.commit("setMemberList", res.memberList);
+        console.log('老子刚收到数据我草信吗')
         // 清空lists
         lists.length = 0;
         res.lists.forEach((item) => {
@@ -225,7 +224,6 @@ export default defineComponent({
         productId: Number(productId.value),
         listName: newColumnName.value,
         pos: 300,
-
       });
       const temp: ProductShowElement = {
         listName: "",
@@ -372,7 +370,7 @@ export default defineComponent({
 <style lang="less" scoped>
 @import url("./scrollCss/scroll.scss");
 .card-wrapper {
-  width: 100%;
+  width: max-content;
   height: 100%;
   .list-item {
     overflow-x: hidden;

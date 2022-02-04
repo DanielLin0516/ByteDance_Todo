@@ -10,10 +10,10 @@ import LeftDrawer from "./LeftDrawer.vue";
 import MainCard from "../card/MainCard.vue";
 import SmallBar from "@/components/layout/SmallBar.vue";
 import { IconUser, IconMoonFill } from "@arco-design/web-vue/es/icon";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted, computed, nextTick } from "vue";
 import { setTheme } from "../../theme/theme";
 import { currentUser } from "../../axios/api";
-import store from "@/store";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "Layout",
   components: {
@@ -26,10 +26,12 @@ export default defineComponent({
   },
   setup() {
     const isDark = ref(false);
-    currentUser().then((res) => {
+    const store = useStore();
+    const currentUserFunc = async () => {
+      const res = await currentUser();
       store.commit("setUserId", res.userId);
-    });
-
+    }
+    currentUserFunc()
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";

@@ -143,3 +143,42 @@ export function editListName(listId: number, listNName: string): Promise<any> {
     `/list/editListName?listId=${listId}&listName=${listNName}`
   );
 }
+/**
+ * 获取邀请码
+ * @param userId 
+ * @returns 
+ */
+export function getInviteCode(userId: any): Promise<any> {
+  return instance.get(
+    `/users/getInviteCode/${userId}`
+  );
+}
+/**
+ * 邀请页
+ * @param productId 
+ * @param inviteCode 
+ * @returns 
+ */
+export function inviteShow(productId: any, inviteCode: any): Promise<{
+  tokenExpire: boolean;
+  productName: string;
+  inviteUserName: string;
+}> {
+  return instance.get(
+    `/product/getInviteInfo?productId=${productId}&secret=${inviteCode}`
+  );
+}
+/**
+ * 邀请人员进项目
+ * @param obj
+ * @returns 
+ */
+export function invitePerson(obj: {
+  productId:number;
+  secret:string;
+  userId:number;
+}): Promise<{}> {
+  return instance.post(
+    `/product/invite`, obj
+  );
+}

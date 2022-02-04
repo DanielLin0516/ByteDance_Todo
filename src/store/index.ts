@@ -9,6 +9,7 @@ export default createStore({
       userId: "",
       productList: [],
       currentProductName: "",
+      memberList:[],
       shareProductList: [],
       showInviteButton: false,
       board: defaultBoard,
@@ -40,6 +41,9 @@ export default createStore({
     },
   },
   mutations: {
+    setMemberList(state,value) {
+      state.memberList = value;
+    },
     setUserId(state, value) {
       state.userId = value;
     },

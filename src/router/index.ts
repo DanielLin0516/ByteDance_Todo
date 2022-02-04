@@ -1,3 +1,4 @@
+import { Message } from "@arco-design/web-vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 const router = createRouter({
   history: createWebHashHistory(),
@@ -16,6 +17,11 @@ const router = createRouter({
       path: "/Register",
       name: "Register",
       component: () => import("../view/Register.vue"),
+    },
+    {
+      path: "/Invite/:productId/:link",
+      name: "Invite",
+      component: () => import("../view/Invite.vue"),
     },
     {
       path: "/Layout",
@@ -40,9 +46,10 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
   let token = localStorage.getItem('token');
-  if (token || to.path == "/" || to.path == "/Login" || to.path == "/Register") {
+  if (token || to.path == "/" || to.path == "/Login" || to.path == "/Register" || (to.params.productId && to.params.link)) {
     next();
   } else {
+    Message.error({content:"请先登录！"})
     next("/Login")
   }
 })
