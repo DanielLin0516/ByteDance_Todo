@@ -7,8 +7,8 @@
     @drop.stop="moveTask($event)"
   >
     <div class="card-menu">
-      {{ cardInfo.cardname }}
-      <div class="des">{{ cardInfo.description }}</div>
+      {{ cardInfo?.cardname }}
+      <div class="des">{{ cardInfo?.description }}</div>
       <!-- <div v-if="cardInfo.time.timePeriod" :class="time" @click.prevent.stop="done">
             <div class="time1">
               <div>{{ cardInfo.time.timePeriod[0] }}</div>
