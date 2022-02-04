@@ -20,7 +20,22 @@
         {{ column.listName }}
       </div>
       <!-- 列表任务栏也要渲染 -->
-      <div
+      <CardItem
+        v-for="task of column.items"
+        :key="task.cardId"
+        draggable="true"
+        :cardInfo="task"
+        :columnId="column.listId"
+        @click="openTask(task.cardId, column)"
+        @dragstart="pickupTask($event, task.cardId, column.listId)"
+        @dragover.prevent
+        @dragenter.prevent
+        @drop.stop="
+          moveTaskOrColumn($event, column.items, task.cardId, column.listId)
+        "
+      >
+      </CardItem>
+      <!-- <div
         v-for="task of column.items"
         :key="task.cardId"
         draggable="true"
@@ -34,13 +49,14 @@
         <div class="card-menu">
           {{ task.cardname }}
           <div class="des">{{ task.description }}</div>
-          <!-- <div v-if="task.time.timePeriod" :class="time" @click.prevent.stop="done">
+          
+          <div v-if="task.time.timePeriod" :class="time" @click.prevent.stop="done">
             <div class="time1">
               <div>{{ task.time.timePeriod[0] }}</div>
               <div>{{ task.time.timePeriod[1] }}</div>
             </div>
             <icon-schedule class="time2" />
-          </div> -->
+          </div>
         </div>
         <div
           class="kanban-dropzon"
@@ -48,7 +64,7 @@
           @dragleave.prevent="height1($event)"
           @drop="height1($event)"
         ></div>
-      </div>
+      </div> -->
       <!-- 添加卡片按钮 -->
       <input
         class="new-button"
@@ -67,7 +83,8 @@
       />
     </div>
     <div class="task-bg" v-if="isTaskOpen" @click.self="close">
-      <router-view />
+      <!-- <router-view /> -->
+      <Task :id="taskClickId" :columnName="columnName" @close="close"></Task>
     </div>
   </div>
 </template>
@@ -93,6 +110,8 @@ import { getProductInfo, owner, createList, editListName } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
 import { getCipherInfo } from "crypto";
 import { title } from "process";
+import CardItem from "./CardItem.vue";
+import Task from "./Task.vue";
 
 export default defineComponent({
   name: "MainCard",
@@ -100,6 +119,8 @@ export default defineComponent({
     IconPlus,
     TransitionGroup,
     IconSchedule,
+    CardItem,
+    Task,
   },
   // props: {
   //   lists: {
@@ -107,6 +128,11 @@ export default defineComponent({
   //     required: true,
   //   },
   // },
+  provide() {
+    return {
+      // columnName:
+    };
+  },
   emits: ["loadingOver"],
   setup(props, context) {
     const store = useStore();
@@ -115,6 +141,9 @@ export default defineComponent({
     const newColumnName = ref("");
     const isEditListTitle = ref(false);
     const newListName = ref("");
+    const taskClickId = ref(1);
+    const columnName = ref("1");
+    const isTaskOpen = ref(false);
     let cur = ref(true);
     const time = computed(() => {
       return {
@@ -125,9 +154,9 @@ export default defineComponent({
     const done = () => {
       cur.value = !cur.value;
     };
-    const isTaskOpen = computed(() => {
-      return route.name === "task";
-    });
+    // const isTaskOpen = computed(() => {
+    //   return route.name === "task";
+    // });
     // 传给MainCard的列数组
     const lists = reactive<ProductShowElement[]>([]);
     // 路由中的项目Id
@@ -205,7 +234,8 @@ export default defineComponent({
       router.push({ name: "task", params: { cid: columnID, id: task.id } });
     };
     const close = () => {
-      router.push({ name: "Layout/Board" });
+      isTaskOpen.value = false;
+      // router.push({ name: "Layout/Board" });
     };
     const createTask = (e: any, tasks: any) => {
       var timestamp = getTimeStamp();
@@ -322,17 +352,18 @@ export default defineComponent({
       e.target.style.height = "10px";
       e.target.style.border = "";
     };
-    const columnsMouseMove = (e: any) => {
-      const el = e.target;
+    const columnsMouseMove = (e: MouseEvent) => {
+      const el = e.target as HTMLDivElement;
+      const elp = el.parentElement as HTMLDivElement;
 
       const startPosition = e.clientX;
-      const startScroll = el.parentElement.scrollLeft;
+      const startScroll = elp.scrollLeft;
 
       if (!el.classList.contains("card-wrapper")) return;
 
-      const onMouseMove = (e: any) => {
+      const onMouseMove = (e: MouseEvent) => {
         const diff = e.clientX - startPosition;
-        el.parentElement.scrollLeft = startScroll - diff;
+        elp.scrollLeft = startScroll - diff;
       };
       const onMouseUp = () => {
         el.removeEventListener("mousemove", onMouseMove);
@@ -340,13 +371,18 @@ export default defineComponent({
       el.addEventListener("mousemove", onMouseMove);
       el.addEventListener("mouseup", onMouseUp);
     };
-    const columnsMouseWheel = (e: any) => {
-      const el = e.target;
+    const columnsMouseWheel = (e: WheelEvent) => {
+      const el = e.target as HTMLDivElement;
       if (!el.classList.contains("card-wrapper")) return;
 
       const flag = ("" + e.deltaY)[0];
-      let elP = el.parentElement;
+      let elP = el.parentElement as HTMLDivElement;
       flag === "1" ? (elP.scrollLeft += 30) : (elP.scrollLeft -= 50);
+    };
+    const openTask = (cardId: number, column: ProductShowElement) => {
+      taskClickId.value = cardId;
+      columnName.value = column.listName;
+      isTaskOpen.value = true;
     };
 
     getInfo();
@@ -376,6 +412,9 @@ export default defineComponent({
       getInfo,
       productLoading,
       editListNameById,
+      openTask,
+      taskClickId,
+      columnName,
     };
   },
 });

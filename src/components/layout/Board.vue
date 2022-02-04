@@ -9,10 +9,8 @@
         <SmallBar></SmallBar>
       </div>
 
-      <div class="right_down">
-        <div v-show="!loading">
-          <MainCard @loadingOver="loadingOver"></MainCard>
-        </div>
+      <div class="right_down" v-show="!loading">
+        <MainCard @loadingOver="loadingOver"></MainCard>
       </div>
     </div>
   </div>
