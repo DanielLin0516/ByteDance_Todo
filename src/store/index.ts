@@ -10,6 +10,7 @@ export default createStore({
       productList: [],
       currentProductName: "",
       memberList:[],
+      background:"",
       shareProductList: [],
       showInviteButton: false,
       board: defaultBoard,
@@ -41,6 +42,9 @@ export default createStore({
     },
   },
   mutations: {
+    setColor(state,value) {
+      state.background = value
+    },
     setMemberList(state,value) {
       state.memberList = value;
     },

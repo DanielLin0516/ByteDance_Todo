@@ -8,21 +8,21 @@
       />
       <input
         type="text"
-        v-model="content"
+        v-model="task.cardname"
         class="content"
         @change="updateTaskProperty($event, 'name')"
         @keyup.enter="updateTaskProperty($event, 'name')"
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ listName }}</span
+        <span class="listNameSpan">{{ columnName }}</span
         >中
       </div>
     </div>
-    <div :class="date" v-if="task.time.timePeriod">
+    <!-- <div :class="date" v-if="true">
       <span>日期</span>
-      <div>{{ task.time.timePeriod[0] }} - {{ task.time.timePeriod[1] }}</div>
-    </div>
+      <div>{{ task.begintime }} - {{ task.deadline }}</div>
+    </div> -->
     <div class="des">
       <icon-align-left
         class="icon-left"
@@ -33,7 +33,7 @@
     <a-textarea
       default-value="添加详细描述..."
       class="text"
-      v-model="task.description"
+      v-model="task.cardname"
       placeholder="添加详细描述..."
       @change="updateTaskProperty($event, 'description')"
       :auto-size="{ minRows: 2, maxRows: 5 }"
@@ -41,6 +41,7 @@
     <card-action :task="task"></card-action>
     <card-detail-fuction></card-detail-fuction>
   </div>
+  <!-- <h1>tttttttttttttttttttt</h1> -->
 </template>
 <script lang="ts">
 import {
@@ -49,9 +50,13 @@ import {
   IconAlignLeft,
 } from "@arco-design/web-vue/es/icon";
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, reactive } from "vue";
 import { useStore } from "vuex";
 import debouceRef from "../../hooks/debounce";
+import { useRequest } from "@/hooks/useRequest";
+import { getCardInfo, owner, createList, editListName } from "@/axios/api";
+import { CardElement } from "@/axios/globalInterface";
+
 import CardAction from "./CardAction.vue";
 import CardDetailFuction from "./CardDetailFuction.vue";
 export default defineComponent({
@@ -63,28 +68,37 @@ export default defineComponent({
     CardAction,
     CardDetailFuction,
   },
-  setup() {
+  props: {
+    id: String,
+    columnName: String,
+  },
+  inject: {},
+  emits: ["close"],
+  setup(props, context) {
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
-    const task = computed(() => {
-      return store.getters.getTask(route.params.id);
-    });
+    const task = reactive<CardElement[]>([]);
+
+    let task1 = {};
     const listName = computed(() => {
+      return "listName---";
       return store.getters.getColumnName(route.params.cid);
     });
     const content = computed({
       get() {
-        let task1 = store.getters.getTask(route.params.id);
-        return task1.content;
+        // let task1 = store.getters.getTask(route.params.id);
+        return "task1.content";
       },
       set(val) {
         let task1 = store.getters.getTask(route.params.id);
         return (task1.content = val);
       },
     });
-    let debounce = debouceRef(content.value);
+    // let debounce = debouceRef(content.value);
     const updateTaskProperty = (e: { target: any }, key: any) => {
+      console.log("updateTaskProperty-----");
+
       store.commit("UPDATE_TASK", {
         task,
         key,
@@ -92,20 +106,49 @@ export default defineComponent({
       });
     };
     const close = () => {
-      router.push({ name: "/Layout/Board"});
+      context.emit("close");
+      // router.push({ name: "/Layout/Board" });
     };
-    const date = computed(() => {
-      return {
-        date: true,
-      };
+    //获取页面渲染数据与处理数据
+    const {
+      data,
+      loading: productLoading,
+      error,
+      run,
+    } = useRequest(getCardInfo, {
+      onError: () => {
+        console.trace(error);
+      },
     });
+    async function getInfo() {
+      try {
+        console.log(props);
+        const res = await run(8);
+        console.log(res);
+        // task = res
+      } catch (error) {
+        console.trace(error);
+      }
+    }
+    // getInfo();
+    const test = async () => {
+      console.log(props.id);
+
+      let id = parseInt(props.id) as number;
+
+      await getCardInfo(id).then((res) => {
+        console.log(res);
+        Object.assign(task, res);
+      });
+    };
+    test();
     return {
       task,
       listName,
       content,
       updateTaskProperty,
       close,
-      date,
+      // date,
     };
   },
 });
@@ -113,16 +156,21 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .flex {
-  height: 750px;
+  position: relative;
+  display: flex;
+  height: 75vh;
+  width: 50vw;
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
   border-radius: 10px;
-  width: 800px;
   background-color: rgba(@cardColorMain, 1);
   padding: 10px;
-  margin: 50px auto;
-  display: flex;
+
   flex-direction: column;
   align-items: flex-start;
-  position: relative;
   .icon-close-circle {
     position: absolute;
     right: 20px;

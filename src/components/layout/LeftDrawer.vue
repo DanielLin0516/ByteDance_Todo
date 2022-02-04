@@ -71,6 +71,7 @@ export default defineComponent({
   border-right: 1px solid rgba(@cardColorWrapper, 0.5);
   display: flex;
   float: left;
+  // z-index: 999;
   cursor: pointer;
   .icon-right-circle {
     width: 50px;
