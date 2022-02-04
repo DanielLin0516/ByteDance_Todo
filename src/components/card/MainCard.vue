@@ -181,6 +181,7 @@ export default defineComponent({
       try {
         const res = await run(productId.value);
         const showInvite = await owner(productId.value);
+        const bgcColor = res.background;
         Message.success({ content: "获取页面成功！" });
         store.commit("setCurrentProductName", res.productName);
         store.commit("setShowInviteButton", showInvite.isOwner);
@@ -213,7 +214,7 @@ export default defineComponent({
         });
         // console.log(lists);
         // 告知父组件，加载完毕
-        context.emit("loadingOver");
+        context.emit("loadingOver", bgcColor);
       } catch (error) {
         console.trace(error);
       }

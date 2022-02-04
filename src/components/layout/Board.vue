@@ -1,16 +1,20 @@
 <template>
-  <LeftDrawer></LeftDrawer>
-  <div class="main-area">
-    <div class="right">
-      <div class="loading" v-show="loading">
-        <a-spin dot :loading="loading" :size="25" />
-      </div>
-      <div v-show="!loading">
-        <SmallBar></SmallBar>
-      </div>
+  <div :style="{ background: projectColor }">
+    <LeftDrawer></LeftDrawer>
+    <div class="main-area">
+      <div class="right">
+        <div class="loading" v-show="loading">
+          <a-spin dot :loading="loading" :size="25" />
+        </div>
+        <div v-show="!loading">
+          <SmallBar></SmallBar>
+        </div>
 
-      <div class="right_down" v-show="!loading">
-        <MainCard @loadingOver="loadingOver"></MainCard>
+        <div class="right_down">
+          <div v-show="!loading">
+            <MainCard @loadingOver="loadingOver"></MainCard>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -33,6 +37,7 @@ export default defineComponent({
   setup() {
     const isDark = ref(false);
     const loading = ref(true);
+    let projectColor = ref("");
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";
@@ -45,10 +50,11 @@ export default defineComponent({
     };
 
     // 加载完成,子组件加载完成调用
-    const loadingOver = () => {
+    const loadingOver = (bgcColor: string) => {
+      projectColor.value = bgcColor;
       loading.value = false;
     };
-    return { changeTheme, loading, loadingOver };
+    return { changeTheme, loading, loadingOver, projectColor };
   },
 });
 </script>
