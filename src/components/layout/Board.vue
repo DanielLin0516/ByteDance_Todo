@@ -22,8 +22,17 @@
 import LeftDrawer from "./LeftDrawer.vue";
 import MainCard from "../card/MainCard.vue";
 import SmallBar from "@/components/layout/SmallBar.vue";
-import { defineComponent, ref, computed, reactive } from "vue";
+import {
+  defineComponent,
+  ref,
+  computed,
+  reactive,
+  onMounted,
+  onUpdated,
+  onBeforeUpdate,
+} from "vue";
 import { setTheme } from "../../theme/theme";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Board",
@@ -33,9 +42,11 @@ export default defineComponent({
     SmallBar,
   },
   setup() {
+    const store = useStore();
     const isDark = ref(false);
     const loading = ref(true);
     let projectColor = ref("");
+
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";

@@ -146,3 +146,12 @@ export const getTagsByProductId = (productId: string): Promise<{ data: list }> =
 export function createNewLabel(newLabelData: { color: string; productId: string; content: string }): Promise<{ id: string; productId: string; tagName: string; color: string }> {
   return instance.post(`/tag/create`, newLabelData);
 }
+
+/**
+ * 根据id删除列
+ * @param listId
+ * @returns
+ */
+export function deleteListById(listId: number): Promise<any> {
+  return instance.delete(`/list/removeList/${listId}`);
+}
