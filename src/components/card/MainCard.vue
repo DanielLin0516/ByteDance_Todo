@@ -16,10 +16,28 @@
       @dragstart.self="pickupColumn($event, column.listId)"
     >
       <!-- 列表标题 -->
-      <div class="list-title">
-        {{ column.listName }}
-      </div>
-      <!-- 列表任务栏也要渲染 -->
+      <a-row justify="space-between" align="center">
+        <a-col :span="21">
+          <a-input
+            class="list-title"
+            size="large"
+            :default-value="column.listName"
+            @press-enter="editListNameById(column.listId, index, $event)"
+          />
+        </a-col>
+        <a-col :span="3" style="display: flex; justify-content: flex-end">
+          <a-popconfirm
+            content="将此列表进行删除？"
+            okText="确认"
+            cancelText="取消"
+            @ok="deleteOneList(column.listId, index)"
+          >
+            <icon-close-circle :style="{ fontSize: '20px', color: '#696969' }"
+          /></a-popconfirm>
+        </a-col>
+      </a-row>
+
+      <!-- 列表卡片栏也要渲染 -->
       <div
         v-for="task of column.items"
         :key="task.cardId"
@@ -75,7 +93,11 @@
 <script lang="ts">
 import "animate.css";
 import { getTimeStamp } from "../../store/utils";
-import { IconPlus, IconSchedule } from "@arco-design/web-vue/es/icon";
+import {
+  IconPlus,
+  IconSchedule,
+  IconCloseCircle,
+} from "@arco-design/web-vue/es/icon";
 import {
   computed,
   defineComponent,
@@ -84,12 +106,20 @@ import {
   watch,
   PropType,
   reactive,
+  onMounted,
+  getCurrentInstance,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { ProductShowElement } from "@/axios/globalInterface";
 import { useRequest } from "@/hooks/useRequest";
-import { getProductInfo, owner, createList, editListName } from "@/axios/api";
+import {
+  getProductInfo,
+  owner,
+  createList,
+  editListName,
+  deleteListById,
+} from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
 import { getCipherInfo } from "crypto";
 import { title } from "process";
@@ -100,6 +130,7 @@ export default defineComponent({
     IconPlus,
     TransitionGroup,
     IconSchedule,
+    IconCloseCircle,
   },
   // props: {
   //   lists: {
@@ -113,8 +144,6 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const newColumnName = ref("");
-    const isEditListTitle = ref(false);
-    const newListName = ref("");
     let cur = ref(true);
     const time = computed(() => {
       return {
@@ -134,7 +163,6 @@ export default defineComponent({
     const productId = computed(() => {
       return route.params.productId;
     });
-
     // useRequest钩子
     const {
       data,
@@ -156,6 +184,7 @@ export default defineComponent({
         Message.success({ content: "获取页面成功！" });
         store.commit("setCurrentProductName", res.productName);
         store.commit("setShowInviteButton", showInvite.isOwner);
+
         // 清空lists
         lists.length = 0;
 
@@ -245,19 +274,36 @@ export default defineComponent({
       lists.push(temp);
       newColumnName.value = "";
     };
+
+    /**
+     * 修改列的名称
+     * @param listId
+     * @param index
+     * @param e
+     */
     const editListNameById = async (
       listId: number,
       index: number,
       e: KeyboardEvent
     ) => {
-      console.log(e);
-      lists[index].listName = newListName.value;
-      await editListName(listId, newListName.value);
-      isEditListTitle.value = false;
+      const inputEvent = e.target as HTMLInputElement;
+      try {
+        lists[index].listName = inputEvent.value;
+        await editListName(listId, inputEvent.value);
+      } catch (e) {
+        console.trace(e);
+      } finally {
+        inputEvent.blur();
+      }
     };
-    const setIsEditListTitle = () => {
-      console.log("415");
-      isEditListTitle.value = true;
+    /**
+     * 删除列表
+     * @param listId
+     * @param index
+     */
+    const deleteOneList = async (listId: number, index: number) => {
+      await deleteListById(listId);
+      lists.splice(index, 1);
     };
     const pickupTask = (e: any, taskIndex: any, fromColumnIndex: any) => {
       e.dataTransfer.effctAllowed = "move";
@@ -267,27 +313,32 @@ export default defineComponent({
       e.dataTransfer.setData("type", "task");
       e.dataTransfer.setData("from-column-name", getCurColumnName(e));
     };
-    const pickupColumn = (e: any, fromColumnIndex: any) => {
-      e.dataTransfer.effctAllowed = "move";
-      e.dataTransfer.dropEffect = "move";
-      e.dataTransfer.setData("from-column-index", fromColumnIndex);
-      e.dataTransfer.setData("type", "column");
+    const pickupColumn = (e: DragEvent, fromColumnIndex: any) => {
+      console.log("列移动中");
+      // e.dataTransfer.effctAllowed = "move";
+      // e.dataTransfer.dropEffect = "move";
+      // e.dataTransfer.setData("from-column-index", fromColumnIndex);
+      // e.dataTransfer.setData("type", "column");
     };
     const moveTaskOrColumn = (
-      e: any,
+      e: DragEvent,
       toTasks: any,
       toColumnIndex: any,
       toTaskIndex: any
     ) => {
-      const type = e.dataTransfer.getData("type");
+      console.log(e);
+      const type = e.dataTransfer?.getData("type");
+      console.log(toColumnIndex);
       if (type === "task") {
-        moveTask(
-          e,
-          toTasks,
-          toTaskIndex !== "undefined" ? toTaskIndex : toTasks.length
-        );
+        // moveTask(
+        //   e,
+        //   toTasks,
+        //   toTaskIndex !== "undefined" ? toTaskIndex : toTasks.length
+        // );
+        console.log("task");
       } else {
-        moveColumn(e, toColumnIndex);
+        console.log("column");
+        // moveColumn(e, toColumnIndex);
       }
     };
     const moveTask = (e: any, toTasks: any, toTaskIndex?: any) => {
@@ -363,9 +414,6 @@ export default defineComponent({
       pickupColumn,
       moveTaskOrColumn,
       newColumnName,
-      isEditListTitle,
-      newListName,
-      setIsEditListTitle,
       createColumn,
       height,
       height1,
@@ -377,15 +425,18 @@ export default defineComponent({
       getInfo,
       productLoading,
       editListNameById,
+      deleteOneList,
     };
   },
 });
 </script>
 <style lang="less" scoped>
 @import url("./scrollCss/scroll.scss");
+
 .card-wrapper {
   width: max-content;
   height: 100%;
+
   .list-item {
     overflow-x: hidden;
     overflow-y: visible;
@@ -401,15 +452,25 @@ export default defineComponent({
     background-color: rgba(@cardColorWrapper, 1);
     border-radius: 10px;
     cursor: pointer;
-    padding: 10px 15px 10px 15px;
+    padding: 10px 12px 10px 12px;
     .list-title {
       cursor: pointer;
       // width: 100%;
       height: 30px;
       opacity: 1;
       padding: 10px;
-      font-size: 22px;
+
       font-family: PingFang-Bold-2;
+      :deep(.arco-input-size-large) {
+        font-size: 22px;
+      }
+    }
+    :deep(.arco-input-wrapper) {
+      background-color: transparent;
+      font-size: 22px !important;
+    }
+    :deep(.arco-input-wrapper.arco-input-focus) {
+      background-color: rgb(255, 255, 255);
     }
     .card-menu {
       height: auto;
@@ -484,18 +545,20 @@ export default defineComponent({
 
   .btn-add {
     float: left;
+    margin-left: 15px;
     .add-item {
       cursor: pointer;
       height: 50px;
       font-size: 18px;
       border-radius: 10px;
-      padding: 10px;
+      padding: 2px 10px;
       display: flex;
       align-items: center;
       width: 300px;
       background-color: rgba(@cardColorWrapper, 0.45);
       color: rgba(@cardTextColorSub, 1);
       margin-top: 5px;
+      margin-right: 20px;
       border: none;
       outline: 0;
     }

@@ -131,12 +131,21 @@ export function createList(param: {
 
 /**
  * 修改列的名称
- * @param listId 
- * @param listNName 
- * @returns 
+ * @param listId
+ * @param listNName
+ * @returns
  */
 export function editListName(listId: number, listNName: string): Promise<any> {
   return instance.post(
     `/list/editListName?listId=${listId}&listName=${listNName}`
   );
+}
+
+/**
+ * 根据id删除列
+ * @param listId
+ * @returns
+ */
+export function deleteListById(listId: number): Promise<any> {
+  return instance.delete(`/list/removeList/${listId}`);
 }
