@@ -127,3 +127,22 @@ export function getCardInfo(cardId: number): Promise<{
 }> {
   return instance.get(`/cards/queryById/${cardId}`);
 }
+
+/**
+ * 获取项目内的label
+ * @param  productId
+ * @returns
+ */
+
+export const getTagsByProductId = (productId: string): Promise<{ data: list }> => {
+  return instance.get(`/tag/getTagsByProductId??productId=${productId}`);
+};
+
+/**
+ * project中添加新label
+ * @param newLabelData
+ * @returns
+ */
+export function createNewLabel(newLabelData: { color: string; productId: string; content: string }): Promise<{ id: string; productId: string; tagName: string; color: string }> {
+  return instance.post(`/tag/create`, newLabelData);
+}

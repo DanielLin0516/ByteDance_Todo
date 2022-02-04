@@ -132,7 +132,9 @@ export default defineComponent({
     }
     // getInfo();
     const test = async () => {
-      let id: number = parseInt(props.id);
+      console.log(props.id);
+
+      let id = parseInt(props.id) as number;
 
       await getCardInfo(id).then((res) => {
         console.log(res);
