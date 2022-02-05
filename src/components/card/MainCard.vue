@@ -10,7 +10,7 @@
       v-for="(column, index) of lists"
       :key="column.listId"
       draggable="true"
-      @drop="moveColumn($event, index)"
+      @drop="moveTaskOrColumn($event, index, column.listId)"
       @dragover.prevent
       @dragenter.prevent
       @dragstart.self="pickupColumn($event, column.listId, index)"
@@ -36,23 +36,44 @@
           /></a-popconfirm>
         </a-col>
       </a-row>
-      <!-- 列表卡片栏也要渲染 -->
-      <CardItem
-        v-for="(task,taskIndex) of column.items"
-        :key="task.cardId"
-        draggable="true"
-        :cardInfo="task"
-        :columnId="column.listId.toString()"
-        @click="openTask(task.cardId, column)"
-        @dragstart.stop="pickupTask($event, task.cardId, column.listId)"
-        @dragover.prevent
-        @dragenter.prevent
-        @drop.stop="
-          moveTask($event, taskIndex,task.cardId,task.listId);
-        "
-      >
-      </CardItem>
+      <div class="scroller-container">
+        <!-- 列表卡片栏也要渲染 -->
+        <div v-for="(task, taskIndex) of column.items" :key="task.cardId">
+          <div
+            class="kanban-dropzon"
+            @dragover.prevent="height($event)"
+            @dragleave.prevent="height1($event)"
+            @drop.stop="
+              moveTaskOrColumn(
+                $event,
+                index,
+                column.listId,
+                taskIndex,
+                task.cardId
+              )
+            "
+          ></div>
+          <CardItem
+            draggable="true"
+            :cardInfo="task"
+            :columnId="column.listId.toString()"
+            @click="openTask(task.cardId, column)"
+            @dragstart.stop="pickupTask($event, task.cardId, taskIndex, index)"
+            @dragover.prevent
+            @dragenter.prevent
+            @drop.stop.prevent
+          >
+          </CardItem>
+        </div>
+      </div>
+
       <!-- 添加卡片按钮 -->
+      <div
+        class="kanban-dropzon"
+        @dragover.prevent="height($event)"
+        @dragleave.prevent="height1($event)"
+        @drop="moveTaskIntoColumnEnd($event, index, column.listId)"
+      ></div>
       <input
         class="new-button"
         type="text"
@@ -111,6 +132,7 @@ import {
   deleteListById,
   createNewCard,
   moveList,
+  moveCard,
 } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
 import { getCipherInfo } from "crypto";
@@ -156,6 +178,12 @@ export default defineComponent({
     const fromListId = ref(NaN);
     // 记录移动之前列的index值
     const fromListIndex = ref(NaN);
+    // 记录移动卡片的id
+    const fromCardId = ref(NaN);
+    // 记录移动卡片的index值
+    const fromCardIndex = ref(NaN);
+    // 记录移动卡片之前所在列的index值
+    const fromCardListIndex = ref(NaN);
 
     // 传给MainCard的列数组
     const lists = reactive<ProductShowElement[]>([]);
@@ -366,13 +394,39 @@ export default defineComponent({
       await deleteListById(listId);
       lists.splice(index, 1);
     };
-    const pickupTask = (e: DragEvent, taskIndex: any, fromColumnIndex: any) => {
-      console.log("卡片移动中");
-      // e.dataTransfer.effctAllowed = "move";
-      // e.dataTransfer.dropEffect = "move";
+
+    /**
+     * 卡片抬起时触发
+     * @param e
+     * @param fromTaskId
+     * @param fromTaskIndex
+     * @param fromColumnIndex
+     */
+    const pickupTask = (
+      e: DragEvent,
+      fromTaskId: number,
+      fromTaskIndex: number,
+      fromColumnIndex: number
+    ) => {
+      console.log(
+        "卡片从" +
+          fromColumnIndex +
+          "列出发，id为" +
+          fromTaskId +
+          " index为：" +
+          fromTaskIndex
+      );
+      fromCardId.value = fromTaskId;
+      fromCardIndex.value = fromTaskIndex;
+      fromCardListIndex.value = fromColumnIndex;
+      if (e.dataTransfer !== null) {
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.dropEffect = "move";
+        e.dataTransfer?.setData("type", "task");
+      }
       // e.dataTransfer.setData("from-task-index", taskIndex);
       // e.dataTransfer.setData("from-column-index", fromColumnIndex);
-      // e.dataTransfer.setData("type", "task");
+
       // e.dataTransfer.setData("from-column-name", getCurColumnName(e));
     };
     /**
@@ -389,22 +443,135 @@ export default defineComponent({
       // 将出发列的数据记录
       fromListIndex.value = fromColumnIndex;
       fromListId.value = fromColumnId;
+      if (e.dataTransfer !== null) {
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.dropEffect = "move";
+        e.dataTransfer?.setData("type", "column");
+      }
     };
 
-    const moveTask = (e: DragEvent, toTaskIndex: number,toTaskId:number,toListIndex:number) => {
-      // const fromColumnIndex = e.dataTransfer.getData("from-column-index");
-      // const fromTasks = store.state.lists[fromColumnIndex].items;
-      // const fromTaskIndex = e.dataTransfer.getData("from-task-index");
-      // const toTaskColumnName = getCurColumnName(e);
-      // const fromTaskColumnName = e.dataTransfer.getData("from-column-name");
-      // store.commit("MOVE_TASK", {
-      //   fromTasks,
-      //   fromTaskIndex,
-      //   toTasks,
-      //   toTaskIndex,
-      //   toTaskColumnName,
-      //   fromTaskColumnName,
-      // });
+    /**
+     * 移动列或任务卡片
+     * @param e
+     * @param toColumnIndex
+     * @param toTaskIndex
+     * @param toTaskId
+     */
+    const moveTaskOrColumn = (
+      e: DragEvent,
+      toColumnIndex: number,
+      toColumnId: number,
+      toTaskIndex?: number,
+      toTaskId?: number
+    ) => {
+      const type = e.dataTransfer?.getData("type");
+      if (
+        type === "task" &&
+        toTaskIndex !== undefined &&
+        toTaskId !== undefined
+      ) {
+        const dom = e.target as HTMLElement;
+        dom.style.height = "15px";
+        dom.style.boxShadow = "";
+        dom.style.backgroundColor = "transparent";
+        moveTask(e, toColumnIndex, toColumnId, toTaskIndex, toTaskId);
+        console.log("卡片移动完毕");
+      } else if (type === "column") {
+        moveColumn(e, toColumnIndex);
+        console.log("列移动完毕");
+      }
+    };
+
+    /**
+     * 移动任务卡片
+     * @param e
+     * @param toColumnIndex
+     * @param toTaskIndex
+     * @param toTaskId
+     */
+    const moveTask = async (
+      e: DragEvent,
+      toColumnIndex: number,
+      toColumnId: number,
+      toTaskIndex: number,
+      toTaskId: number
+    ) => {
+      console.log(
+        "卡片插入到" +
+          toColumnIndex +
+          "列，id为" +
+          toTaskId +
+          " index为：" +
+          toTaskIndex
+      );
+      let newPos: number = NaN;
+
+      if (fromCardListIndex.value === toColumnIndex) {
+        // 同列移动
+        const type = fromCardIndex.value < toTaskIndex ? "down" : "up";
+        if (type === "down") {
+          if (toTaskIndex - fromCardIndex.value <= 1) {
+            // 原地不动
+            return;
+          }
+          newPos = getPos(
+            lists[fromCardListIndex.value].items[toTaskIndex - 1].pos,
+            lists[fromCardListIndex.value].items[toTaskIndex].pos,
+            PosType.middle
+          );
+          const temp =
+            lists[fromCardListIndex.value].items[fromCardIndex.value];
+          temp.pos = newPos;
+          lists[toColumnIndex].items.splice(toTaskIndex, 0, temp);
+          lists[fromCardListIndex.value].items.splice(fromCardIndex.value, 1);
+        } else {
+          if (toTaskIndex === fromCardIndex.value) {
+            // 原地不动
+            return;
+          }
+          newPos =
+            toTaskIndex === 0
+              ? getPos(
+                  0,
+                  lists[fromCardListIndex.value].items[toTaskIndex].pos,
+                  PosType.first
+                )
+              : getPos(
+                  lists[fromCardListIndex.value].items[toTaskIndex - 1].pos,
+                  lists[fromCardListIndex.value].items[toTaskIndex].pos,
+                  PosType.middle
+                );
+          const temp =
+            lists[fromCardListIndex.value].items[fromCardIndex.value];
+          temp.pos = newPos;
+          lists[fromCardListIndex.value].items.splice(fromCardIndex.value, 1);
+          lists[toColumnIndex].items.splice(toTaskIndex, 0, temp);
+        }
+      } else {
+        // 跨列移动
+        newPos =
+          toTaskIndex === 0
+            ? getPos(
+                0,
+                lists[toColumnIndex].items[toTaskIndex].pos,
+                PosType.first
+              )
+            : getPos(
+                lists[toColumnIndex].items[toTaskIndex - 1].pos,
+                lists[toColumnIndex].items[toTaskIndex].pos,
+                PosType.middle
+              );
+        const temp = lists[fromCardListIndex.value].items[fromCardIndex.value];
+        temp.pos = newPos;
+        lists[fromCardListIndex.value].items.splice(fromCardIndex.value, 1);
+        lists[toColumnIndex].items.splice(toTaskIndex, 0, temp);
+      }
+
+      await moveCard({
+        cardId: fromCardId.value,
+        listId: toColumnId,
+        pos: newPos,
+      });
     };
 
     /**
@@ -414,14 +581,15 @@ export default defineComponent({
      * @param toColumnIndex
      */
     const moveColumn = (e: DragEvent, toColumnIndex: number) => {
+      const type = e.dataTransfer?.getData("type");
+      // 原地移动直接return
+      if (fromListIndex.value === toColumnIndex || type === "task") {
+        return;
+      }
       const len = lists.length;
       const id = fromListId.value;
       // 判断移动方向
       const direction = fromListIndex.value < toColumnIndex ? "right" : "left";
-      // 原地移动直接return
-      if (fromListIndex.value === toColumnIndex) {
-        return;
-      }
       // 获取新的pos值
       const newPos =
         toColumnIndex === 0
@@ -454,13 +622,48 @@ export default defineComponent({
       moveList({ listId: id, pos: newPos });
     };
 
-    const height = (e: any) => {
-      e.target.style.height = "4vw";
-      e.target.style.border = "1px solid grey";
+    const height = (e: DragEvent) => {
+      const dom = e.target as HTMLElement;
+      dom.style.height = "4vw";
+      dom.style.boxShadow = "inset 0 0 3px 3px #D8D8D8";
+      dom.style.backgroundColor = "#E6E6E6";
+      dom.style.transition = "height 0.2s";
     };
-    const height1 = (e: any) => {
-      e.target.style.height = "10px";
-      e.target.style.border = "";
+    const height1 = (e: DragEvent) => {
+      const dom = e.target as HTMLElement;
+      dom.style.height = "15px";
+      dom.style.boxShadow = "";
+      dom.style.backgroundColor = "transparent";
+    };
+    const moveTaskIntoColumnEnd = async (
+      e: DragEvent,
+      toColumnIndex: number,
+      toColumnId: number
+    ) => {
+      const dom = e.target as HTMLElement;
+      dom.style.height = "15px";
+      dom.style.boxShadow = "";
+      dom.style.backgroundColor = "transparent";
+
+      const len = lists[toColumnIndex].items.length;
+      const newPos =
+        len === 0
+          ? 60000
+          : getPos(lists[toColumnIndex].items[len - 1].pos, 0, PosType.end);
+
+      const temp = lists[fromCardListIndex.value].items[fromCardIndex.value];
+
+      temp.pos = newPos;
+
+      lists[toColumnIndex].items.push(temp);
+
+      lists[fromCardListIndex.value].items.splice(fromCardIndex.value, 1);
+
+      await moveCard({
+        cardId: fromCardId.value,
+        listId: toColumnId,
+        pos: newPos,
+      });
     };
     const columnsMouseMove = (e: MouseEvent) => {
       const el = e.target as HTMLDivElement;
@@ -508,6 +711,7 @@ export default defineComponent({
       createColumn,
       height,
       height1,
+      moveTaskIntoColumnEnd,
       time,
       done,
       columnsMouseMove,
@@ -520,6 +724,7 @@ export default defineComponent({
       taskClickId,
       columnName,
       deleteOneList,
+      moveTaskOrColumn,
     };
   },
 });
@@ -532,9 +737,6 @@ export default defineComponent({
   height: 100%;
 
   .list-item {
-    overflow-x: hidden;
-    overflow-y: visible;
-    max-height: 630px;
     width: 300px;
     float: left;
     flex-direction: column;
@@ -547,6 +749,7 @@ export default defineComponent({
     border-radius: 10px;
     cursor: pointer;
     padding: 10px 12px 10px 12px;
+    height: auto;
     .list-title {
       cursor: pointer;
       // width: 100%;
@@ -568,58 +771,13 @@ export default defineComponent({
     :deep(.arco-input-wrapper.arco-input-focus) {
       background-color: rgba(@cardColorMain, 0.4);
     }
-    .card-menu {
-      height: auto;
-      // width: 100%;
-      background-color: rgba(@cardColorMain, 1);
-      padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 5px;
-      border-radius: 10px;
-      box-shadow: 4px 2px 2px 1px rgba(@cardTextColorMain, 0.2);
-      cursor: pointer;
-      font-size: 18px;
-      border-bottom: 2px solid rgba(@cardTextColorSub, 0.45);
-      .des {
-        font-size: 12px;
-        color: rgba(@cardTextColorMain, 0.5);
-        margin-top: 5px;
-        font-style: italic;
-      }
-      .time {
-        margin-top: 10px;
-        display: flex;
-        font-size: 12px;
-        width: 200px;
-        align-items: center;
-        background-color: rgb(242, 214, 0);
-        padding: 5px;
-        border-radius: 10px;
-        color: rgba(@cardColorMain, 1);
-        .time1 {
-          display: flex;
-          flex-direction: column;
-        }
-        .time2 {
-          height: 30px;
-          width: 30px;
-        }
-      }
-      .time:hover {
-        background-color: rgb(217, 181, 28);
-      }
-      .timedone {
-        background-color: rgb(97, 189, 79);
-      }
-      .timedone:hover {
-        background-color: rgb(81, 152, 57);
-      }
-    }
-    .card-menu:hover {
-      background-color: rgba(@cardColorMain, 0.45);
+    .scroller-container {
+      overflow-x: hidden;
+      overflow-y: auto;
+      max-height: 500px;
     }
     .kanban-dropzon {
-      height: 8px;
+      height: 15px;
       background-color: transparent;
       border-radius: 10px;
     }

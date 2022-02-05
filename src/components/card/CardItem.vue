@@ -1,11 +1,5 @@
 <template>
-  <div
-    draggable="true"
-    @dragstart="pickupTask"
-    @dragover.prevent
-    @dragenter.prevent
-    @drop.stop="moveTask($event)"
-  >
+  <div>
     <div class="card-menu">
       {{ cardInfo?.cardname }}
       <div class="des">{{ cardInfo?.description }}</div>
@@ -17,12 +11,6 @@
             <icon-schedule class="time2" />
           </div> -->
     </div>
-    <div
-      class="kanban-dropzon"
-      @dragover.prevent="height($event)"
-      @dragleave.prevent="height1($event)"
-      @drop="height1($event)"
-    ></div>
   </div>
 </template>
 
@@ -36,28 +24,8 @@ export default defineComponent({
     cardInfo: Object,
     columnId: String,
   },
-  // emits: ["loadingOver"],
   setup(props) {
-    const height = (e: any) => {
-      e.target.style.height = "4vw";
-      e.target.style.border = "1px solid grey";
-    };
-    const height1 = (e: any) => {
-      e.target.style.height = "10px";
-      e.target.style.border = "";
-    };
-    const pickupTask = (e: any) => {
-      console.log(e);
-    };
-    const moveTask = (e: any) => {
-      console.log(e);
-    };
-    return {
-      height,
-      height1,
-      pickupTask,
-      moveTask,
-    };
+    return {};
   },
 });
 </script>
@@ -70,8 +38,10 @@ export default defineComponent({
   padding: 10px;
   margin-top: 5px;
   margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 8px;
   border-radius: 10px;
-  box-shadow: 4px 2px 2px 1px rgba(@cardTextColorMain, 0.2);
+  box-shadow: 0 1px 2px 1px rgba(@cardTextColorMain, 0.2);
   cursor: pointer;
   font-size: 18px;
   border-bottom: 2px solid rgba(@cardTextColorSub, 0.45);
@@ -112,10 +82,5 @@ export default defineComponent({
 }
 .card-menu:hover {
   background-color: rgba(@cardColorMain, 0.45);
-}
-.kanban-dropzon {
-  height: 8px;
-  background-color: transparent;
-  border-radius: 10px;
 }
 </style>

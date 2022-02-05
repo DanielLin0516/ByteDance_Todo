@@ -245,8 +245,8 @@ export function createNewCard(
 }
 /**
  * 邀请人员加入项目
- * @param obj 
- * @returns 
+ * @param obj
+ * @returns
  */
 export function invitePerson(obj: {
   productId: number;
@@ -254,4 +254,13 @@ export function invitePerson(obj: {
   userId: number;
 }): Promise<{}> {
   return instance.post(`/product/invite`, obj);
+}
+
+/**
+ * 移动卡片
+ * @param param 
+ * @returns 
+ */
+export function moveCard(param: { cardId: number; listId: number; pos: number }):Promise<any> {
+  return instance.post('/cards/moveCard', param);
 }
