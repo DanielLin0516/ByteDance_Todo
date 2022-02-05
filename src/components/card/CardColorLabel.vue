@@ -163,23 +163,20 @@ export default defineComponent({
     const pressEnter = () => {
       console.log(newLabelData);
     };
-    const chooseColor = (e: MouseEvent, color: string,type:string) => {
-      if(type === 'new'){
-           newLabelData.color = color;
-
-      const el = e.target as HTMLDivElement;
-      const els = el.parentElement?.children;
-      for (let i = 0; i < els?.length; i++) {
-        if (els[i].innerText) {
-          els[i].innerText = "";
-          break;
+    const chooseColor = (e: MouseEvent, color: string, type: string) => {
+      if (type === "new") {
+        newLabelData.color = color;
+        const el = e.target as HTMLDivElement;
+        const els = el.parentElement?.children;
+        for (let i = 0; i < els?.length; i++) {
+          if (els[i].innerText) {
+            els[i].innerText = "";
+            break;
+          }
         }
+        el.innerText = "✔";
+      } else if (type === "edit") {
       }
-      el.innerText = "✔";
-      }else if(type ==='edit'){
-        
-      }
-   
     };
     const addNewLabel = async () => {
       // console.log("addNewLabel---" + JSON.stringify(newLabelData));
@@ -263,8 +260,8 @@ export default defineComponent({
       colors,
       isShow,
       newLabelData,
-      labelList,editData
-
+      labelList,
+      editData,
       pressEnter,
       chooseColor,
       addNewLabel,

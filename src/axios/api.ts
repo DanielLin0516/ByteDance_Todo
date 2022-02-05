@@ -39,7 +39,11 @@ export function registerUser(obj: {
  * 根据token查询当前用户
  * @returns
  */
-export function currentUser(): Promise<{ userId: number; fullname: String ;username:String}> {
+export function currentUser(): Promise<{
+  userId: number;
+  fullname: String;
+  username: String;
+}> {
   return instance.get(`/users/currentUser`);
 }
 
@@ -161,8 +165,6 @@ export function getCardInfo(cardId: number): Promise<{
 }
 
 /**
-<<<<<<< HEAD
-=======
  * 获取项目内的label
  * @param  productId
  * @returns
@@ -188,7 +190,6 @@ export function createNewLabel(newLabelData: {
 }
 
 /**
->>>>>>> dev
  * 根据id删除列
  * @param listId
  * @returns
@@ -202,7 +203,7 @@ export function deleteListById(listId: number): Promise<any> {
  * @param param
  * @returns
  */
- export function moveList(param: { listId: number; pos: number }): Promise<any> {
+export function moveList(param: { listId: number; pos: number }): Promise<any> {
   return instance.post("/list/moveList", param);
 }
 /**
@@ -227,17 +228,9 @@ export function inviteShow(
   productName: string;
   inviteUserName: string;
 }> {
-  return instance.get(`/product/getInviteInfo?productId=${productId}&secret=${inviteCode}`);
-}
-
-/**
- * 邀请人员进项目
- * @param obj
- * @returns
- */
-<<<<<<< HEAD
-export function invitePerson(obj: { productId: number; secret: string; userId: number }): Promise<{}> {
-  return instance.post(`/product/invite`, obj);
+  return instance.get(
+    `/product/getInviteInfo?productId=${productId}&secret=${inviteCode}`
+  );
 }
 
 /**
@@ -245,14 +238,20 @@ export function invitePerson(obj: { productId: number; secret: string; userId: n
  * @param newCardData
  * @returns
  */
-export function createNewCard(newCardData: object): Promise<{ id: string; productId: string; tagName: string; color: string }> {
+export function createNewCard(
+  newCardData: object
+): Promise<{ id: string; productId: string; tagName: string; color: string }> {
   return instance.post(`/cards/create`, newCardData);
-=======
+}
+/**
+ * 邀请人员加入项目
+ * @param obj 
+ * @returns 
+ */
 export function invitePerson(obj: {
   productId: number;
   secret: string;
   userId: number;
 }): Promise<{}> {
   return instance.post(`/product/invite`, obj);
->>>>>>> dev
 }
