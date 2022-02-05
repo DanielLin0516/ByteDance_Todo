@@ -7,7 +7,7 @@
                 :key="member.id"
                 v-show="store.state.memberList"
             >
-                {{ member.firstName }}
+                {{ member.fullname }}
                 <!-- <p class="detail" v-show="show">{{ member.fullname }}</p> -->
             </a-avatar>
 
@@ -19,7 +19,7 @@
     </a-space>
 </template>
 <script lang="ts">
-import { defineComponent, computed, watch, ref, onUpdated, onBeforeUnmount, onUnmounted, onBeforeUpdate, onMounted, onBeforeMount, nextTick } from 'vue';
+import { defineComponent, nextTick, onMounted} from 'vue';
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 export default defineComponent({
@@ -29,12 +29,13 @@ export default defineComponent({
     setup(props) {
         const store = useStore();
         let member = store.state.memberList;
-        let show = ref(false);
-        onMounted(() => {
-        member.forEach((item: any) => {
-            item.firstName = ""
-            item.firstName = item.fullname.slice(0, 1)
-        })
+        // let show = ref(false);
+        
+        nextTick(() => {
+            member.forEach((item: any) => {
+                item.firstName = ""
+                item.firstName = item.fullname.slice(0, 1)
+            })
         })
 
         return {

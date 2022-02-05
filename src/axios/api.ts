@@ -168,7 +168,7 @@ export function getCardInfo(cardId: number): Promise<{
 
 export const getTagsByProductId = (
   productId: string
-): Promise<{ data: list }> => {
+): Promise<{ data: any }> => {
   return instance.get(`/tag/getTagsByProductId??productId=${productId}`);
 };
 
