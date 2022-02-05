@@ -149,7 +149,7 @@ export default defineComponent({
     onBeforeUpdate(() => {
       if (url && data && data.userId === 0) {
         data.userId = store.state.userId;
-        router.push({name:"Invite",params:{productId:data.productId,link:url}});
+        router.push({ name: "Invite", params: { productId: data.productId, link: url } });
         localStorage.removeItem("user");
         localStorage.removeItem("url");
       }

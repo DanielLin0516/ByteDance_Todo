@@ -279,14 +279,9 @@ export default defineComponent({
         Message.error("请输入卡片名~");
         return;
       }
-      const timestamp = timetrans(getTimeStamp());
       const lastTask = tasks.at(-1);
-      // console.log(lastTask?.pos);
-      const pos = lastTask?.pos ? lastTask.pos + 10 : 10;
-      // const tempObj = Object.assign(lastTask,{
-      //   pos: pos,cardname: el.value,
-      // })
-      tasks.push({
+      const pos = lastTask?.pos ? lastTask.pos + 60000 : 60000;
+      const emptyCard: CardElement = {
         begintime: "",
         deadline: "",
         cardname: el.value,
@@ -297,6 +292,7 @@ export default defineComponent({
         closed: false,
         productId: parseInt(productId.value as string) as number,
         expired: false,
+        createdTime: "",
         executorList: [
           {
             avatar: "",
@@ -313,31 +309,25 @@ export default defineComponent({
             tagName: "",
           },
         ],
-      });
+      };
+      tasks.push(emptyCard);
       const newCardData = {
-        begintime: "",
         cardname: el.value,
-        deadline: "",
-        descript: "",
         listId: listId,
         pos: pos,
-        productId: productId.value,
+        productId: Number(productId.value),
       };
-      const res = await createNewCard(newCardData);
-      // console.log(res);
-      // const curColumnName = getCurColumnName(e);
-      // const createAction = {
-      //   username: "没想好叫啥",
-      //   actionTime: timestamp,
-      //   action: "在" + curColumnName + "中创建了这张卡",
-      // };
-      // el.value = "";
-      // store.commit("CREATE_TASK", {
-      //   tasks,
-      //   createAction,
-      //   content: e.target.value,
-      // });
-      // e.target.value = "";
+      el.value = "";
+      const len = tasks.length;
+      try {
+        const res = await createNewCard(newCardData);
+        Object.assign(emptyCard, res);
+        tasks.splice(len - 1, 1, emptyCard);
+      } catch (error) {
+        console.trace(error);
+        // 卡片回滚
+        tasks.splice(len - 1, 1);
+      }
     };
 
     /**
@@ -424,10 +414,6 @@ export default defineComponent({
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer?.setData("type", "task");
       }
-      // e.dataTransfer.setData("from-task-index", taskIndex);
-      // e.dataTransfer.setData("from-column-index", fromColumnIndex);
-
-      // e.dataTransfer.setData("from-column-name", getCurColumnName(e));
     };
     /**
      * 列抬起时触发
@@ -635,6 +621,9 @@ export default defineComponent({
       dom.style.boxShadow = "";
       dom.style.backgroundColor = "transparent";
     };
+    /**
+     * 移动卡片至列的最后
+     */
     const moveTaskIntoColumnEnd = async (
       e: DragEvent,
       toColumnIndex: number,

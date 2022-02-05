@@ -238,9 +238,24 @@ export function inviteShow(
  * @param newCardData
  * @returns
  */
-export function createNewCard(
-  newCardData: object
-): Promise<{ id: string; productId: string; tagName: string; color: string }> {
+export function createNewCard(newCardData: {
+  cardname: string;
+  listId: number;
+  pos: number;
+  productId: number;
+}): Promise<{
+  begintime: string;
+  cardId: number;
+  cardname: string;
+  closed: boolean;
+  createdTime: string;
+  deadline: string;
+  description: string;
+  expired: boolean;
+  listId: number;
+  pos: number;
+  productId: number;
+}> {
   return instance.post(`/cards/create`, newCardData);
 }
 /**
@@ -258,9 +273,24 @@ export function invitePerson(obj: {
 
 /**
  * 移动卡片
- * @param param 
- * @returns 
+ * @param param
+ * @returns
  */
-export function moveCard(param: { cardId: number; listId: number; pos: number }):Promise<any> {
-  return instance.post('/cards/moveCard', param);
+export function moveCard(param: {
+  cardId: number;
+  listId: number;
+  pos: number;
+}): Promise<any> {
+  return instance.post("/cards/moveCard", param);
+}
+/**
+ * 更改背景
+ * @param productId
+ * @param bgc
+ * @returns
+ */
+export function changeBackground(productId: number, bgc: string): Promise<{}> {
+  return instance.post(
+    `/product/setProductBackground/${productId}?background=${bgc}`
+  );
 }
