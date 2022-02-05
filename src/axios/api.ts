@@ -255,3 +255,12 @@ export function invitePerson(obj: {
 }): Promise<{}> {
   return instance.post(`/product/invite`, obj);
 }
+/**
+ * 更改背景
+ * @param productId 
+ * @param bgc
+ * @returns 
+ */
+export function changeBackground(productId:number,bgc:string): Promise<{}> {
+  return instance.post(`/product/setProductBackground/${productId}?background=${bgc}`);
+}
