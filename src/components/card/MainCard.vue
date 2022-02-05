@@ -33,7 +33,6 @@
         </a-col>
       </a-row>
       <!-- 列表卡片栏也要渲染 -->
-      <!-- 列表任务栏也要渲染 -->
       <CardItem
         v-for="task of column.items"
         :key="task.cardId"
@@ -49,42 +48,6 @@
         "
       >
       </CardItem>
-      <!-- <div
-        v-for="task of column.items"
-        :key="task.cardId"
-        draggable="true"
-        @dragstart="pickupTask($event, task.cardId, column.listId)"
-        @dragover.prevent
-        @dragenter.prevent
-        @drop.stop="
-          moveTaskOrColumn($event, column.items, task.cardId, column.listId)
-        "
-      >
-        <div class="card-menu">
-          {{ task.cardname }}
-          <div class="des">{{ task.description }}</div>
-
-          <div
-            v-if="task.time.timePeriod"
-            :class="time"
-            @click.prevent.stop="done"
-          >
-            <div class="time1">
-              <div>{{ task.time.timePeriod[0] }}</div>
-              <div>{{ task.time.timePeriod[1] }}</div>
-            </div>
-            <icon-schedule class="time2" />
-
-          </div>
->>>>>>> 05a469848d05ac35a96c4fc116a954549a9610ab
-        </div>
-        <div
-          class="kanban-dropzon"
-          @dragover.prevent="height($event)"
-          @dragleave.prevent="height1($event)"
-          @drop="height1($event)"
-        ></div>
-      </div> -->
       <!-- 添加卡片按钮 -->
       <input
         class="new-button"
@@ -155,12 +118,6 @@ export default defineComponent({
     Task,
     IconCloseCircle,
   },
-  // props: {
-  //   lists: {
-  //     type: Array as PropType<ProductShowElement[]>,
-  //     required: true,
-  //   },
-  // },
   provide() {
     return {
       // columnName:
