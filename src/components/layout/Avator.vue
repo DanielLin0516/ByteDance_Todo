@@ -1,59 +1,98 @@
 <template>
-    <a-space :size="32">
-        <a-avatar-group>
-            <a-avatar
-                :style="{ backgroundColor: '#7BC616' }"
-                v-for="member of store.state.memberList"
-                :key="member.id"
-                v-show="store.state.memberList"
-            >
-                {{ member.firstName }}
-                <!-- <p class="detail" v-show="show">{{ member.fullname }}</p> -->
-            </a-avatar>
-
-            <!-- <a-avatar :style="{ backgroundColor: '#14C9C9' }">B</a-avatar>
-            <a-avatar :style="{ backgroundColor: '#168CFF' }">C</a-avatar>
-            <a-avatar :style="{ backgroundColor: '#FF7D00' }">A</a-avatar>
-            <a-avatar :style="{ backgroundColor: '#FFC72E' }">D</a-avatar>-->
-        </a-avatar-group>
-    </a-space>
+  <a-space :size="32">
+    <a-avatar-group>
+      <a-avatar
+        :style="{ backgroundColor: '#7BC616' }"
+        v-for="item of member"
+        :key="item.userId"
+        v-show="member.length != 0"
+      >
+        {{ item.fullname.slice(0, 1) }}
+        <template #trigger-icon>
+          <a-popover position="bottom">
+            <icon-user />
+            <template #content>
+              <div class="userInfo">
+                <div class="info-header">
+                  <span>账号</span>
+                </div>
+                <div class="center">
+                  <a-avatar
+                    :style="{ backgroundColor: '#3370ff' }"
+                    class="info"
+                  >
+                    <IconUser />
+                  </a-avatar>
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      margin-left: 1vw;
+                    "
+                  >
+                    <div>{{ item.fullname }}</div>
+                    <div
+                      style="
+                        color: rgb(197, 202, 210);
+                        font-size: 12px;
+                        margin-top: 0.5vw;
+                      "
+                    >
+                      {{ item.username }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </a-popover>
+        </template>
+      </a-avatar>
+    </a-avatar-group>
+  </a-space>
 </template>
 <script lang="ts">
-import { defineComponent, computed, watch, ref, onUpdated, onBeforeUnmount, onUnmounted, onBeforeUpdate, onMounted, onBeforeMount, nextTick } from 'vue';
-import { useStore } from 'vuex'
-import { useRoute, useRouter } from 'vue-router'
+import { defineComponent, computed, onMounted, ComputedRef } from "vue";
+import { useStore } from "vuex";
+import { UserElement } from "@/axios/globalInterface";
+import { IconUser } from "@arco-design/web-vue/es/icon";
 export default defineComponent({
-    name: 'TopBar',
-    components: {
-    },
-    setup(props) {
-        const store = useStore();
-        let member = store.state.memberList;
-        let show = ref(false);
-        onMounted(() => {
-        member.forEach((item: any) => {
-            item.firstName = ""
-            item.firstName = item.fullname.slice(0, 1)
-        })
-        })
+  name: "TopBar",
+  components: { IconUser },
+  setup() {
+    const store = useStore();
 
-        return {
-            store,
+    const member: ComputedRef<UserElement[]> = computed(() => {
+      return store.state.memberList;
+    });
 
-        }
-    }
-})
-
+    return {
+      member,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped>
-.detail {
-    position: absolute;
-    top: -20px;
-    right: -20px;
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  .info-header {
     height: 30px;
-    width: 60px;
-    background-color: white;
-    color: black;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    color: rgb(94, 108, 132);
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .center {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .info {
+      height: 50px;
+      width: 50px;
+    }
+  }
 }
 </style>

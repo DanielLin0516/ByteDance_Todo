@@ -10,10 +10,10 @@
       v-for="(column, index) of lists"
       :key="column.listId"
       draggable="true"
-      @drop="moveTaskOrColumn($event, column.items, column.listId, undefined)"
+      @drop="moveColumn($event, index)"
       @dragover.prevent
       @dragenter.prevent
-      @dragstart.self="pickupColumn($event, column.listId)"
+      @dragstart.self="pickupColumn($event, column.listId, index)"
     >
       <!-- 列表标题 -->
       <a-row justify="space-between" align="center">
@@ -37,7 +37,6 @@
         </a-col>
       </a-row>
       <!-- 列表卡片栏也要渲染 -->
-      <!-- 列表任务栏也要渲染 -->
       <CardItem
         v-for="task of column.items"
         :key="task.cardId"
@@ -45,7 +44,7 @@
         :cardInfo="task"
         :columnId="column.listId.toString()"
         @click="openTask(task.cardId, column)"
-        @dragstart="pickupTask($event, task.cardId, column.listId)"
+        @dragstart.stop="pickupTask($event, task.cardId, column.listId)"
         @dragover.prevent
         @dragenter.prevent
         @drop.stop="
@@ -53,42 +52,6 @@
         "
       >
       </CardItem>
-      <!-- <div
-        v-for="task of column.items"
-        :key="task.cardId"
-        draggable="true"
-        @dragstart="pickupTask($event, task.cardId, column.listId)"
-        @dragover.prevent
-        @dragenter.prevent
-        @drop.stop="
-          moveTaskOrColumn($event, column.items, task.cardId, column.listId)
-        "
-      >
-        <div class="card-menu">
-          {{ task.cardname }}
-          <div class="des">{{ task.description }}</div>
-
-          <div
-            v-if="task.time.timePeriod"
-            :class="time"
-            @click.prevent.stop="done"
-          >
-            <div class="time1">
-              <div>{{ task.time.timePeriod[0] }}</div>
-              <div>{{ task.time.timePeriod[1] }}</div>
-            </div>
-            <icon-schedule class="time2" />
-
-          </div>
->>>>>>> 05a469848d05ac35a96c4fc116a954549a9610ab
-        </div>
-        <div
-          class="kanban-dropzon"
-          @dragover.prevent="height($event)"
-          @dragleave.prevent="height1($event)"
-          @drop="height1($event)"
-        ></div>
-      </div> -->
       <!-- 添加卡片按钮 -->
       <input
         class="new-button"
@@ -119,7 +82,7 @@
 
 <script lang="ts">
 import "animate.css";
-import { getTimeStamp, timetrans } from "../../store/utils";
+import { getTimeStamp, PosType, getPos, timetrans } from "../../store/utils";
 import {
   IconPlus,
   IconSchedule,
@@ -147,6 +110,7 @@ import {
   editListName,
   deleteListById,
   createNewCard,
+  moveList,
 } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
 import { getCipherInfo } from "crypto";
@@ -163,12 +127,6 @@ export default defineComponent({
     Task,
     IconCloseCircle,
   },
-  // props: {
-  //   lists: {
-  //     type: Array as PropType<ProductShowElement[]>,
-  //     required: true,
-  //   },
-  // },
   provide() {
     return {
       // columnName:
@@ -180,8 +138,6 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const newColumnName = ref("");
-    const isEditListTitle = ref(false);
-    const newListName = ref("");
     const taskClickId = ref(1);
     const columnName = ref("1");
     const isTaskOpen = ref(false);
@@ -195,9 +151,12 @@ export default defineComponent({
     const done = () => {
       cur.value = !cur.value;
     };
-    // const isTaskOpen = computed(() => {
-    //   return route.name === "task";
-    // });
+
+    // 记录移动之前列的id
+    const fromListId = ref(NaN);
+    // 记录移动之前列的index值
+    const fromListIndex = ref(NaN);
+
     // 传给MainCard的列数组
     const lists = reactive<ProductShowElement[]>([]);
     // 路由中的项目Id
@@ -357,10 +316,11 @@ export default defineComponent({
      * 创建列
      */
     const createColumn = async () => {
+      const maxPos = lists.length === 0 ? 0 : lists[lists.length - 1].pos;
       const res = await createList({
         productId: Number(productId.value),
         listName: newColumnName.value,
-        pos: 300,
+        pos: maxPos + 60000,
       });
       const temp: ProductShowElement = {
         listName: "",
@@ -405,20 +365,29 @@ export default defineComponent({
       await deleteListById(listId);
       lists.splice(index, 1);
     };
-    const pickupTask = (e: any, taskIndex: any, fromColumnIndex: any) => {
-      e.dataTransfer.effctAllowed = "move";
-      e.dataTransfer.dropEffect = "move";
-      e.dataTransfer.setData("from-task-index", taskIndex);
-      e.dataTransfer.setData("from-column-index", fromColumnIndex);
-      e.dataTransfer.setData("type", "task");
-      e.dataTransfer.setData("from-column-name", getCurColumnName(e));
-    };
-    const pickupColumn = (e: DragEvent, fromColumnIndex: any) => {
-      console.log("列移动中");
+    const pickupTask = (e: DragEvent, taskIndex: any, fromColumnIndex: any) => {
+      console.log("卡片移动中");
       // e.dataTransfer.effctAllowed = "move";
       // e.dataTransfer.dropEffect = "move";
+      // e.dataTransfer.setData("from-task-index", taskIndex);
       // e.dataTransfer.setData("from-column-index", fromColumnIndex);
-      // e.dataTransfer.setData("type", "column");
+      // e.dataTransfer.setData("type", "task");
+      // e.dataTransfer.setData("from-column-name", getCurColumnName(e));
+    };
+    /**
+     * 列抬起时触发
+     * @param e
+     * @param fromColumnId
+     * @param fromColumnIndex
+     */
+    const pickupColumn = (
+      e: DragEvent,
+      fromColumnId: number,
+      fromColumnIndex: number
+    ) => {
+      // 将出发列的数据记录
+      fromListIndex.value = fromColumnIndex;
+      fromListId.value = fromColumnId;
     };
     const moveTaskOrColumn = (
       e: DragEvent,
@@ -456,16 +425,54 @@ export default defineComponent({
         fromTaskColumnName,
       });
     };
-    const moveColumn = (
-      e: { dataTransfer: { getData: (arg0: string) => any } },
-      toColumnIndex: any
-    ) => {
-      const fromColumnIndex = e.dataTransfer.getData("from-column-index");
-      store.commit("MOVE_COLUMN", {
-        fromColumnIndex,
-        toColumnIndex,
-      });
+
+    /**
+     * 移动列
+     * @param e
+     * @param toColumnId
+     * @param toColumnIndex
+     */
+    const moveColumn = (e: DragEvent, toColumnIndex: number) => {
+      const len = lists.length;
+      const id = fromListId.value;
+      // 判断移动方向
+      const direction = fromListIndex.value < toColumnIndex ? "right" : "left";
+      // 原地移动直接return
+      if (fromListIndex.value === toColumnIndex) {
+        return;
+      }
+      // 获取新的pos值
+      const newPos =
+        toColumnIndex === 0
+          ? getPos(0, lists[toColumnIndex].pos, PosType.first)
+          : toColumnIndex === len - 1
+          ? getPos(
+              lists[toColumnIndex].pos,
+              lists[toColumnIndex].pos,
+              PosType.end
+            )
+          : direction === "right"
+          ? getPos(
+              lists[toColumnIndex].pos,
+              lists[toColumnIndex + 1].pos,
+              PosType.middle
+            )
+          : getPos(
+              lists[toColumnIndex - 1].pos,
+              lists[toColumnIndex].pos,
+              PosType.middle
+            );
+      // 更改出发列的pos值
+      lists[fromListIndex.value].pos = newPos;
+      // 暂存出发列，并删除出发列
+      const temp = lists[fromListIndex.value];
+      lists.splice(fromListIndex.value, 1);
+      // 将出发列插入目标index
+      lists.splice(toColumnIndex, 0, temp);
+
+      moveList({ listId: id, pos: newPos });
     };
+
     const height = (e: any) => {
       e.target.style.height = "4vw";
       e.target.style.border = "1px solid grey";
@@ -515,6 +522,7 @@ export default defineComponent({
       pickupTask,
       moveTask,
       pickupColumn,
+      moveColumn,
       moveTaskOrColumn,
       newColumnName,
       createColumn,
@@ -562,7 +570,7 @@ export default defineComponent({
     .list-title {
       cursor: pointer;
       // width: 100%;
-      height: 30px;
+      height: 40px;
       opacity: 1;
       padding: 10px;
 
@@ -573,10 +581,12 @@ export default defineComponent({
     }
     :deep(.arco-input-wrapper) {
       background-color: transparent;
-      font-size: 22px !important;
+    }
+    :deep(.arco-input-wrapper:focus-within) {
+      border-color: rgba(@cardColorMain, 0.4);
     }
     :deep(.arco-input-wrapper.arco-input-focus) {
-      background-color: rgb(255, 255, 255);
+      background-color: rgba(@cardColorMain, 0.4);
     }
     .card-menu {
       height: auto;

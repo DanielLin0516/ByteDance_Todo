@@ -14,34 +14,62 @@
                     v-for="event in store.state.userEvent"
                     :key="event.id"
                 >{{ event.content }}发生改变，请查收</div>
-            </div> 
-            <a-avatar :style="{ backgroundColor: '#3370ff' }" class="avatar" @click="toboard">
-                <IconUser />
-            </a-avatar>
+            </div>
+            <a-popover position="bottom">
+                <a-avatar
+                    :style="{ backgroundColor: '#3370ff' }"
+                    class="avatar"
+                    @click="inviteCard = !inviteCard"
+                >
+                    <IconUser />
+                </a-avatar>
+                <template #content>
+                    <div class="userInfo" >
+                        <div class="invite-header">
+                            <span>账号</span>
+                            <!-- <icon-close class="close" /> -->
+                        </div>
+                        <div class="center">
+                            <a-avatar :style="{ backgroundColor: '#3370ff' }" class="info">
+                                <IconUser />
+                            </a-avatar>
+                            <div style="display: flex;flex-direction: column;margin-left: 1vw;">
+                                <div>{{ store.state.fullName }}</div>
+                                <div
+                                    style="color:rgb(197,202,210);font-size: 12px;margin-top: 0.5vw;"
+                                >{{ store.state.email }}</div>
+                            </div>
+                        </div>
+                        <div class="logout" @click="toboard">登出账号</div>
+                    </div>
+                </template>
+            </a-popover>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { IconBytedanceColor, IconNotification, IconUser } from '@arco-design/web-vue/es/icon';
+import { IconBytedanceColor, IconNotification, IconUser, IconClose } from '@arco-design/web-vue/es/icon';
 import { defineComponent, computed, watch, ref } from 'vue';
 import { useStore } from 'vuex'
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 export default defineComponent({
     name: 'TopBar',
     components: {
         IconBytedanceColor,
         IconNotification,
         IconUser,
+        IconClose
     },
     setup(props) {
         const store = useStore();
         const route = useRoute();
         const router = useRouter();
+        let inviteCard = ref(false)
         const task = computed(() => {
             return store.getters.getTask(route.params.id);
         })
         const show = ref(false);
-        const toboard = ()=> {
+        const toboard = () => {
             localStorage.removeItem('token');
             router.push({ name: 'Home' });
         }
@@ -59,11 +87,13 @@ export default defineComponent({
         watch(store.state.board.columns, (newVal, oldVal) => {
             console.log(newVal, oldVal)
         }, { deep: true })
+
         return {
             show,
             store,
             toboard,
-            project
+            project,
+            inviteCard
         }
     }
 })
@@ -163,6 +193,63 @@ export default defineComponent({
             width: 50px;
             height: 50px;
         }
+    }
+}
+.userInfo {
+    width: 400px;
+    height: 300px;
+    // position: absolute;
+    background-color: white;
+    top: 85px;
+    right: 5px;
+    border-radius: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    // box-shadow: 0 8px 16px -4px #091e4240, 0 0 0 1px #091e4214;
+    display: flex;
+    flex-direction: column;
+    //  transform: translateY(0px);
+    .invite-header {
+        height: 30px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: rgb(94, 108, 132);
+        font-size: 24px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        padding: 10px;
+        .close {
+            position: absolute;
+            right: 20px;
+            cursor: pointer;
+            height: 24px;
+            width: 24px;
+        }
+        .close:hover {
+            color: darkblue;
+        }
+    }
+    .center {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .info {
+            height: 50px;
+            width: 50px;
+        }
+    }
+    .logout {
+        width: 95%;
+        margin-top: 20px;
+        border-radius: 5px;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 20px;
+    }
+    .logout:hover {
+        background-color: rgba(0, 0, 0, 0.1);
     }
 }
 </style>

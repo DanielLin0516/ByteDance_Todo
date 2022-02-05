@@ -18,6 +18,8 @@ export default createStore({
       isCardDetailShow: false,
       show: false,
       tagList: [],
+      fullName:"",
+      email:""
     };
   },
   getters: {
@@ -43,8 +45,19 @@ export default createStore({
     },
   },
   mutations: {
+<<<<<<< HEAD
     setTagList(state, tagList) {
       state.tagList = tagList;
+=======
+    fullName(state,value) {
+      state.fullName = value;
+    },
+    Email(state,value) {
+      state.email = value;
+    },
+    setColor(state,value) {
+      state.background = value
+>>>>>>> dev
     },
     setColor(state, value) {
       state.background = value;
@@ -94,11 +107,6 @@ export default createStore({
         taskTOMove.actions.unshift(moveAction);
       }
       toTasks.splice(toTaskIndex, 0, taskTOMove);
-    },
-    MOVE_COLUMN(state, { fromColumnIndex, toColumnIndex }) {
-      const columnList = state.board.columns;
-      const columnToMove = columnList.splice(fromColumnIndex, 1)[0];
-      columnList.splice(toColumnIndex, 0, columnToMove);
     },
     changeCardShowState(state) {
       state.isCardDetailShow = !state.isCardDetailShow;

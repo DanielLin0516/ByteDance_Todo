@@ -199,7 +199,7 @@ export default defineComponent({
   width: 400px;
   background-color: rgb(255, 255, 255);
   position: absolute;
-  left: 317px;
+  left: 280px;
   top: 70px;
   z-index: 9999;
   padding: 10px;

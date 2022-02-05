@@ -20,3 +20,29 @@ export function timetrans(timestamp: any) {
   var s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
   return Y + M + D + h + m + s;
 }
+
+export enum PosType {
+  first,
+  middle,
+  end,
+}
+
+/**
+ * 计算Pos
+ * @param before
+ * @param after
+ * @param type
+ * @returns
+ */
+export function getPos(before: number, after: number, type: number): number {
+  let pos = NaN;
+
+  if (type === PosType.end) {
+    pos = before + 60000;
+  } else if (type === PosType.first) {
+    pos = after > 60000 ? 60000 : after / 2;
+  } else {
+    pos = before + (after - before) / 2;
+  }
+  return Math.floor(pos * 100) / 100;
+}
