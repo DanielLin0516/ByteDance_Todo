@@ -9,6 +9,37 @@
         <div>邀请朋友</div>
       </div>
       <div class="change" @click="changeTheme($event)">切换夜间模式</div>
+      <a-popover position="bottom">
+        <div class="changeColor">改变颜色</div>
+        <template #content>
+          <div class="creat-project">
+            <span>调整颜色</span>
+            <div class="square" :style="{ background: upSquare }"></div>
+            <div class="back-ground">
+              <div class="content">背景</div>
+              <div class="color-choose">
+                <div
+                  class="choose"
+                  :style="{ background: choose.color }"
+                  v-for="choose in color"
+                  :key="choose.id"
+                  @click="yourChoice(choose.color)"
+                ></div>
+              </div>
+              <a-button
+                type="primary"
+                style="
+              margin-top: 2vw;
+              width: 100%;
+              border-radius: 1vw;
+              height: 3vw;
+            "
+                @click="changeBGC"
+              >更改</a-button>
+            </div>
+          </div>
+        </template>
+      </a-popover>
     </div>
   </div>
   <div class="invite-code" v-show="inviteCard">
@@ -24,7 +55,7 @@
       <span class="create-link" @click="createLink">创建连接</span>
     </div>
     <div style="font-size: 1vw;color: rgb(rgb(131,140,145)); margin-bottom: 1vw;">具有该链接的任何人均可加入为看板成员</div>
-    <a-spin size="20" v-if="loading" />
+    <a-spin :size="20" v-if="loading" />
     <div style="width: 100%;display: flex;flex-direction: column;" v-show="inviteCodeData">
       <a-input style="width: 100%;margin-bottom: 0.5vw;" allow-clear :model-value="link" />
       <a-button type="primary" style="width: 6vw;height: 2vw;" @click="copy">复制链接</a-button>
@@ -34,7 +65,7 @@
 
 <script lang="ts">
 import { IconUser, IconMoonFill, IconClose, IconLink } from "@arco-design/web-vue/es/icon";
-import { computed, defineComponent, ref, onBeforeUpdate } from "vue";
+import { computed, defineComponent, ref, onBeforeUpdate, reactive } from "vue";
 import Avator from '@/components/layout/Avator.vue'
 import { useRoute } from 'vue-router'
 import { useStore } from "vuex";
@@ -42,6 +73,7 @@ import { setTheme } from "@/theme/theme";
 import { getInviteCode } from "@/axios/api"
 import { useRequest } from "@/hooks/useRequest";
 import { Message } from "@arco-design/web-vue";
+import { changeBackground } from "@/axios/api"
 export default defineComponent({
   name: "SmallBar",
   components: {
@@ -55,14 +87,15 @@ export default defineComponent({
     const isDark = ref(false);
     const store = useStore();
     const inviteCard = ref(false);
-    let userId = ref(null)
+    let userId = ref(null);
+    let upSquare = ref(String("#0079BF"));
     onBeforeUpdate(() => {
       userId = store.state.userId;
     })
     const route = useRoute();
     let inviteCodeData = ref(null);
     let link = ref(String(null));
-    const productId = computed(() => {
+    const productId: any = computed(() => {
       return route.params.productId;
     });
     const inviteShow = () => {
@@ -89,6 +122,43 @@ export default defineComponent({
         console.trace(error);
       },
     });
+    let color = reactive([
+      {
+        id: 1,
+        color: "#0079BF",
+      },
+      {
+        id: 2,
+        color: "#D29034",
+      },
+      {
+        id: 3,
+        color: "#519839",
+      },
+      {
+        id: 4,
+        color: "#B04632",
+      },
+      {
+        id: 5,
+        color: "#755286",
+      },
+      {
+        id: 6,
+        color: "#FFFF00",
+      },
+      {
+        id: 7,
+        color: "#00FF00",
+      },
+    ]);
+    const yourChoice = (c: string) => {
+      upSquare.value = c;
+    };
+    const changeBGC = async () => {
+      await changeBackground(productId.value, `${upSquare.value.slice(1,7)}`);
+      Message.success({ content: "更改成功！请刷新后查看" })
+    }
     const createLink = async () => {
       const res = await run(userId);
       inviteCodeData.value = res;
@@ -115,7 +185,11 @@ export default defineComponent({
       loading,
       inviteCodeData,
       link,
-      copy
+      copy,
+      color,
+      yourChoice,
+      upSquare,
+      changeBGC
     };
   },
 });
@@ -192,6 +266,33 @@ export default defineComponent({
         color: rgba(@cardColorMain, 1);
       }
     }
+    .changeColor {
+      margin-left: 30px;
+      color: rgba(@cardTextColorMain, 1);
+      background-color: rgba(@cardColorMain, 1);
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      .icon-moon-fill {
+        margin-right: 10px;
+        width: 26px;
+        height: 26px;
+        color: rgba(@cardTextColorMain, 1);
+      }
+      .changr-text {
+        color: rgba(@cardTextColorMain, 1);
+      }
+      .changr-text:hover {
+        color: rgba(@cardColorMain, 1);
+      }
+    }
+    .changeColor:hover {
+      background-color: rgba(@cardTextColorMain, 1);
+      color: rgba(@cardColorMain, 1);
+      .icon-moon-fill {
+        color: rgba(@cardColorMain, 1);
+      }
+    }
   }
 }
 .invite-code {
@@ -247,6 +348,83 @@ export default defineComponent({
       color: rgb(0, 121, 191);
       cursor: pointer;
       text-decoration: underline rgb(0, 121, 191);
+    }
+  }
+}
+.creat-project {
+  width: 330px;
+  height: 500px;
+  background-color: white;
+  // border:1px solid rgb(103,117,139);
+  border-radius: 10px;
+  padding: 10px;
+
+  span {
+    display: inline-block;
+    position: relative;
+    padding: 10px;
+    font-size: 24px;
+    width: calc(100% - 20px);
+    text-align: center;
+    color: rgb(103, 117, 139);
+    border-bottom: 1px solid rgb(0, 121, 191);
+  }
+
+  .square {
+    height: 100px;
+    width: 200px;
+    background: #0079bf;
+    margin: 20px auto;
+    border-radius: 10px;
+  }
+
+  .back-ground {
+    width: 100%;
+
+    .content {
+      font-size: 16px;
+      color: rgb(103, 117, 139);
+    }
+
+    .color-choose {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+
+      .choose {
+        width: 60px;
+        height: 30px;
+        margin-right: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+    }
+
+    .title {
+      outline: none;
+      margin-top: 10px;
+      line-height: 20px;
+      font-weight: 400;
+      padding: 8px;
+      width: calc(100% - 24px);
+      color: #172b4d;
+      border: 3px solid rgb(223, 225, 230);
+    }
+
+    .enter {
+      width: 100%;
+      height: 50px;
+      background-color: rgb(0, 121, 191);
+      color: white;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 3vw;
+      border-radius: 10px;
+    }
+
+    .enter:hover {
+      background-color: rgb(2, 106, 167);
     }
   }
 }
