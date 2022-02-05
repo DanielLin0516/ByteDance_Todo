@@ -364,6 +364,7 @@ export default defineComponent({
      */
     const moveColumn = (e: DragEvent, toColumnIndex: number) => {
       const len = lists.length;
+      const id = fromListId.value;
       // 判断移动方向
       const direction = fromListIndex.value < toColumnIndex ? "right" : "left";
       // 原地移动直接return
@@ -398,8 +399,6 @@ export default defineComponent({
       lists.splice(fromListIndex.value, 1);
       // 将出发列插入目标index
       lists.splice(toColumnIndex, 0, temp);
-
-      const id = fromListId.value;
 
       moveList({ listId: id, pos: newPos });
     };

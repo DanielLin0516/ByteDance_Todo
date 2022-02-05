@@ -1,60 +1,47 @@
 <template>
-    <a-space :size="32">
-        <a-avatar-group>
-            <a-avatar
-                :style="{ backgroundColor: '#7BC616' }"
-                v-for="member of store.state.memberList"
-                :key="member.id"
-                v-show="store.state.memberList"
-            >
-                {{ member.fullname }}
-                <!-- <p class="detail" v-show="show">{{ member.fullname }}</p> -->
-            </a-avatar>
-
-            <!-- <a-avatar :style="{ backgroundColor: '#14C9C9' }">B</a-avatar>
-            <a-avatar :style="{ backgroundColor: '#168CFF' }">C</a-avatar>
-            <a-avatar :style="{ backgroundColor: '#FF7D00' }">A</a-avatar>
-            <a-avatar :style="{ backgroundColor: '#FFC72E' }">D</a-avatar>-->
-        </a-avatar-group>
-    </a-space>
+  <a-space :size="32">
+    <a-avatar-group>
+      <a-avatar
+        :style="{ backgroundColor: '#7BC616' }"
+        v-for="item of member"
+        :key="item.userId"
+        v-show="member.length != 0"
+      >
+        {{ item.fullname.slice(0, 1) }}
+      </a-avatar>
+    </a-avatar-group>
+  </a-space>
 </template>
 <script lang="ts">
-import { defineComponent, nextTick, onMounted} from 'vue';
-import { useStore } from 'vuex'
-import { useRoute, useRouter } from 'vue-router'
+import { defineComponent, computed, onMounted, ComputedRef } from "vue";
+import { useStore } from "vuex";
+import { UserElement } from "@/axios/globalInterface";
 export default defineComponent({
-    name: 'TopBar',
-    components: {
-    },
-    setup(props) {
-        const store = useStore();
-        let member = store.state.memberList;
-        // let show = ref(false);
-        
-        nextTick(() => {
-            member.forEach((item: any) => {
-                item.firstName = ""
-                item.firstName = item.fullname.slice(0, 1)
-            })
-        })
+  name: "TopBar",
+  components: {},
+  setup(props) {
+    const store = useStore();
 
-        return {
-            store,
+    const member: ComputedRef<UserElement[]> = computed(() => {
+      return store.state.memberList;
+    });
 
-        }
-    }
-})
-
+    return {
+      store,
+      member,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped>
 .detail {
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    height: 30px;
-    width: 60px;
-    background-color: white;
-    color: black;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  height: 30px;
+  width: 60px;
+  background-color: white;
+  color: black;
 }
 </style>
