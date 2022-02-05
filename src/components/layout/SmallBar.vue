@@ -55,7 +55,7 @@
       <span class="create-link" @click="createLink">创建连接</span>
     </div>
     <div style="font-size: 1vw;color: rgb(rgb(131,140,145)); margin-bottom: 1vw;">具有该链接的任何人均可加入为看板成员</div>
-    <a-spin size="20" v-if="loading" />
+    <a-spin :size="20" v-if="loading" />
     <div style="width: 100%;display: flex;flex-direction: column;" v-show="inviteCodeData">
       <a-input style="width: 100%;margin-bottom: 0.5vw;" allow-clear :model-value="link" />
       <a-button type="primary" style="width: 6vw;height: 2vw;" @click="copy">复制链接</a-button>

@@ -38,6 +38,7 @@ export interface CardElement {
   pos: number;
   productId: number;
   tagList: TagElement[];
+  createdTime: string;
 }
 
 export interface ListElement {
