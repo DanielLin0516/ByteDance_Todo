@@ -38,7 +38,7 @@
       </a-row>
       <!-- 列表卡片栏也要渲染 -->
       <CardItem
-        v-for="task of column.items"
+        v-for="(task,taskIndex) of column.items"
         :key="task.cardId"
         draggable="true"
         :cardInfo="task"
@@ -48,7 +48,7 @@
         @dragover.prevent
         @dragenter.prevent
         @drop.stop="
-          moveTaskOrColumn($event, column.items, task.cardId, column.listId)
+          moveTask($event, taskIndex,task.cardId,task.listId);
         "
       >
       </CardItem>
@@ -331,6 +331,7 @@ export default defineComponent({
         items: [],
       };
       Object.assign(temp, res);
+      temp.listId = res.id;
       lists.push(temp);
       newColumnName.value = "";
     };
@@ -389,41 +390,21 @@ export default defineComponent({
       fromListIndex.value = fromColumnIndex;
       fromListId.value = fromColumnId;
     };
-    const moveTaskOrColumn = (
-      e: DragEvent,
-      toTasks: any,
-      toColumnIndex: any,
-      toTaskIndex: any
-    ) => {
-      console.log(e);
-      const type = e.dataTransfer?.getData("type");
-      console.log(toColumnIndex);
-      if (type === "task") {
-        // moveTask(
-        //   e,
-        //   toTasks,
-        //   toTaskIndex !== "undefined" ? toTaskIndex : toTasks.length
-        // );
-        console.log("task");
-      } else {
-        console.log("column");
-        // moveColumn(e, toColumnIndex);
-      }
-    };
-    const moveTask = (e: any, toTasks: any, toTaskIndex?: any) => {
-      const fromColumnIndex = e.dataTransfer.getData("from-column-index");
-      const fromTasks = store.state.lists[fromColumnIndex].items;
-      const fromTaskIndex = e.dataTransfer.getData("from-task-index");
-      const toTaskColumnName = getCurColumnName(e);
-      const fromTaskColumnName = e.dataTransfer.getData("from-column-name");
-      store.commit("MOVE_TASK", {
-        fromTasks,
-        fromTaskIndex,
-        toTasks,
-        toTaskIndex,
-        toTaskColumnName,
-        fromTaskColumnName,
-      });
+
+    const moveTask = (e: DragEvent, toTaskIndex: number,toTaskId:number,toListIndex:number) => {
+      // const fromColumnIndex = e.dataTransfer.getData("from-column-index");
+      // const fromTasks = store.state.lists[fromColumnIndex].items;
+      // const fromTaskIndex = e.dataTransfer.getData("from-task-index");
+      // const toTaskColumnName = getCurColumnName(e);
+      // const fromTaskColumnName = e.dataTransfer.getData("from-column-name");
+      // store.commit("MOVE_TASK", {
+      //   fromTasks,
+      //   fromTaskIndex,
+      //   toTasks,
+      //   toTaskIndex,
+      //   toTaskColumnName,
+      //   fromTaskColumnName,
+      // });
     };
 
     /**
@@ -523,7 +504,6 @@ export default defineComponent({
       moveTask,
       pickupColumn,
       moveColumn,
-      moveTaskOrColumn,
       newColumnName,
       createColumn,
       height,
