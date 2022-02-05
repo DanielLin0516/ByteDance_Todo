@@ -51,7 +51,7 @@ export default defineComponent({
     let show = store.state.show;
     const isColorShow = ref(false);
     const showColorLable = () => {
-      console.log("showColorLable-----");
+      // console.log("showColorLable-----");
       isColorShow.value = true;
     };
     const closeColor = () => {

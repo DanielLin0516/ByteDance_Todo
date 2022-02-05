@@ -31,7 +31,7 @@ export interface CardElement {
   cardname: string;
   closed: boolean;
   deadline: string;
-  description: "string";
+  description: string;
   executorList: UserElement[];
   expired: boolean;
   listId: number;
@@ -60,3 +60,9 @@ export interface ProductShowElement {
   items: CardElement[];
 }
 
+export interface LabelElement {
+  color: string;
+  id: string;
+  productId: string;
+  tagName: string;
+}

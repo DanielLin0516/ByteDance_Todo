@@ -130,25 +130,6 @@ export function getCardInfo(cardId: number): Promise<{
 }
 
 /**
- * 获取项目内的label
- * @param  productId
- * @returns
- */
-
-export const getTagsByProductId = (productId: string): Promise<{ data: list }> => {
-  return instance.get(`/tag/getTagsByProductId??productId=${productId}`);
-};
-
-/**
- * project中添加新label
- * @param newLabelData
- * @returns
- */
-export function createNewLabel(newLabelData: { color: string; productId: string; content: string }): Promise<{ id: string; productId: string; tagName: string; color: string }> {
-  return instance.post(`/tag/create`, newLabelData);
-}
-
-/**
  * 根据id删除列
  * @param listId
  * @returns
@@ -156,42 +137,46 @@ export function createNewLabel(newLabelData: { color: string; productId: string;
 export function deleteListById(listId: number): Promise<any> {
   return instance.delete(`/list/removeList/${listId}`);
 }
+
 /**
  * 获取邀请码
- * @param userId 
- * @returns 
+ * @param userId
+ * @returns
  */
 export function getInviteCode(userId: any): Promise<any> {
-  return instance.get(
-    `/users/getInviteCode/${userId}`
-  );
+  return instance.get(`/users/getInviteCode/${userId}`);
 }
 /**
  * 邀请页
- * @param productId 
- * @param inviteCode 
- * @returns 
+ * @param productId
+ * @param inviteCode
+ * @returns
  */
-export function inviteShow(productId: any, inviteCode: any): Promise<{
+export function inviteShow(
+  productId: any,
+  inviteCode: any
+): Promise<{
   tokenExpire: boolean;
   productName: string;
   inviteUserName: string;
 }> {
-  return instance.get(
-    `/product/getInviteInfo?productId=${productId}&secret=${inviteCode}`
-  );
+  return instance.get(`/product/getInviteInfo?productId=${productId}&secret=${inviteCode}`);
 }
+
 /**
  * 邀请人员进项目
  * @param obj
- * @returns 
+ * @returns
  */
-export function invitePerson(obj: {
-  productId:number;
-  secret:string;
-  userId:number;
-}): Promise<{}> {
-  return instance.post(
-    `/product/invite`, obj
-  );
+export function invitePerson(obj: { productId: number; secret: string; userId: number }): Promise<{}> {
+  return instance.post(`/product/invite`, obj);
+}
+
+/**
+ * --column中添加新card
+ * @param newCardData
+ * @returns
+ */
+export function createNewCard(newCardData: object): Promise<{ id: string; productId: string; tagName: string; color: string }> {
+  return instance.post(`/cards/create`, newCardData);
 }

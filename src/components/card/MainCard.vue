@@ -1,5 +1,9 @@
 <template>
-  <div class="card-wrapper" @mousedown="columnsMouseMove" @wheel="columnsMouseWheel">
+  <div
+    class="card-wrapper"
+    @mousedown="columnsMouseMove"
+    @wheel="columnsMouseWheel"
+  >
     <!-- 要渲染的列表 -->
     <div
       class="list-item"
@@ -90,7 +94,7 @@
         class="new-button"
         type="text"
         placeholder="+ 添加任务"
-        @keyup.enter="createTask($event, column.items)"
+        @keyup.enter="createTask($event, column.items, column.listId)"
       />
     </div>
     <div class="btn-add">
@@ -104,14 +108,18 @@
     </div>
     <div class="task-bg" v-if="isTaskOpen" @click.self="close">
       <!-- <router-view /> -->
-      <Task :id="taskClickId.toString()" :columnName="columnName" @close="close"></Task>
+      <Task
+        :id="taskClickId.toString()"
+        :columnName="columnName"
+        @close="close"
+      ></Task>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import "animate.css";
-import { getTimeStamp } from "../../store/utils";
+import { getTimeStamp, timetrans } from "../../store/utils";
 import {
   IconPlus,
   IconSchedule,
@@ -130,7 +138,7 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { ProductShowElement } from "@/axios/globalInterface";
+import { ProductShowElement, CardElement } from "@/axios/globalInterface";
 import { useRequest } from "@/hooks/useRequest";
 import {
   getProductInfo,
@@ -138,6 +146,7 @@ import {
   createList,
   editListName,
   deleteListById,
+  createNewCard,
 } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
 import { getCipherInfo } from "crypto";
@@ -217,6 +226,7 @@ export default defineComponent({
         store.commit("setShowInviteButton", showInvite.isOwner);
         store.commit("setMemberList", res.memberList);
         store.commit("setColor", res.background);
+        store.commit("setTagList", res.tagList);
         // 清空lists
         lists.length = 0;
         res.lists.forEach((item) => {
@@ -268,21 +278,81 @@ export default defineComponent({
       isTaskOpen.value = false;
       // router.push({ name: "Layout/Board" });
     };
-    const createTask = (e: any, tasks: any) => {
-      var timestamp = getTimeStamp();
-      const curColumnName = getCurColumnName(e);
-      const createAction = {
-        username: "没想好叫啥",
-        actionTime: timestamp,
-        action: "在" + curColumnName + "中创建了这张卡",
-      };
-      store.commit("CREATE_TASK", {
-        tasks,
-        createAction,
-        content: e.target.value,
+
+    /**
+     * 创建新卡片
+     */
+    const createTask = async (
+      e: KeyboardEvent,
+      tasks: CardElement[],
+      listId: number
+    ) => {
+      const el = e.target as HTMLInputElement;
+      if (!el.value) {
+        Message.error("请输入卡片名~");
+        return;
+      }
+      const timestamp = timetrans(getTimeStamp());
+      const lastTask = tasks.at(-1);
+      // console.log(lastTask?.pos);
+      const pos = lastTask?.pos ? lastTask.pos + 10 : 10;
+      // const tempObj = Object.assign(lastTask,{
+      //   pos: pos,cardname: el.value,
+      // })
+      tasks.push({
+        begintime: "",
+        deadline: "",
+        cardname: el.value,
+        description: "",
+        listId: listId,
+        pos: pos,
+        cardId: 0,
+        closed: false,
+        productId: parseInt(productId.value as string) as number,
+        expired: false,
+        executorList: [
+          {
+            avatar: "",
+            fullname: "",
+            userId: 0,
+            username: "",
+          },
+        ],
+        tagList: [
+          {
+            color: "",
+            id: 0,
+            productId: 0,
+            tagName: "",
+          },
+        ],
       });
-      e.target.value = "";
+      const newCardData = {
+        begintime: "",
+        cardname: el.value,
+        deadline: "",
+        descript: "",
+        listId: listId,
+        pos: pos,
+        productId: productId.value,
+      };
+      const res = await createNewCard(newCardData);
+      // console.log(res);
+      // const curColumnName = getCurColumnName(e);
+      // const createAction = {
+      //   username: "没想好叫啥",
+      //   actionTime: timestamp,
+      //   action: "在" + curColumnName + "中创建了这张卡",
+      // };
+      // el.value = "";
+      // store.commit("CREATE_TASK", {
+      //   tasks,
+      //   createAction,
+      //   content: e.target.value,
+      // });
+      // e.target.value = "";
     };
+
     /**
      * 创建列
      */

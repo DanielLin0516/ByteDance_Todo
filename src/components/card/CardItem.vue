@@ -28,6 +28,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { CardElement } from "@/axios/globalInterface";
 export default defineComponent({
   name: "CardItem",
   components: {},

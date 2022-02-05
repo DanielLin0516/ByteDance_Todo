@@ -9,14 +9,15 @@ export default createStore({
       userId: "",
       productList: [],
       currentProductName: "",
-      memberList:[],
-      background:"",
+      memberList: [],
+      background: "",
       shareProductList: [],
       showInviteButton: false,
       board: defaultBoard,
       userEvent: [],
       isCardDetailShow: false,
       show: false,
+      tagList: [],
     };
   },
   getters: {
@@ -42,10 +43,13 @@ export default createStore({
     },
   },
   mutations: {
-    setColor(state,value) {
-      state.background = value
+    setTagList(state, tagList) {
+      state.tagList = tagList;
     },
-    setMemberList(state,value) {
+    setColor(state, value) {
+      state.background = value;
+    },
+    setMemberList(state, value) {
       state.memberList = value;
     },
     setUserId(state, value) {
@@ -79,17 +83,7 @@ export default createStore({
     UPDATE_TASK(state, { task, key, value }) {
       task[key] = value;
     },
-    MOVE_TASK(
-      state,
-      {
-        fromTasks,
-        toTasks,
-        fromTaskIndex,
-        toTaskIndex,
-        toTaskColumnName,
-        fromTaskColumnName,
-      }
-    ) {
+    MOVE_TASK(state, { fromTasks, toTasks, fromTaskIndex, toTaskIndex, toTaskColumnName, fromTaskColumnName }) {
       const taskTOMove = fromTasks.splice(fromTaskIndex, 1)[0];
       const moveAction = {
         username: "没想好叫啥",

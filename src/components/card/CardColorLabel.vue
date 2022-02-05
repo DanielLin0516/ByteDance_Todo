@@ -13,13 +13,15 @@
         allow-clear
         class="fontsize"
       />
+      <p>标签</p>
       <div class="labels">
-        <p>标签</p>
-        <div class="label">
-          <div :style="{ backgroundColor: 'green' }" class="label_color">
-            syg
+        <div class="label" v-for="item in labelList" :key="item.id">
+          <div :style="{ backgroundColor: item.color }" class="label_color">
+            {{ item.tagName }}
           </div>
-          <IconPenFill @click="showEditLabel" class="icon_pen" />
+          <span class="icon_pen">
+            <IconPenFill @click="showEditLabel(item)" />
+          </span>
         </div>
       </div>
       <p @click="showAddLabel" class="new_label">新建标签</p>
@@ -33,7 +35,7 @@
       </div>
       <p>标签名</p>
       <a-input
-        v-model="newLabelData.content"
+        v-model="newLabelData.tagName"
         :style="{ width: '100%' }"
         @blur="pressEnter"
         allow-clear
@@ -60,7 +62,7 @@
       >
     </div>
     <!-- 编辑 -->
-    <!-- <div v-show="isShow.edit">
+    <div v-show="isShow.edit">
       <div class="header">
         <span>修改标签</span>
         <IconLeft @click.self="backToAll" class="icon_left" />
@@ -68,7 +70,7 @@
       </div>
       <p>标签名</p>
       <a-input
-        :model-value="newLabelData.content"
+        :model-value="editData.tagName"
         :style="{ width: '100%' }"
         @press-enter="pressEnter"
         allow-clear
@@ -80,26 +82,23 @@
           v-for="(color, index) in colors"
           :key="index"
           :style="{ backgroundColor: color }"
-          @click="chooseColor($event, color)"
+          @click="chooseColor($event, color, 'edit')"
         ></div>
         <span class="text">没有颜色。<br />这不会显示在卡片封面上。</span>
       </div>
       <div class="bottom_buttons">
-        <a-button
-          type="primary"
-          @click.self="addNewLabel"
-          size="large"
+        <a-button type="primary" @click.self="editLabel" size="large"
           >保存</a-button
         >
         <a-button
           type="primary"
           status="danger"
-          @click.self="addNewLabel"
+          @click.self="deleteLabel"
           size="large"
           >删除</a-button
         >
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -112,7 +111,13 @@ import { Message } from "@arco-design/web-vue";
 import { defineComponent, computed, ref, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
-import { createNewLabel, getTagsByProductId } from "@/axios/api";
+import { LabelElement } from "@/axios/globalInterface";
+import {
+  createNewLabel,
+  deleteLabelById,
+  getTagsByProductId,
+  editLabelApi,
+} from "@/axios/labelApi";
 export default defineComponent({
   components: {
     IconCloseCircle,
@@ -127,9 +132,8 @@ export default defineComponent({
   emits: ["close"],
   setup(props, context) {
     const route = useRoute();
-
     const store = useStore();
-    let time = ref(null);
+    const productId = ref(route.params.productId);
     const isShow = reactive({
       all: true,
       edit: false,
@@ -148,19 +152,20 @@ export default defineComponent({
       "#344563",
       "#b3bac5",
     ]);
-    const task = computed(() => {
-      return store.getters.getTask(route.params.id);
-    });
+    // const task = computed(() => {
+    //   return store.getters.getTask(route.params.id);
+    // });
     const newLabelData = reactive({
       color: "#61bd4f",
-      content: "",
-      productId: "",
+      tagName: "",
+      productId: parseInt(productId.value as string),
     });
     const pressEnter = () => {
       console.log(newLabelData);
     };
-    const chooseColor = (e: MouseEvent, color: string) => {
-      newLabelData.color = color;
+    const chooseColor = (e: MouseEvent, color: string,type:string) => {
+      if(type === 'new'){
+           newLabelData.color = color;
 
       const el = e.target as HTMLDivElement;
       const els = el.parentElement?.children;
@@ -171,16 +176,37 @@ export default defineComponent({
         }
       }
       el.innerText = "✔";
+      }else if(type ==='edit'){
+        
+      }
+   
     };
     const addNewLabel = async () => {
-      console.log("addNewLabel---" + JSON.stringify(newLabelData));
-      console.log(typeof route.params.productId);
-      if (!newLabelData.color || !newLabelData.content) {
+      // console.log("addNewLabel---" + JSON.stringify(newLabelData));
+      if (!newLabelData.color || !newLabelData.tagName) {
+        console.log(newLabelData);
         Message.error("请确定颜色与标签名是否完整");
         return;
       }
       const res = await createNewLabel(newLabelData);
       console.log(res);
+      if (res.id) {
+        const tempObj: LabelElement = {
+          color: "",
+          id: "",
+          productId: "",
+          tagName: "",
+        };
+        Object.assign(tempObj, res);
+        console.log(tempObj);
+        console.log(res);
+        console.log(res == tempObj);
+        console.log(res === tempObj);
+
+        labelList.push({
+          tempObj,
+        });
+      }
     };
     const close = () => {
       context.emit("close");
@@ -194,14 +220,42 @@ export default defineComponent({
       isShow.add = false;
       isShow.all = true;
     };
-    const showEditLabel = () => {
+
+    const showEditLabel = (item: LabelElement) => {
       isShow.all = false;
       isShow.edit = true;
+      Object.assign(editData, item);
     };
+    const editData = reactive({
+      color: "",
+      id: 0,
+      productId: 0,
+      tagName: "",
+    });
+    const editLabel = async () => {
+      console.log(editData);
+      // const res = editLabelApi(editData);
+      // console.log(res);
+    };
+
+    /**
+     * 删除标签
+     * @param labelId
+     * @returns
+     */
+    const deleteLabel = async () => {
+      const id = editData.id;
+      const res = deleteLabelById(id);
+      console.log(res);
+    };
+
+    const labelList: LabelElement[] = reactive([]);
     const getLabels = async () => {
       const productId = route.params.productId as string;
       const res = await getTagsByProductId(productId);
-      console.log(res);
+      res.forEach((el: LabelElement) => {
+        labelList.push(el);
+      });
     };
     getLabels();
     return {
@@ -209,6 +263,7 @@ export default defineComponent({
       colors,
       isShow,
       newLabelData,
+      labelList,editData
 
       pressEnter,
       chooseColor,
@@ -217,6 +272,8 @@ export default defineComponent({
       close,
       showAddLabel,
       backToAll,
+      deleteLabel,
+      editLabel,
     };
   },
 });
@@ -286,22 +343,28 @@ $white: rgb(255, 255, 255);
   }
 
   .labels {
-    // display: flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     p {
       width: 100px;
     }
     .label {
       position: relative;
       display: flex;
-      height: 40px;
+      height: 50px;
       width: 100%;
+      margin-top: 10px;
 
       .label_color {
+        display: flex;
+        align-items: center;
+
         box-sizing: border-box;
-        width: 90%;
+        width: calc(100% - 50px);
         height: 100%;
         line-height: 40px;
-        // line-height: 100%;??
 
         padding-left: 3%;
         border-radius: 5px;
@@ -312,9 +375,16 @@ $white: rgb(255, 255, 255);
       .icon_pen {
         position: absolute;
         right: 0;
+        margin: 5px 5px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         font-size: 24px;
-        height: 100%;
-        line-height: 100%;
+        height: 40px;
+        width: 40px;
+        line-height: 40px;
       }
       .icon_pen:hover {
         cursor: pointer;
@@ -324,8 +394,8 @@ $white: rgb(255, 255, 255);
   }
   .new_label {
     text-align: center;
-    height: 35px;
-    line-height: 35px;
+    height: 50px;
+    line-height: 50px;
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.05);
   }
