@@ -15,32 +15,36 @@
                     :key="event.id"
                 >{{ event.content }}发生改变，请查收</div>
             </div>
-            <a-avatar
-                :style="{ backgroundColor: '#3370ff' }"
-                class="avatar"
-                @click="inviteCard = !inviteCard"
-            >
-                <IconUser />
-            </a-avatar>
+            <a-popover position="bottom">
+                <a-avatar
+                    :style="{ backgroundColor: '#3370ff' }"
+                    class="avatar"
+                    @click="inviteCard = !inviteCard"
+                >
+                    <IconUser />
+                </a-avatar>
+                <template #content>
+                    <div class="userInfo" >
+                        <div class="invite-header">
+                            <span>账号</span>
+                            <!-- <icon-close class="close" /> -->
+                        </div>
+                        <div class="center">
+                            <a-avatar :style="{ backgroundColor: '#3370ff' }" class="info">
+                                <IconUser />
+                            </a-avatar>
+                            <div style="display: flex;flex-direction: column;margin-left: 1vw;">
+                                <div>{{ store.state.fullName }}</div>
+                                <div
+                                    style="color:rgb(197,202,210);font-size: 12px;margin-top: 0.5vw;"
+                                >{{ store.state.email }}</div>
+                            </div>
+                        </div>
+                        <div class="logout" @click="toboard">登出账号</div>
+                    </div>
+                </template>
+            </a-popover>
         </div>
-    </div>
-    <div class="userInfo" v-show="inviteCard">
-        <div class="invite-header">
-            <span>账号</span>
-            <icon-close class="close" @click="inviteCard = !inviteCard" />
-        </div>
-        <div class="center">
-            <a-avatar :style="{ backgroundColor: '#3370ff' }" class="info">
-                <IconUser />
-            </a-avatar>
-            <div style="display: flex;flex-direction: column;margin-left: 1vw;">
-                <div>{{ store.state.fullName }}</div>
-                <div
-                    style="color:rgb(197,202,210);font-size: 12px;margin-top: 0.5vw;"
-                >{{ store.state.email }}</div>
-            </div>
-        </div>
-        <div class="logout" @click="toboard">登出账号</div>
     </div>
 </template>
 <script lang="ts">
@@ -191,17 +195,17 @@ export default defineComponent({
         }
     }
 }
- .userInfo {
+.userInfo {
     width: 400px;
     height: 300px;
-    position: absolute;
+    // position: absolute;
     background-color: white;
     top: 85px;
     right: 5px;
     border-radius: 10px;
     padding: 10px;
     border-radius: 10px;
-    box-shadow: 0 8px 16px -4px #091e4240, 0 0 0 1px #091e4214;
+    // box-shadow: 0 8px 16px -4px #091e4240, 0 0 0 1px #091e4214;
     display: flex;
     flex-direction: column;
     //  transform: translateY(0px);
@@ -213,6 +217,9 @@ export default defineComponent({
         align-items: center;
         color: rgb(94, 108, 132);
         font-size: 24px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        padding: 10px;
         .close {
             position: absolute;
             right: 20px;
