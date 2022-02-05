@@ -1,12 +1,24 @@
-import { ProductElement, ProductShowElement, CardElement, UserElement, TagElement, ListElement } from "@/axios/globalInterface";
+import {
+  ProductElement,
+  ProductShowElement,
+  CardElement,
+  UserElement,
+  TagElement,
+  ListElement,
+} from "@/axios/globalInterface";
 import instance from "./request";
 /**
  * 登录
  * @param obj
  * @returns
  */
-export function getUser(obj: { username: String; password: String }): Promise<{ token: string; userId: number }> {
-  return instance.post(`/login?username=${obj.username}&password=${obj.password}`);
+export function getUser(obj: {
+  username: String;
+  password: String;
+}): Promise<{ token: string; userId: number }> {
+  return instance.post(
+    `/login?username=${obj.username}&password=${obj.password}`
+  );
 }
 
 /**
@@ -14,7 +26,12 @@ export function getUser(obj: { username: String; password: String }): Promise<{ 
  * @param obj
  * @returns
  */
-export function registerUser(obj: { fullname: String; username: String; verifyCode: String; password: String }) {
+export function registerUser(obj: {
+  fullname: String;
+  username: String;
+  verifyCode: String;
+  password: String;
+}) {
   return instance.post(`/register`, obj);
 }
 
@@ -42,7 +59,13 @@ export function getProduct(): Promise<{
  * @param obj
  * @returns
  */
-export function createProduct(obj: { background: String; description: String; isPrivate: Boolean; ownerId: Number; productName: String }): Promise<{ id: number }> {
+export function createProduct(obj: {
+  background: String;
+  description: String;
+  isPrivate: Boolean;
+  ownerId: Number;
+  productName: String;
+}): Promise<{ id: number }> {
   return instance.post(`/product/create`, obj);
 }
 
@@ -52,7 +75,9 @@ export function createProduct(obj: { background: String; description: String; is
  * @returns
  */
 export function sendEmail(email: String) {
-  return instance.post(`/mail/sendVerifyCodeToMail?actionType=register&email=${email}`);
+  return instance.post(
+    `/mail/sendVerifyCodeToMail?actionType=register&email=${email}`
+  );
 }
 
 /**
@@ -97,7 +122,11 @@ export function owner(productId: any): Promise<{ isOwner: boolean }> {
  * @param param 创建列
  * @returns
  */
-export function createList(param: { listName: string; pos: number; productId: number }): Promise<ListElement> {
+export function createList(param: {
+  listName: string;
+  pos: number;
+  productId: number;
+}): Promise<ListElement> {
   return instance.post("/list/addList", param);
 }
 
@@ -108,7 +137,9 @@ export function createList(param: { listName: string; pos: number; productId: nu
  * @returns
  */
 export function editListName(listId: number, listNName: string): Promise<any> {
-  return instance.post(`/list/editListName?listId=${listId}&listName=${listNName}`);
+  return instance.post(
+    `/list/editListName?listId=${listId}&listName=${listNName}`
+  );
 }
 
 /**
@@ -135,7 +166,9 @@ export function getCardInfo(cardId: number): Promise<{
  * @returns
  */
 
-export const getTagsByProductId = (productId: string): Promise<{ data: list }> => {
+export const getTagsByProductId = (
+  productId: string
+): Promise<{ data: list }> => {
   return instance.get(`/tag/getTagsByProductId??productId=${productId}`);
 };
 
@@ -144,7 +177,11 @@ export const getTagsByProductId = (productId: string): Promise<{ data: list }> =
  * @param newLabelData
  * @returns
  */
-export function createNewLabel(newLabelData: { color: string; productId: string; content: string }): Promise<{ id: string; productId: string; tagName: string; color: string }> {
+export function createNewLabel(newLabelData: {
+  color: string;
+  productId: string;
+  content: string;
+}): Promise<{ id: string; productId: string; tagName: string; color: string }> {
   return instance.post(`/tag/create`, newLabelData);
 }
 
@@ -157,22 +194,31 @@ export function deleteListById(listId: number): Promise<any> {
   return instance.delete(`/list/removeList/${listId}`);
 }
 /**
+ * 移动列
+ * @param param
+ * @returns
+ */
+ export function moveList(param: { listId: number; pos: number }): Promise<any> {
+  return instance.post("/list/moveList", param);
+}
+/**
  * 获取邀请码
- * @param userId 
- * @returns 
+ * @param userId
+ * @returns
  */
 export function getInviteCode(userId: any): Promise<any> {
-  return instance.get(
-    `/users/getInviteCode/${userId}`
-  );
+  return instance.get(`/users/getInviteCode/${userId}`);
 }
 /**
  * 邀请页
- * @param productId 
- * @param inviteCode 
- * @returns 
+ * @param productId
+ * @param inviteCode
+ * @returns
  */
-export function inviteShow(productId: any, inviteCode: any): Promise<{
+export function inviteShow(
+  productId: any,
+  inviteCode: any
+): Promise<{
   tokenExpire: boolean;
   productName: string;
   inviteUserName: string;
@@ -184,14 +230,12 @@ export function inviteShow(productId: any, inviteCode: any): Promise<{
 /**
  * 邀请人员进项目
  * @param obj
- * @returns 
+ * @returns
  */
 export function invitePerson(obj: {
-  productId:number;
-  secret:string;
-  userId:number;
+  productId: number;
+  secret: string;
+  userId: number;
 }): Promise<{}> {
-  return instance.post(
-    `/product/invite`, obj
-  );
+  return instance.post(`/product/invite`, obj);
 }
