@@ -41,7 +41,6 @@
     <card-action :task="task"></card-action>
     <card-detail-fuction></card-detail-fuction>
   </div>
-  <!-- <h1>tttttttttttttttttttt</h1> -->
 </template>
 <script lang="ts">
 import {
@@ -50,7 +49,7 @@ import {
   IconAlignLeft,
 } from "@arco-design/web-vue/es/icon";
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, computed, reactive } from "vue";
+import { defineComponent, computed, reactive, provide } from "vue";
 import { useStore } from "vuex";
 import debouceRef from "../../hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
@@ -72,30 +71,17 @@ export default defineComponent({
     id: String,
     columnName: String,
   },
-  inject: {},
+  provide() {
+    return {};
+  },
   emits: ["close"],
   setup(props, context) {
+    provide("taskId", props.id as string);
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
     const task = reactive<CardElement[]>([]);
 
-    let task1 = {};
-    const listName = computed(() => {
-      return "listName---";
-      return store.getters.getColumnName(route.params.cid);
-    });
-    const content = computed({
-      get() {
-        // let task1 = store.getters.getTask(route.params.id);
-        return "task1.content";
-      },
-      set(val) {
-        let task1 = store.getters.getTask(route.params.id);
-        return (task1.content = val);
-      },
-    });
-    // let debounce = debouceRef(content.value);
     const updateTaskProperty = (e: { target: any }, key: any) => {
       console.log("updateTaskProperty-----");
 
@@ -105,9 +91,9 @@ export default defineComponent({
         value: e.target,
       });
     };
+
     const close = () => {
       context.emit("close");
-      // router.push({ name: "/Layout/Board" });
     };
     //获取页面渲染数据与处理数据
     const {
@@ -120,34 +106,20 @@ export default defineComponent({
         console.trace(error);
       },
     });
-    async function getInfo() {
-      try {
-        console.log(props);
-        const res = await run(8);
-        console.log(res);
-        // task = res
-      } catch (error) {
-        console.trace(error);
-      }
-    }
-    // getInfo();
-    const test = async () => {
-      // console.log(props.id);
+
+    const getInfo = async () => {
       let id = parseInt(props.id as string) as number;
 
       await getCardInfo(id).then((res) => {
-        // console.log(res);
         Object.assign(task, res);
       });
     };
-    test();
+    getInfo();
+    console.log();
     return {
       task,
-      listName,
-      content,
       updateTaskProperty,
       close,
-      // date,
     };
   },
 });

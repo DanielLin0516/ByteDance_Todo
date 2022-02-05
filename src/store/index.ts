@@ -20,6 +20,7 @@ export default createStore({
       tagList: [],
       fullName: "",
       email: "",
+      labelList: [],
     };
   },
   getters: {
@@ -75,6 +76,9 @@ export default createStore({
     setCurrentProductName(state, value) {
       state.currentProductName = value;
     },
+    setLabelList(state, list) {
+      state.labelList = list;
+    },
     CREATE_TASK(state, { tasks, createAction, content }) {
       createAction.actionTime = timetrans(createAction.actionTime);
       tasks.push({
@@ -91,17 +95,7 @@ export default createStore({
     UPDATE_TASK(state, { task, key, value }) {
       task[key] = value;
     },
-    MOVE_TASK(
-      state,
-      {
-        fromTasks,
-        toTasks,
-        fromTaskIndex,
-        toTaskIndex,
-        toTaskColumnName,
-        fromTaskColumnName,
-      }
-    ) {
+    MOVE_TASK(state, { fromTasks, toTasks, fromTaskIndex, toTaskIndex, toTaskColumnName, fromTaskColumnName }) {
       const taskTOMove = fromTasks.splice(fromTaskIndex, 1)[0];
       const moveAction = {
         username: "没想好叫啥",

@@ -38,7 +38,7 @@
       </a-row>
       <!-- 列表卡片栏也要渲染 -->
       <CardItem
-        v-for="(task,taskIndex) of column.items"
+        v-for="(task, taskIndex) of column.items"
         :key="task.cardId"
         draggable="true"
         :cardInfo="task"
@@ -47,9 +47,7 @@
         @dragstart.stop="pickupTask($event, task.cardId, column.listId)"
         @dragover.prevent
         @dragenter.prevent
-        @drop.stop="
-          moveTask($event, taskIndex,task.cardId,task.listId);
-        "
+        @drop.stop="moveTask($event, taskIndex, task.cardId, task.listId)"
       >
       </CardItem>
       <!-- 添加卡片按钮 -->
@@ -101,7 +99,12 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { ProductShowElement, CardElement } from "@/axios/globalInterface";
+import {
+  ProductShowElement,
+  CardElement,
+  LabelElement,
+} from "@/axios/globalInterface";
+import { getTagsByProductId } from "@/axios/labelApi";
 import { useRequest } from "@/hooks/useRequest";
 import {
   getProductInfo,
@@ -391,7 +394,12 @@ export default defineComponent({
       fromListId.value = fromColumnId;
     };
 
-    const moveTask = (e: DragEvent, toTaskIndex: number,toTaskId:number,toListIndex:number) => {
+    const moveTask = (
+      e: DragEvent,
+      toTaskIndex: number,
+      toTaskId: number,
+      toListIndex: number
+    ) => {
       // const fromColumnIndex = e.dataTransfer.getData("from-column-index");
       // const fromTasks = store.state.lists[fromColumnIndex].items;
       // const fromTaskIndex = e.dataTransfer.getData("from-task-index");
@@ -493,6 +501,21 @@ export default defineComponent({
       columnName.value = column.listName;
       isTaskOpen.value = true;
     };
+
+    interface webLabel extends LabelElement {
+      show: boolean;
+      isChoosed: boolean;
+    }
+    const labelList: webLabel[] = reactive([]);
+    const getProductLabels = async () => {
+      const res = await getTagsByProductId(productId.value as string);
+      res.forEach((el: LabelElement) => {
+        labelList.push(Object.assign(el, { show: true, isChoosed: false }));
+        // choosedList.push(false);
+      });
+      store.commit("setLabelList", labelList);
+    };
+    getProductLabels();
     getInfo();
     return {
       store,
