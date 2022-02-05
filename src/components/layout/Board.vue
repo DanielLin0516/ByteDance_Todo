@@ -62,10 +62,12 @@ export default defineComponent({
 .main-area {
   position: relative;
   display: flex;
+  z-index:1;
   .right {
     position: relative;
     height: calc(100vh - 80px);
     width: 100%;
+      z-index:-1;
     .loading {
       position: absolute;
       display: flex;

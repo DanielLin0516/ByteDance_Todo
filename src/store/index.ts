@@ -17,6 +17,8 @@ export default createStore({
       userEvent: [],
       isCardDetailShow: false,
       show: false,
+      fullName:"",
+      email:""
     };
   },
   getters: {
@@ -42,6 +44,12 @@ export default createStore({
     },
   },
   mutations: {
+    fullName(state,value) {
+      state.fullName = value;
+    },
+    Email(state,value) {
+      state.email = value;
+    },
     setColor(state,value) {
       state.background = value
     },

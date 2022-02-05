@@ -22,7 +22,7 @@ export function registerUser(obj: { fullname: String; username: String; verifyCo
  * 根据token查询当前用户
  * @returns
  */
-export function currentUser(): Promise<{ userId: number; fullname: String }> {
+export function currentUser(): Promise<{ userId: number; fullname: String ;username:String}> {
   return instance.get(`/users/currentUser`);
 }
 
