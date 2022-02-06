@@ -31,7 +31,7 @@
               <a-button
                 type="primary"
                 style="
-                  margin-top: 2vw;
+                  /* margin-top: 2vw; */
                   width: 100%;
                   border-radius: 1vw;
                   height: 3vw;
@@ -171,7 +171,51 @@ export default defineComponent({
       {
         id: 7,
         color: "#00FF00",
-      },
+      },      
+      {
+        id: 8,
+        color: "#61bd4f",
+      },      
+      {
+        id: 9,
+        color: "#f5de33",
+      },      
+      {
+        id: 10,
+        color: "#ff9f1a",
+      },      
+      {
+        id: 11,
+        color: "#eb5a46",
+      },      
+      {
+        id: 12,
+        color: "#c377e0",
+      },      
+      {
+        id: 13,
+        color: "#0079bf",
+      },      
+      {
+        id: 14,
+        color: "#00c2e0",
+      },      
+      {
+        id: 15,
+        color: "#51e898",
+      },      
+      {
+        id: 16,
+        color: "#ff78cb",
+      },      
+      {
+        id: 17,
+        color: "#344563",
+      },      
+      {
+        id: 18,
+        color: "#b3bac5",
+      },      
     ]);
     const yourChoice = (c: string) => {
       upSquare.value = c;
@@ -421,7 +465,7 @@ export default defineComponent({
       flex-wrap: wrap;
 
       .choose {
-        width: 60px;
+        width: 70px;
         height: 30px;
         margin-right: 10px;
         border-radius: 10px;

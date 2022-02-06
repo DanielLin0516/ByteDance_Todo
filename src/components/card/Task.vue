@@ -2,32 +2,24 @@
   <div class="flex">
     <icon-close-circle class="icon-close-circle" @click.self="close" />
     <div class="header">
-      <icon-robot
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-        class="robot"
-      />
-      <input
-        type="text"
-        v-model="CardName"
-        class="content"
-        @change="updateTaskName()"
-        @keyup.enter="updateTaskName()"
+      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" /><input
+      type="text"
+      v-model="CardName"
+      class="content"
+      @change="updateTaskName()"
+      @keyup.enter="updateTaskName()"
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ columnName }}</span
-        >中
+        <span class="listNameSpan">{{ columnName }}</span>中
       </div>
     </div>
-    <!-- <div :class="date" v-if="true">
+    <div class="date" v-if="task.begintime">
       <span>日期</span>
-      <div>{{ task.begintime }} - {{ task.deadline }}</div>
-    </div> -->
+      <div>{{ dayjs(task.begintime) }} - {{ dayjs(task.deadline) }}</div>
+    </div>
     <div class="des">
-      <icon-align-left
-        class="icon-left"
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-      />
+      <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
       <span>描述</span>
     </div>
     <a-textarea
@@ -48,11 +40,13 @@ import {
   IconRobot,
   IconAlignLeft,
 } from "@arco-design/web-vue/es/icon";
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { useRoute, useRouter } from "vue-router";
 import { defineComponent, computed, reactive, ref, provide } from "vue";
 import { useStore } from "vuex";
-import debouceRef from "../../hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
+
 import {
   getCardInfo,
   owner,
@@ -62,7 +56,6 @@ import {
   editCardDesc,
 } from "@/axios/api";
 import { CardElement } from "@/axios/globalInterface";
-
 import CardAction from "./CardAction.vue";
 import CardDetailFuction from "./CardDetailFuction.vue";
 import { log } from "console";
@@ -82,22 +75,21 @@ export default defineComponent({
   emits: ["close"],
   setup(props, context) {
     provide("taskId", props.id as string);
+    provide("cardId", props.id as string);
+    dayjs.extend(utc);
+    let carId: any = props.id;
     const store = useStore();
     const route = useRoute();
-    const router = useRouter();
     const task = reactive<CardElement[]>([]);
     let id = parseInt(props.id as string) as number;
     let CardName = ref("");
     let CardDesc = ref("");
-
     let task1 = {};
     const listName = computed(() => {
       return "listName---";
-      return store.getters.getColumnName(route.params.cid);
     });
     const content = computed({
       get() {
-        // let task1 = store.getters.getTask(route.params.id);
         return "task1.content";
       },
       set(val) {
@@ -105,7 +97,6 @@ export default defineComponent({
         return (task1.content = val);
       },
     });
-    // let debounce = debouceRef(content.value);
     const updateTaskName = async () => {
       await editCardName(id, CardName.value);
     };
@@ -119,7 +110,6 @@ export default defineComponent({
     // }
     const updateTaskProperty = (e: { target: any }, key: any) => {
       console.log("updateTaskProperty-----");
-
       store.commit("UPDATE_TASK", {
         task,
         key,
@@ -160,6 +150,7 @@ export default defineComponent({
       updateTaskName,
       updateTaskDesc,
       // date,
+      dayjs,
     };
   },
 });
