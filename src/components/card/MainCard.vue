@@ -162,6 +162,7 @@ import {
 import { Message } from "@arco-design/web-vue";
 import CardItem from "./CardItem.vue";
 import Task from "./Task.vue";
+import { log } from "console";
 export default defineComponent({
   name: "MainCard",
   components: {
@@ -217,6 +218,7 @@ export default defineComponent({
         console.trace(error);
       },
     });
+    
     //获取页面渲染数据与处理数据
     async function getInfo() {
       try {
@@ -262,8 +264,51 @@ export default defineComponent({
         console.trace(error);
       }
     }
-    const close = () => {
+    /**
+     * 工具函数 获取当前column的name
+     * @param e
+     */
+    const getCurColumnName = (e: any) => {
+      if (e.currentTarget.parentElement.className == "card-wrapper") {
+        return e.currentTarget.firstElementChild.innerHTML;
+      } else {
+        return e.currentTarget.parentElement.firstElementChild.innerHTML;
+      }
+    };
+    const goToTask = (task: { id: any }, columnID: string) => {
+      router.push({ name: "task", params: { cid: columnID, id: task.id } });
+    };
+    /**
+     * 子组件Task触发 关闭任务卡片后的处理
+     * @param param
+     * @returns
+     */
+    const close = (param:{
+      taskId:number,
+      taskName:string,
+      del:boolean
+    }) => {
+      if(param.del) {
+        lists.forEach(items => {
+          Array.prototype.slice.call(items.items).forEach((item, index) => {
+            if(item.cardId == param.taskId) {
+              console.log(index);
+              items.items.splice(index, 1)
+            }
+          })
+        })
+      }
+      if(param.taskName) {
+        lists.forEach(items => {
+          Array.prototype.slice.call(items.items).forEach(item => {
+            if(item.cardId == param.taskId) {
+              item.cardname = param.taskName
+            }
+          })
+        })
+      }
       isTaskOpen.value = false;
+
     };
 
     /**

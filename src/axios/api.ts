@@ -342,3 +342,13 @@ export function editCardName(cardId:number, editContent: string) {
     `/cards/editDescByCardId/${cardId}`, {editContent}
   )
 }
+/**
+ * 根据ID删除卡片
+ * @param cardId 
+ * @returns
+ */
+ export function removeCard(cardId:number) {
+  return instance.delete(
+    `/cards/removeCardById/${cardId}`
+  )
+}
