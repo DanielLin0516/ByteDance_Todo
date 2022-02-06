@@ -463,6 +463,12 @@ export default defineComponent({
         moveTask(e, toColumnIndex, toColumnId, toTaskIndex, toTaskId);
         console.log("卡片移动完毕");
       } else if (type === "column") {
+        const dom = e.target as HTMLElement;
+        if (dom.className === "kanban-dropzon") {
+          dom.style.height = "15px";
+          dom.style.boxShadow = "";
+          dom.style.backgroundColor = "transparent";
+        }
         moveColumn(e, toColumnIndex);
         console.log("列移动完毕");
       }
@@ -763,7 +769,7 @@ export default defineComponent({
     .scroller-container {
       overflow-x: hidden;
       overflow-y: auto;
-      max-height: 500px;
+      max-height: 62vh;
     }
     .kanban-dropzon {
       height: 15px;

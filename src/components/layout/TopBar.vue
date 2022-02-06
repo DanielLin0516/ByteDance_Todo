@@ -15,7 +15,7 @@
                     :key="event.id"
                 >{{ event.content }}发生改变，请查收</div>
             </div>
-            <a-popover position="bottom">
+            <a-popover position="br">
                 <a-avatar
                     :style="{ backgroundColor: '#3370ff' }"
                     class="avatar"
