@@ -114,6 +114,7 @@
         :lists="lists"
       ></Task>
     </div>
+    <!-- <Websocket /> -->
   </div>
 </template>
 
@@ -165,6 +166,8 @@ import { Message } from "@arco-design/web-vue";
 import CardItem from "./CardItem.vue";
 import Task from "./Task.vue";
 import { log } from "console";
+import Websocket from "@/components/websocket/Websocket.vue"
+
 export default defineComponent({
   name: "MainCard",
   components: {
@@ -174,6 +177,7 @@ export default defineComponent({
     CardItem,
     Task,
     IconCloseCircle,
+    Websocket,
   },
   provide() {
     return {

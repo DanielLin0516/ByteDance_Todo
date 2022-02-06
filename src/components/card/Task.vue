@@ -177,6 +177,7 @@ export default defineComponent({
     };
 
     const close = () => {
+      console.log("关闭")
       const param = {
         taskId: id,
         taskName: CardName,

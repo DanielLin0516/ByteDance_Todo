@@ -37,6 +37,5 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "src/theme/theme.ts",
-    "src/websocket/websocket.js"
   ]
 }
