@@ -1,15 +1,15 @@
 <template>
-  <div class="bgc" :style="{background:store.state.background}">
+  <div class="bgc" :style="{ background: background }">
     <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
 import TopBar from "./components/layout/TopBar.vue";
-import { defineComponent, onMounted ,computed, watch} from "vue";
+import { defineComponent, onMounted, computed, watch, ComputedRef } from "vue";
 import { setTheme } from "./theme/theme";
 import { useStore } from "vuex";
-import {useRouter,useRoute} from 'vue-router'
+import { useRouter, useRoute } from "vue-router";
 import router from "./router";
 export default defineComponent({
   name: "App",
@@ -17,7 +17,7 @@ export default defineComponent({
     TopBar,
   },
   setup() {
-    const store =useStore();
+    const store = useStore();
     const router = useRouter();
     const route = useRoute();
     const init = () => {
@@ -26,14 +26,18 @@ export default defineComponent({
     onMounted(() => {
       init();
     });
-    watch(route,() => {
-      if(route.path === "/Layout/WorkPlace") {
-        store.state.background = "#0079BF"
+    const background: ComputedRef<string> = computed(() => {
+      return store.state.background;
+    });
+    watch(route, () => {
+      if (route.path === "/Layout/WorkPlace") {
+        store.commit("setColor", "#0079BF");
       }
-    })
+    });
     return {
-      store
-    }
+      store,
+      background,
+    };
   },
 });
 </script>
