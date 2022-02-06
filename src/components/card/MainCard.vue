@@ -202,6 +202,7 @@ export default defineComponent({
 
     // 传给MainCard的列数组
     const lists = reactive<ProductShowElement[]>([]);
+
     // 路由中的项目Id
     const productId = computed(() => {
       return route.params.productId;
