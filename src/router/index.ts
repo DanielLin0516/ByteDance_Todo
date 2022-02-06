@@ -37,7 +37,7 @@ const router = createRouter({
         {
           path: "WorkPlace",
           name: "WorkPlace",
-          component: () => import("@/components/project/WorkPlace.vue"),
+          component: () => import("@/view/WorkPlace.vue"),
         },
       ],
     },

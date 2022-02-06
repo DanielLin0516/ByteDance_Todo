@@ -5,7 +5,7 @@
       <span class="product-name" style="margin-right: 1vw">{{
         productName
       }}</span>
-      <Avator></Avator>
+      <Avatar />
       <div class="inviteUser" v-show="showInviteButton" @click="inviteShow">
         <icon-user class="icon-user" />
         <div>邀请朋友</div>
@@ -87,7 +87,7 @@ import {
   IconLink,
 } from "@arco-design/web-vue/es/icon";
 import { computed, defineComponent, ref, onBeforeUpdate, reactive } from "vue";
-import Avator from "@/layout/Avator.vue";
+import Avatar from "@/layout/Avatar.vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { setTheme } from "@/theme/theme";
@@ -102,7 +102,7 @@ export default defineComponent({
     IconMoonFill,
     IconClose,
     IconLink,
-    Avator,
+    Avatar,
   },
   setup() {
     const isDark = ref(false);

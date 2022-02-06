@@ -56,7 +56,7 @@ import { useStore } from "vuex";
 import { UserElement } from "@/axios/globalInterface";
 import { IconUser } from "@arco-design/web-vue/es/icon";
 export default defineComponent({
-  name: "TopBar",
+  name: "Avatar",
   components: { IconUser },
   setup() {
     const store = useStore();
