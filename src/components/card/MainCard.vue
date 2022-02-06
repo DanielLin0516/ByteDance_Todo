@@ -111,6 +111,7 @@
         :id="taskClickId.toString()"
         :columnName="columnName"
         @close="close"
+        :lists="lists"
       ></Task>
     </div>
     <Websocket />
@@ -140,6 +141,7 @@ import {
   watch,
   PropType,
   reactive,
+  provide,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";

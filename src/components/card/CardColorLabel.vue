@@ -138,7 +138,7 @@ export default defineComponent({
   emits: ["close"],
   setup(props, context) {
     const addSpan = ref(null);
-    const cardId: string = inject("taskId") as string;
+    const cardId: string = inject("cardId") as string;
 
     const route = useRoute();
     const store = useStore();
@@ -148,7 +148,11 @@ export default defineComponent({
       edit: false,
       add: false,
     });
-    const labelList = store.state.labelList;
+    interface webLabel extends LabelElement {
+      show: boolean;
+      isChoosed: boolean;
+    }
+    const labelList: webLabel[] = store.state.labelList;
     const colors = reactive([
       "#61bd4f",
       "#f5de33",
@@ -184,6 +188,8 @@ export default defineComponent({
     const labelClick = async (tagId: string, index: number, e: MouseEvent) => {
       const el: HTMLDivElement = e.target as HTMLDivElement;
       el.dataset;
+      console.log([cardId, tagId]);
+
       if (el.dataset.choosed === "false") {
         el.dataset.choosed = "true";
         el.classList.add("choosed");
@@ -232,7 +238,8 @@ export default defineComponent({
       if (type === "new") {
         newLabelData.color = color;
         const el = e.target as HTMLDivElement;
-        const els: HTMLDivElement[] = el.parentElement?.children;
+        const els: HTMLCollection = el.parentElement
+          ?.children as HTMLCollection;
         for (let i = 0; i < els?.length; i++) {
           if (els[i].innerText) {
             els[i].innerText = "";
@@ -254,15 +261,16 @@ export default defineComponent({
       const res = await createNewLabel(newLabelData);
       console.log(res);
       if (res.id) {
-        const tempObj: LabelElement = {
+        const tempObj: webLabel = {
           color: "",
           id: "",
           productId: "",
           tagName: "",
+          show: true,
+          isChoosed: true,
         };
-        Object.assign(res, { show: true, isChoosed: true });
-        console.log(tempObj);
-        labelList.push(res);
+        Object.assign(tempObj, res);
+        labelList.push(tempObj);
         //清空之前选中的颜色和name
         newLabelData.color = "#61bd4f";
         newLabelData.tagName = "";
@@ -364,10 +372,8 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 @import url("./scrollCss/scroll.scss");
-$color: red;
-$white: rgb(255, 255, 255);
 .outer {
   position: absolute;
   width: 350px;
@@ -380,7 +386,7 @@ $white: rgb(255, 255, 255);
   flex-direction: column;
 
   border-radius: 5px;
-  background-color: $white;
+  background-color: white;
   box-shadow: 0px 0px 6px gray;
   // border-left: 1px solid rgba(0, 0, 0, 0.3);
 
@@ -401,29 +407,28 @@ $white: rgb(255, 255, 255);
       font-size: 22px;
       height: 100%;
     }
+
     .icon-close,
     .icon_left {
       position: absolute;
-      right: -5px;
-      top: -5px;
-
-      height: 100%;
+      right: -12px;
+      top: -15px;
+      height: 40px;
       width: 40px;
-
       border-radius: 50%;
-      font-size: 10px;
-      color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      color: rgba(@cardTextColorMain, 0.5);
 
       transition: all 0.4s;
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgba(@cardTextColorMain, 0.1);
+        transition: all 0.4s;
+      }
     }
     .icon_left {
       left: 0;
-    }
-    .icon-close,
-    .icon_left:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: all 0.4s;
     }
   }
 
