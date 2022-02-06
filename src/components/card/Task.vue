@@ -2,10 +2,7 @@
   <div class="flex">
     <icon-close-circle class="icon-close-circle" @click.self="close" />
     <div class="header">
-      <icon-robot
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-        class="robot"
-      />
+      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
       <input
         type="text"
         v-model="CardName"
@@ -15,19 +12,15 @@
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ columnName }}</span
-        >中
+        <span class="listNameSpan">{{ columnName }}</span>中
       </div>
     </div>
-    <!-- <div :class="date" v-if="true">
+    <div class="date" v-if="task.begintime">
       <span>日期</span>
-      <div>{{ task.begintime }} - {{ task.deadline }}</div>
-    </div> -->
+      <div>{{ dayjs(task.begintime).format('YYYY-MM-DD') }} ~ {{ dayjs(task.deadline).format('YYYY-MM-DD') }}</div>
+    </div>
     <div class="des">
-      <icon-align-left
-        class="icon-left"
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-      />
+      <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
       <span>描述</span>
     </div>
     <a-textarea
@@ -39,7 +32,7 @@
       :auto-size="{ minRows: 2, maxRows: 5 }"
     />
     <card-action :task="task"></card-action>
-    <card-detail-fuction></card-detail-fuction>
+    <card-detail-fuction @timeDate="dateTime" :lists="lists"></card-detail-fuction>
     <a-popconfirm
       content="将此任务删除？"
       okText="确认"
@@ -53,7 +46,6 @@
         <template #default>删除任务</template>
       </a-button>
     /></a-popconfirm>
-    
   </div>
 </template>
 <script lang="ts">
@@ -63,8 +55,10 @@ import {
   IconAlignLeft,
   IconDelete,
 } from "@arco-design/web-vue/es/icon";
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, computed, reactive, ref, provide } from "vue";
+import { defineComponent, computed, reactive, ref, provide, inject } from "vue";
 import { useStore } from "vuex";
 import debouceRef from "@/hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
@@ -78,8 +72,6 @@ import {
   removeCard
 } from "@/axios/api";
 import { CardElement } from "@/axios/globalInterface";
-
-import { log } from "console";
 import CardAction from "@/components/card/CardAction.vue";
 import CardDetailFuction from "@/components/card/CardDetailFuction.vue";
 export default defineComponent({
@@ -95,27 +87,50 @@ export default defineComponent({
   props: {
     id: String,
     columnName: String,
+    lists:Object
   },
   emits: ["close"],
   setup(props, context) {
-    provide("taskId", props.id as string);
+    // provide("taskId", props.id as string);
+    provide("cardId", props.id as string);
+    dayjs.extend(utc);
     const store = useStore();
     const route = useRoute();
-    const router = useRouter();
-    const task = reactive<CardElement[]>([]);
-    let id = parseInt(props.id as string) as number;
-    let CardName = ref('');
-    let CardDesc = ref('');
-    let delStatue = false;
+    let time = reactive({
+      begintime: "",
+      deadline:"",
+    });
+    const task = reactive<CardElement>({
+      begintime: "",
+      cardId: NaN,
+      cardname: "",
+      closed: false,
+      deadline: "",
+      description: "",
+      executorList: [],
+      expired: false,
+      listId: NaN,
+      pos: NaN,
+      productId: NaN,
+      tagList: [],
+      createdTime: "",
+    });
 
+    const dateTime = (e: any) => {
+      task.begintime = e.beginTime;
+      task.deadline = e.deadline;
+    }
+    let id = parseInt(props.id as string) as number;
+
+    let CardName = ref("");
+    let CardDesc = ref("");
+    let delStatue = false;
     let task1 = {};
     const listName = computed(() => {
       return "listName---";
-      return store.getters.getColumnName(route.params.cid);
     });
     const content = computed({
       get() {
-        // let task1 = store.getters.getTask(route.params.id);
         return "task1.content";
       },
       set(val) {
@@ -126,6 +141,7 @@ export default defineComponent({
     // let debounce = debouceRef(content.value);
     const updateTaskName = async() => {
       await editCardName(id, CardName.value)  
+      close()
     }
     const updateTaskDesc = async() => {      
       await editCardDesc(id, CardDesc.value)  
@@ -135,13 +151,8 @@ export default defineComponent({
       await removeCard(id)
       close()
     }
-    // const changeBGC = async () => {
-    //   await changeBackground(productId.value, `${upSquare.value.slice(1,7)}`);
-    //   Message.success({ content: "更改成功！请刷新后查看" })
-    // }
     const updateTaskProperty = (e: { target: any }, key: any) => {
       console.log("updateTaskProperty-----");
-
       store.commit("UPDATE_TASK", {
         task,
         key,
@@ -188,6 +199,9 @@ export default defineComponent({
       updateTaskDesc,
       deleteOneTask,
       // date,
+      dayjs,
+      dateTime,
+      time
     };
   },
 });

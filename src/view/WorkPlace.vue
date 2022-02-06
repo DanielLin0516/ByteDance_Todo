@@ -109,7 +109,6 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { getProduct, createProduct, deleteProject } from "@/axios/api";
 import { ProductElement } from "@/axios/globalInterface";
-
 export default defineComponent({
   name: "App",
   components: {
@@ -180,10 +179,8 @@ export default defineComponent({
     const yourChoice = (c: string) => {
       upSquare.value = c;
     };
-
     const productList: ProductElement[] = reactive([]);
     const shareProductList: ProductElement[] = reactive([]);
-
     async function deleteItem(id: String) {
       try {
         await deleteProject(id);
@@ -239,7 +236,6 @@ export default defineComponent({
         console.trace(error);
       }
     }
-
     getProduct().then((res) => {
       console.log("work");
       res.productList.forEach((item) => {
@@ -285,7 +281,6 @@ export default defineComponent({
     flex: 1;
     height: 300px;
     padding: 10px;
-
     // float:left
     .first {
       display: flex;
@@ -293,14 +288,12 @@ export default defineComponent({
       background-color: rgb(228, 240, 246);
       border-radius: 10px;
       padding: 10px;
-
       .icon {
         height: 30px;
         width: 30px;
         margin-right: 10px;
         color: rgb(0, 121, 191);
       }
-
       span {
         font-size: 24px;
         color: rgb(0, 121, 191);
@@ -320,7 +313,6 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     overflow-y: visible;
-
     // background-color:red;
     .work {
       display: flex;
@@ -334,7 +326,6 @@ export default defineComponent({
         // height: 200px;
         display: flex;
         width: 100%;
-
         // padding: 20px;
         .item {
           width: 230px;
@@ -350,7 +341,6 @@ export default defineComponent({
           cursor: pointer;
           margin-bottom: 20px;
           position: relative;
-
           .delete {
             position: absolute;
             right: 10px;
@@ -361,7 +351,6 @@ export default defineComponent({
             color: black;
           }
         }
-
         .create {
           width: 230px;
           height: 150px;
@@ -373,13 +362,11 @@ export default defineComponent({
           cursor: pointer;
           margin-bottom: 20px;
         }
-
         .create:hover {
           background-color: rgb(231, 233, 237);
         }
       }
     }
-
     .creat-project {
       position: absolute;
       top: 205px;
@@ -392,7 +379,6 @@ export default defineComponent({
       padding: 10px;
       box-shadow: 0 8px 16px -4px rgb(9 30 66 / 25%),
         0 0 0 1px rgb(9 30 66 / 8%);
-
       span {
         display: inline-block;
         position: relative;
@@ -402,7 +388,6 @@ export default defineComponent({
         text-align: center;
         color: rgb(103, 117, 139);
         border-bottom: 1px solid rgb(0, 121, 191);
-
         .close {
           position: absolute;
           right: 0px;
@@ -411,12 +396,10 @@ export default defineComponent({
           border-radius: 50%;
           cursor: pointer;
         }
-
         .close:hover {
           background-color: rgb(231, 233, 237);
         }
       }
-
       .square {
         height: 100px;
         width: 200px;
@@ -424,20 +407,16 @@ export default defineComponent({
         margin: 20px auto;
         border-radius: 10px;
       }
-
       .back-ground {
         width: 100%;
-
         .content {
           font-size: 16px;
           color: rgb(103, 117, 139);
         }
-
         .color-choose {
           margin-top: 10px;
           display: flex;
           flex-wrap: wrap;
-
           .choose {
             width: 60px;
             height: 30px;
@@ -447,7 +426,6 @@ export default defineComponent({
             cursor: pointer;
           }
         }
-
         .title {
           outline: none;
           margin-top: 10px;
@@ -458,7 +436,6 @@ export default defineComponent({
           color: #172b4d;
           border: 3px solid rgb(223, 225, 230);
         }
-
         .enter {
           width: 100%;
           height: 50px;
@@ -469,23 +446,19 @@ export default defineComponent({
           margin-top: 3vw;
           border-radius: 10px;
         }
-
         .enter:hover {
           background-color: rgb(2, 106, 167);
         }
       }
     }
-
     .join {
       display: flex;
       flex-direction: column;
       width: 90%;
-
       .part {
         margin-top: 30px;
         height: 200px;
         display: flex;
-
         .parttime {
           width: 230px;
           height: 150px;

@@ -277,6 +277,22 @@ export function editCardDesc(cardId: number, editContent: string) {
   return instance.post(`/cards/editDescByCardId/${cardId}`, { editContent });
 }
 /**
+ * 设置项目执行时间
+ * @param productId
+ * @param bgc
+ * @returns
+ */
+export function setTime(
+  cardId: number,
+  obj: {
+    beginTime: string;
+    deadline: string;
+    dueReminder?: any;
+  }
+): Promise<{}> {
+  return instance.post(`/cards/setCardDeadline/${cardId}`, obj);
+}
+/**
  * 根据ID删除卡片
  * @param cardId
  * @returns

@@ -3,29 +3,37 @@
     <div class="card-menu">
       {{ cardInfo?.cardname }}
       <div class="des">{{ cardInfo?.description }}</div>
-      <!-- <div v-if="cardInfo.time.timePeriod" :class="time" @click.prevent.stop="done">
-            <div class="time1">
-              <div>{{ cardInfo.time.timePeriod[0] }}</div>
-              <div>{{ cardInfo.time.timePeriod[1] }}</div>
-            </div>
-            <icon-schedule class="time2" />
-          </div> -->
+      <div class="time" v-show="cardInfo?.begintime">
+        <div class="time1">
+          <div>{{ dayjs(cardInfo?.begintime).format('YYYY-MM-DD') }}</div>
+          <div>{{ dayjs(cardInfo?.deadline).format('YYYY-MM-DD') }}</div>
+        </div>
+        <icon-schedule class="time2" />
+      </div>
     </div>
   </div>
 </template>
-
 <script lang="ts">
-import { defineComponent } from "vue";
+import dayjs from 'dayjs'
+import {
+  IconSchedule
+} from "@arco-design/web-vue/es/icon";
+import { defineComponent, inject } from "vue";
 import { CardElement } from "@/axios/globalInterface";
 export default defineComponent({
   name: "CardItem",
-  components: {},
+  components: {
+    IconSchedule
+  },
   props: {
     cardInfo: Object,
     columnId: String,
   },
   setup(props) {
-    return {};
+    
+    return {
+      dayjs,
+    };
   },
 });
 </script>
@@ -55,7 +63,7 @@ export default defineComponent({
     margin-top: 10px;
     display: flex;
     font-size: 12px;
-    width: 200px;
+    width: 150px;
     align-items: center;
     background-color: rgb(242, 214, 0);
     padding: 5px;
