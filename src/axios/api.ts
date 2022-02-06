@@ -1,24 +1,12 @@
-import {
-  ProductElement,
-  ProductShowElement,
-  CardElement,
-  UserElement,
-  TagElement,
-  ListElement,
-} from "@/axios/globalInterface";
+import { ProductElement, ProductShowElement, CardElement, UserElement, TagElement, ListElement } from "@/axios/globalInterface";
 import instance from "./request";
 /**
  * 登录
  * @param obj
  * @returns
  */
-export function getUser(obj: {
-  username: String;
-  password: String;
-}): Promise<{ token: string; userId: number }> {
-  return instance.post(
-    `/login?username=${obj.username}&password=${obj.password}`
-  );
+export function getUser(obj: { username: String; password: String }): Promise<{ token: string; userId: number }> {
+  return instance.post(`/login?username=${obj.username}&password=${obj.password}`);
 }
 
 /**
@@ -26,12 +14,7 @@ export function getUser(obj: {
  * @param obj
  * @returns
  */
-export function registerUser(obj: {
-  fullname: String;
-  username: String;
-  verifyCode: String;
-  password: String;
-}) {
+export function registerUser(obj: { fullname: String; username: String; verifyCode: String; password: String }) {
   return instance.post(`/register`, obj);
 }
 
@@ -63,13 +46,7 @@ export function getProduct(): Promise<{
  * @param obj
  * @returns
  */
-export function createProduct(obj: {
-  background: String;
-  description: String;
-  isPrivate: Boolean;
-  ownerId: Number;
-  productName: String;
-}): Promise<{ id: number }> {
+export function createProduct(obj: { background: String; description: String; isPrivate: Boolean; ownerId: Number; productName: String }): Promise<{ id: number }> {
   return instance.post(`/product/create`, obj);
 }
 
@@ -79,9 +56,7 @@ export function createProduct(obj: {
  * @returns
  */
 export function sendEmail(email: String) {
-  return instance.post(
-    `/mail/sendVerifyCodeToMail?actionType=register&email=${email}`
-  );
+  return instance.post(`/mail/sendVerifyCodeToMail?actionType=register&email=${email}`);
 }
 
 /**
@@ -126,11 +101,7 @@ export function owner(productId: any): Promise<{ isOwner: boolean }> {
  * @param param 创建列
  * @returns
  */
-export function createList(param: {
-  listName: string;
-  pos: number;
-  productId: number;
-}): Promise<ListElement> {
+export function createList(param: { listName: string; pos: number; productId: number }): Promise<ListElement> {
   return instance.post("/list/addList", param);
 }
 
@@ -141,9 +112,7 @@ export function createList(param: {
  * @returns
  */
 export function editListName(listId: number, listNName: string): Promise<any> {
-  return instance.post(
-    `/list/editListName?listId=${listId}&listName=${listNName}`
-  );
+  return instance.post(`/list/editListName?listId=${listId}&listName=${listNName}`);
 }
 
 /**
@@ -172,9 +141,7 @@ export function getCardInfo(cardId: number): Promise<{
  * @returns
  */
 
-export const getTagsByProductId = (
-  productId: string
-): Promise<{ data: any }> => {
+export const getTagsByProductId = (productId: string): Promise<{ data: any }> => {
   return instance.get(`/tag/getTagsByProductId??productId=${productId}`);
 };
 
@@ -183,11 +150,7 @@ export const getTagsByProductId = (
  * @param newLabelData
  * @returns
  */
-export function createNewLabel(newLabelData: {
-  color: string;
-  productId: string;
-  content: string;
-}): Promise<{ id: string; productId: string; tagName: string; color: string }> {
+export function createNewLabel(newLabelData: { color: string; productId: string; content: string }): Promise<{ id: string; productId: string; tagName: string; color: string }> {
   return instance.post(`/tag/create`, newLabelData);
 }
 
@@ -230,9 +193,7 @@ export function inviteShow(
   productName: string;
   inviteUserName: string;
 }> {
-  return instance.get(
-    `/product/getInviteInfo?productId=${productId}&secret=${inviteCode}`
-  );
+  return instance.get(`/product/getInviteInfo?productId=${productId}&secret=${inviteCode}`);
 }
 
 /**
@@ -240,12 +201,7 @@ export function inviteShow(
  * @param newCardData
  * @returns
  */
-export function createNewCard(newCardData: {
-  cardname: string;
-  listId: number;
-  pos: number;
-  productId: number;
-}): Promise<{
+export function createNewCard(newCardData: { cardname: string; listId: number; pos: number; productId: number }): Promise<{
   begintime: string;
   cardId: number;
   cardname: string;
@@ -265,11 +221,7 @@ export function createNewCard(newCardData: {
  * @param obj
  * @returns
  */
-export function invitePerson(obj: {
-  productId: number;
-  secret: string;
-  userId: number;
-}): Promise<{}> {
+export function invitePerson(obj: { productId: number; secret: string; userId: number }): Promise<{}> {
   return instance.post(`/product/invite`, obj);
 }
 
@@ -278,11 +230,7 @@ export function invitePerson(obj: {
  * @param param
  * @returns
  */
-export function moveCard(param: {
-  cardId: number;
-  listId: number;
-  pos: number;
-}): Promise<any> {
+export function moveCard(param: { cardId: number; listId: number; pos: number }): Promise<any> {
   return instance.post("/cards/moveCard", param);
 }
 /**
@@ -292,29 +240,23 @@ export function moveCard(param: {
  * @returns
  */
 export function changeBackground(productId: number, bgc: string): Promise<{}> {
-  return instance.post(
-    `/product/setProductBackground/${productId}?background=${bgc}`
-  );
+  return instance.post(`/product/setProductBackground/${productId}?background=${bgc}`);
 }
 /**
  * 编辑卡片标题
- * @param cardId 
+ * @param cardId
  * @param editContent
  * @returns
  */
-export function editCardName(cardId:number, editContent: string) {
-  return instance.post(
-    `/cards/editCardNameByCardId/${cardId}`, {editContent}
-  )
+export function editCardName(cardId: number, editContent: string) {
+  return instance.post(`/cards/editCardNameByCardId/${cardId}`, { editContent });
 }
 /**
  * 编辑卡片描述
- * @param cardId 
+ * @param cardId
  * @param editContent
  * @returns
  */
- export function editCardDesc(cardId:number, editContent: string) {
-  return instance.post(
-    `/cards/editDescByCardId/${cardId}`, {editContent}
-  )
+export function editCardDesc(cardId: number, editContent: string) {
+  return instance.post(`/cards/editDescByCardId/${cardId}`, { editContent });
 }

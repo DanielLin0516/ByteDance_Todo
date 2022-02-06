@@ -6,6 +6,7 @@ export default createStore({
   plugins: [saveStatePlugins],
   state() {
     return {
+      currentUserInfo: null,
       userId: "",
       productList: [],
       currentProductName: "",
@@ -78,6 +79,9 @@ export default createStore({
     },
     setLabelList(state, list) {
       state.labelList = list;
+    },
+    setCurrentUser(state, value) {
+      state.currentUserInfo = value;
     },
     CREATE_TASK(state, { tasks, createAction, content }) {
       createAction.actionTime = timetrans(createAction.actionTime);

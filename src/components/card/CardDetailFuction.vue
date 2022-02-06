@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <span class="sidebar-tip">添加至卡片</span>
-    <a class="button-link" href="#" title="成员">
+    <a class="button-link" title="成员" @click="showMember">
       <icon-user />
       <span class="sidebar-text">成员</span>
     </a>
@@ -20,6 +20,7 @@
   </div>
   <div>
     <CardColorLabel v-if="isColorShow" @close="closeColor"></CardColorLabel>
+    <TaskMember v-if="isMemberShow" @close="closeMember"></TaskMember>
   </div>
   <date v-show="store.state.show" />
 </template>
@@ -36,6 +37,7 @@ import {
 import { defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 import CardColorLabel from "@/components/card/CardColorLabel.vue";
+import TaskMember from "@/components/card/TaskMember.vue";
 export default defineComponent({
   components: {
     IconUser,
@@ -45,24 +47,36 @@ export default defineComponent({
     IconFile,
     Date,
     CardColorLabel,
+    TaskMember,
   },
   setup() {
     const store = useStore();
     let show = store.state.show;
     const isColorShow = ref(false);
+    const isMemberShow = ref(false);
+
     const showColorLable = () => {
-      // console.log("showColorLable-----");
       isColorShow.value = true;
+    };
+    const showMember = () => {
+      isMemberShow.value = true;
     };
     const closeColor = () => {
       isColorShow.value = false;
     };
+    const closeMember = () => {
+      console.log("closeMember---");
+
+      isMemberShow.value = false;
+    };
     return {
       store,
-      show,
-      showColorLable,
       isColorShow,
+      isMemberShow,
+      showColorLable,
       closeColor,
+      closeMember,
+      showMember,
     };
   },
 });
