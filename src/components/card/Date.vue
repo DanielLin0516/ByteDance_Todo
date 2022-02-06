@@ -23,39 +23,58 @@
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { IconCloseCircle } from '@arco-design/web-vue/es/icon';
-import { defineComponent, computed, ref, inject, reactive } from 'vue';
+import { defineComponent, computed, ref, inject, reactive, provide } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { setTime } from '@/axios/api'
+import { emit } from 'process';
+import { Message } from '@arco-design/web-vue';
 export default defineComponent({
     components: {
         IconCloseCircle
     },
-    setup() {
+    props: {
+        lists: Object
+    },
+    setup(props, context) {
         dayjs.extend(utc);
         const store = useStore();
         let time = ref(null);
-        let cardId:any = inject('cardId');
+        let cardId: any = inject('cardId');
         const route = useRoute();
         const task = computed(() => {
             return store.getters.getTask(route.params.id);
         })
-        async function onOk(dateString: string, date: string) {
-            let obj = reactive({
-                beginTime:dayjs(dateString[0]).utc().format(),
-                deadline:dayjs(dateString[1]).utc().format(),
-                dueReminder:0
+        let lists = props.lists;
+        let obj = reactive({
+            beginTime: "",
+            deadline: "",
+            dueReinder: 0
+        })
+        function onOk(dateString: string, date: string) {
+            obj.beginTime = dayjs(dateString[0]).utc().format();
+            obj.deadline = dayjs(dateString[1]).utc().format();
+        }
+
+        async function save() {
+            context.emit('time', obj);
+            lists?.forEach((item: any) => {
+                item.items.forEach((item1: any) => {
+                    if (cardId === item1.cardId) {
+                        item1.begintime = obj.beginTime;
+                        item1.deadline = obj.deadline;
+                    }
+                })
             })
-            await setTime(cardId,obj);
+            await setTime(cardId, obj);
+            Message.success({ content: "设置成功" })
+            store.state.show = !store.state.show;
         }
-        function save() {
-            task.value.time.timePeriod = time;
-            console.log(task.value.time)
-            store.state.show = false;
-        }
-        function del() {
-            task.value.time.timePeriod = "";
-            store.state.show = false;
+        async function del() {
+            obj.beginTime = "";
+            obj.deadline = "";
+            await setTime(cardId, obj);
+            store.state.show = !store.state.show;
         }
         return {
             onOk,
@@ -73,7 +92,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     width: 600px;
-    height: 730px;
+    height: 620px;
     padding: 20px;
     position: absolute;
     border-radius: 5px;
@@ -81,6 +100,7 @@ export default defineComponent({
     right: -200px;
     background-color: rgba(@cardColorMain, 1);
     border-left: 1px solid rgba(@cardTextColorMain, 0.3);
+    box-shadow: 0 8px 16px -4px rgb(9 30 66 / 25%), 0 0 0 1px rgb(9 30 66 / 8%);
     .header {
         display: flex;
         height: 80px;

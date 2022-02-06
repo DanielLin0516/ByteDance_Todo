@@ -2,12 +2,13 @@
   <div class="flex">
     <icon-close-circle class="icon-close-circle" @click.self="close" />
     <div class="header">
-      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" /><input
-      type="text"
-      v-model="CardName"
-      class="content"
-      @change="updateTaskName()"
-      @keyup.enter="updateTaskName()"
+      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
+      <input
+        type="text"
+        v-model="CardName"
+        class="content"
+        @change="updateTaskName()"
+        @keyup.enter="updateTaskName()"
       />
       <div class="listName">
         在列表
@@ -16,7 +17,7 @@
     </div>
     <div class="date" v-if="task.begintime">
       <span>日期</span>
-      <div>{{ dayjs(task.begintime) }} - {{ dayjs(task.deadline) }}</div>
+      <div>{{ dayjs(task.begintime).format('YYYY-MM-DD') }} ~ {{ dayjs(task.deadline).format('YYYY-MM-DD') }}</div>
     </div>
     <div class="des">
       <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
@@ -31,7 +32,7 @@
       :auto-size="{ minRows: 2, maxRows: 5 }"
     />
     <card-action :task="task"></card-action>
-    <card-detail-fuction></card-detail-fuction>
+    <card-detail-fuction @timeDate="dateTime" :lists="lists"></card-detail-fuction>
   </div>
 </template>
 <script lang="ts">
@@ -43,7 +44,7 @@ import {
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, computed, reactive, ref, provide } from "vue";
+import { defineComponent, computed, reactive, ref, provide, inject } from "vue";
 import { useStore } from "vuex";
 import { useRequest } from "@/hooks/useRequest";
 
@@ -71,16 +72,39 @@ export default defineComponent({
   props: {
     id: String,
     columnName: String,
+    lists:Object
   },
   emits: ["close"],
   setup(props, context) {
-    provide("taskId", props.id as string);
+    // provide("taskId", props.id as string);
     provide("cardId", props.id as string);
     dayjs.extend(utc);
-    let carId: any = props.id;
     const store = useStore();
     const route = useRoute();
-    const task = reactive<CardElement[]>([]);
+    let time = reactive({
+      begintime: "",
+      deadline:"",
+    });
+    const task = reactive<CardElement>({
+      begintime: "",
+      cardId: NaN,
+      cardname: "",
+      closed: false,
+      deadline: "",
+      description: "",
+      executorList: [],
+      expired: false,
+      listId: NaN,
+      pos: NaN,
+      productId: NaN,
+      tagList: [],
+      createdTime: "",
+    });
+
+    const dateTime = (e: any) => {
+      task.begintime = e.beginTime;
+      task.deadline = e.deadline;
+    }
     let id = parseInt(props.id as string) as number;
     let CardName = ref("");
     let CardDesc = ref("");
@@ -103,11 +127,6 @@ export default defineComponent({
     const updateTaskDesc = async () => {
       await editCardDesc(id, CardDesc.value);
     };
-
-    // const changeBGC = async () => {
-    //   await changeBackground(productId.value, `${upSquare.value.slice(1,7)}`);
-    //   Message.success({ content: "更改成功！请刷新后查看" })
-    // }
     const updateTaskProperty = (e: { target: any }, key: any) => {
       console.log("updateTaskProperty-----");
       store.commit("UPDATE_TASK", {
@@ -151,6 +170,8 @@ export default defineComponent({
       updateTaskDesc,
       // date,
       dayjs,
+      dateTime,
+      time
     };
   },
 });

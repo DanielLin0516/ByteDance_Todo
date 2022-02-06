@@ -99,7 +99,7 @@
     </div>
     <div class="task-bg" v-if="isTaskOpen" @click.self="close">
       <!-- <router-view /> -->
-      <Task :id="taskClickId.toString()" :columnName="columnName" @close="close"></Task>
+      <Task :id="taskClickId.toString()" :columnName="columnName" :lists="lists" @close="close"></Task>
     </div>
   </div>
 </template>

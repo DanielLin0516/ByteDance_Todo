@@ -351,7 +351,7 @@ export function editCardName(cardId:number, editContent: string) {
 export function setTime(cardId: number, obj: {
   beginTime: string;
   deadline: string;
-  dueReminder: number
+  dueReminder?: any
 }): Promise<{}> {
   return instance.post(
     `/cards/setCardDeadline/${cardId}`, obj

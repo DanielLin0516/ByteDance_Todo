@@ -9,11 +9,7 @@
       <icon-tag />
       <span class="sidebar-text">标签</span>
     </a>
-    <a
-      class="button-link"
-      @mousedown="store.state.show = !store.state.show"
-      title="日期"
-    >
+    <a class="button-link" @mousedown="store.state.show = !store.state.show" title="日期">
       <icon-schedule />
       <span class="sidebar-text">日期</span>
     </a>
@@ -21,7 +17,7 @@
   <div>
     <CardColorLabel v-if="isColorShow" @close="closeColor"></CardColorLabel>
   </div>
-  <date v-show="store.state.show" />
+  <date v-show="store.state.show" @time="recieveTime" :lists="lists"/>
 </template>
 
 <script lang="ts">
@@ -33,7 +29,7 @@ import {
   IconSchedule,
   IconFile,
 } from "@arco-design/web-vue/es/icon";
-import { defineComponent, ref } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import CardColorLabel from "@/components/card/CardColorLabel.vue";
 export default defineComponent({
@@ -46,10 +42,15 @@ export default defineComponent({
     Date,
     CardColorLabel,
   },
-  setup() {
+  props:{
+    lists:Object
+  },
+    emits: ["timeDate"],
+  setup(props, context) {
     const store = useStore();
     let show = store.state.show;
     const isColorShow = ref(false);
+    let timePeriod = reactive({});
     const showColorLable = () => {
       // console.log("showColorLable-----");
       isColorShow.value = true;
@@ -57,12 +58,18 @@ export default defineComponent({
     const closeColor = () => {
       isColorShow.value = false;
     };
+    const recieveTime = (e: object) => {
+      timePeriod = e;
+      context.emit('timeDate', timePeriod);
+    }
+
     return {
       store,
       show,
       showColorLable,
       isColorShow,
       closeColor,
+      recieveTime
     };
   },
 });
