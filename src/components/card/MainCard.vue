@@ -1,10 +1,14 @@
 <template>
-  <div class="card-wrapper" @mousedown="columnsMouseMove" @wheel="columnsMouseWheel">
+  <div
+    class="card-wrapper"
+    @mousedown="columnsMouseMove"
+    @wheel="columnsMouseWheel"
+  >
     <!-- 要渲染的列表 -->
     <transition-group
-      name="animate__animated animate__bounce"
-      enter-active-class="animate__fadeInDownBig"
-      leave-active-class="animate__zoomOutLeft"
+      name="animate__list"
+      enter-active-class="animate__animated animate__fadeIn animate__fast"
+      leave-active-class="animate__animated animate__zoomOut animate__fast"
     >
       <div
         class="list-item"
@@ -33,16 +37,18 @@
               cancelText="取消"
               @ok="deleteOneList(column.listId, index)"
             >
-              <icon-close-circle :style="{ fontSize: '20px', color: '#696969' }" />
+              <icon-close-circle
+                :style="{ fontSize: '20px', color: '#696969' }"
+              />
             </a-popconfirm>
           </a-col>
         </a-row>
         <div class="scroller-container">
           <!-- 列表卡片栏也要渲染 -->
           <transition-group
-            name="animate__animated animate__bounce"
-            enter-active-class="animate__bounceIn"
-            leave-active-class="animate__zoomOutLeft"
+            name="animate__card"
+            enter-active-class="animate__animated animate__bounceIn animate__fast"
+            leave-active-class="animate__animated animate__zoomOut animate__fast"
           >
             <div v-for="(task, taskIndex) of column.items" :key="task.cardId">
               <div
@@ -64,7 +70,9 @@
                 :cardInfo="task"
                 :columnId="column.listId.toString()"
                 @click="openTask(task.cardId, column)"
-                @dragstart.stop="pickupTask($event, task.cardId, taskIndex, index)"
+                @dragstart.stop="
+                  pickupTask($event, task.cardId, taskIndex, index)
+                "
                 @dragover.prevent
                 @dragenter.prevent
                 @drop.stop.prevent
@@ -99,14 +107,25 @@
     </div>
     <div class="task-bg" v-if="isTaskOpen" @click.self="close">
       <!-- <router-view /> -->
-      <Task :id="taskClickId.toString()" :columnName="columnName" @close="close"></Task>
+      <Task
+        :id="taskClickId.toString()"
+        :columnName="columnName"
+        @close="close"
+      ></Task>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import "animate.css";
-import { getTimeStamp, PosType, getPos, timetrans } from "../../store/utils";
+import {
+  getTimeStamp,
+  PosType,
+  getPos,
+  timetrans,
+  columnsMouseMove,
+  columnsMouseWheel,
+} from "@/utils/utils";
 import {
   IconPlus,
   IconSchedule,
@@ -164,19 +183,9 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const newColumnName = ref("");
-    const taskClickId = ref(1);
-    const columnName = ref("1");
+    const taskClickId = ref(NaN);
+    const columnName = ref("");
     const isTaskOpen = ref(false);
-    let cur = ref(true);
-    const time = computed(() => {
-      return {
-        time: true,
-        timedone: !cur.value,
-      };
-    });
-    const done = () => {
-      cur.value = !cur.value;
-    };
 
     // 记录移动之前列的id
     const fromListId = ref(NaN);
@@ -188,6 +197,8 @@ export default defineComponent({
     const fromCardIndex = ref(NaN);
     // 记录移动卡片之前所在列的index值
     const fromCardListIndex = ref(NaN);
+    // 记录当前操作的是列还是卡片
+    const currentActionDragType = ref("");
 
     // 传给MainCard的列数组
     const lists = reactive<ProductShowElement[]>([]);
@@ -197,7 +208,6 @@ export default defineComponent({
     });
     // useRequest钩子
     const {
-      data,
       loading: productLoading,
       error,
       run,
@@ -251,23 +261,8 @@ export default defineComponent({
         console.trace(error);
       }
     }
-    /**
-     * 工具函数 获取当前column的name
-     * @param e
-     */
-    const getCurColumnName = (e: any) => {
-      if (e.currentTarget.parentElement.className == "card-wrapper") {
-        return e.currentTarget.firstElementChild.innerHTML;
-      } else {
-        return e.currentTarget.parentElement.firstElementChild.innerHTML;
-      }
-    };
-    const goToTask = (task: { id: any }, columnID: string) => {
-      router.push({ name: "task", params: { cid: columnID, id: task.id } });
-    };
     const close = () => {
       isTaskOpen.value = false;
-      // router.push({ name: "Layout/Board" });
     };
 
     /**
@@ -404,11 +399,11 @@ export default defineComponent({
     ) => {
       console.log(
         "卡片从" +
-        fromColumnIndex +
-        "列出发，id为" +
-        fromTaskId +
-        " index为：" +
-        fromTaskIndex
+          fromColumnIndex +
+          "列出发，id为" +
+          fromTaskId +
+          " index为：" +
+          fromTaskIndex
       );
       fromCardId.value = fromTaskId;
       fromCardIndex.value = fromTaskIndex;
@@ -418,6 +413,7 @@ export default defineComponent({
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer?.setData("type", "task");
       }
+      currentActionDragType.value = "task";
     };
     /**
      * 列抬起时触发
@@ -438,6 +434,7 @@ export default defineComponent({
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer?.setData("type", "column");
       }
+      currentActionDragType.value = "column";
     };
 
     /**
@@ -465,7 +462,6 @@ export default defineComponent({
         dom.style.boxShadow = "";
         dom.style.backgroundColor = "transparent";
         moveTask(e, toColumnIndex, toColumnId, toTaskIndex, toTaskId);
-        console.log("卡片移动完毕");
       } else if (type === "column") {
         const dom = e.target as HTMLElement;
         if (dom.className === "kanban-dropzon") {
@@ -474,8 +470,8 @@ export default defineComponent({
           dom.style.backgroundColor = "transparent";
         }
         moveColumn(e, toColumnIndex);
-        console.log("列移动完毕");
       }
+      currentActionDragType.value = "";
     };
 
     /**
@@ -494,11 +490,11 @@ export default defineComponent({
     ) => {
       console.log(
         "卡片插入到" +
-        toColumnIndex +
-        "列，id为" +
-        toTaskId +
-        " index为：" +
-        toTaskIndex
+          toColumnIndex +
+          "列，id为" +
+          toTaskId +
+          " index为：" +
+          toTaskIndex
       );
       let newPos: number = NaN;
 
@@ -528,15 +524,15 @@ export default defineComponent({
           newPos =
             toTaskIndex === 0
               ? getPos(
-                0,
-                lists[fromCardListIndex.value].items[toTaskIndex].pos,
-                PosType.first
-              )
+                  0,
+                  lists[fromCardListIndex.value].items[toTaskIndex].pos,
+                  PosType.first
+                )
               : getPos(
-                lists[fromCardListIndex.value].items[toTaskIndex - 1].pos,
-                lists[fromCardListIndex.value].items[toTaskIndex].pos,
-                PosType.middle
-              );
+                  lists[fromCardListIndex.value].items[toTaskIndex - 1].pos,
+                  lists[fromCardListIndex.value].items[toTaskIndex].pos,
+                  PosType.middle
+                );
           const temp =
             lists[fromCardListIndex.value].items[fromCardIndex.value];
           temp.pos = newPos;
@@ -548,15 +544,15 @@ export default defineComponent({
         newPos =
           toTaskIndex === 0
             ? getPos(
-              0,
-              lists[toColumnIndex].items[toTaskIndex].pos,
-              PosType.first
-            )
+                0,
+                lists[toColumnIndex].items[toTaskIndex].pos,
+                PosType.first
+              )
             : getPos(
-              lists[toColumnIndex].items[toTaskIndex - 1].pos,
-              lists[toColumnIndex].items[toTaskIndex].pos,
-              PosType.middle
-            );
+                lists[toColumnIndex].items[toTaskIndex - 1].pos,
+                lists[toColumnIndex].items[toTaskIndex].pos,
+                PosType.middle
+              );
         const temp = lists[fromCardListIndex.value].items[fromCardIndex.value];
         temp.pos = newPos;
         lists[fromCardListIndex.value].items.splice(fromCardIndex.value, 1);
@@ -591,22 +587,22 @@ export default defineComponent({
         toColumnIndex === 0
           ? getPos(0, lists[toColumnIndex].pos, PosType.first)
           : toColumnIndex === len - 1
-            ? getPos(
+          ? getPos(
               lists[toColumnIndex].pos,
               lists[toColumnIndex].pos,
               PosType.end
             )
-            : direction === "right"
-              ? getPos(
-                lists[toColumnIndex].pos,
-                lists[toColumnIndex + 1].pos,
-                PosType.middle
-              )
-              : getPos(
-                lists[toColumnIndex - 1].pos,
-                lists[toColumnIndex].pos,
-                PosType.middle
-              );
+          : direction === "right"
+          ? getPos(
+              lists[toColumnIndex].pos,
+              lists[toColumnIndex + 1].pos,
+              PosType.middle
+            )
+          : getPos(
+              lists[toColumnIndex - 1].pos,
+              lists[toColumnIndex].pos,
+              PosType.middle
+            );
       // 更改出发列的pos值
       lists[fromListIndex.value].pos = newPos;
       // 暂存出发列，并删除出发列
@@ -619,13 +615,19 @@ export default defineComponent({
     };
 
     const height = (e: DragEvent) => {
+      if (currentActionDragType.value === "column") {
+        return;
+      }
       const dom = e.target as HTMLElement;
-      dom.style.height = "4vw";
+      dom.style.height = "63px";
       dom.style.boxShadow = "inset 0 0 3px 3px #D8D8D8";
       dom.style.backgroundColor = "#E6E6E6";
       dom.style.transition = "height 0.2s";
     };
     const height1 = (e: DragEvent) => {
+      if (currentActionDragType.value === "column") {
+        return;
+      }
       const dom = e.target as HTMLElement;
       dom.style.height = "15px";
       dom.style.boxShadow = "";
@@ -664,32 +666,6 @@ export default defineComponent({
         pos: newPos,
       });
     };
-    const columnsMouseMove = (e: MouseEvent) => {
-      const el = e.target as HTMLDivElement;
-      const elp = el.parentElement as HTMLDivElement;
-
-      const startPosition = e.clientX;
-      const startScroll = elp.scrollLeft;
-
-      if (!el.classList.contains("card-wrapper")) return;
-
-      const onMouseMove = (e: MouseEvent) => {
-        const diff = e.clientX - startPosition;
-        elp.scrollLeft = startScroll - diff;
-      };
-      const onMouseUp = () => {
-        el.removeEventListener("mousemove", onMouseMove);
-      };
-      el.addEventListener("mousemove", onMouseMove);
-      el.addEventListener("mouseup", onMouseUp);
-    };
-    const columnsMouseWheel = (e: WheelEvent) => {
-      const el = e.target as HTMLDivElement;
-      if (!el.classList.contains("card-wrapper")) return;
-      const flag = ("" + e.deltaY)[0];
-      let elP = el.parentElement as HTMLDivElement;
-      flag === "1" ? (elP.scrollLeft += 30) : (elP.scrollLeft -= 50);
-    };
     const openTask = (cardId: number, column: ProductShowElement) => {
       taskClickId.value = cardId;
       columnName.value = column.listName;
@@ -714,7 +690,6 @@ export default defineComponent({
     return {
       store,
       isTaskOpen,
-      goToTask,
       close,
       createTask,
       pickupTask,
@@ -726,8 +701,6 @@ export default defineComponent({
       height,
       height1,
       moveTaskIntoColumnEnd,
-      time,
-      done,
       columnsMouseMove,
       columnsMouseWheel,
       lists,
@@ -744,7 +717,7 @@ export default defineComponent({
 });
 </script>
 <style lang="less" scoped>
-@import url("./scrollCss/scroll.scss");
+@import url("@/components/card/scrollCss/scroll.scss");
 
 .card-wrapper {
   width: max-content;

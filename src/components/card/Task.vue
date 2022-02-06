@@ -51,7 +51,7 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import { defineComponent, computed, reactive, ref, provide } from "vue";
 import { useStore } from "vuex";
-import debouceRef from "../../hooks/debounce";
+import debouceRef from "@/hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
 import {
   getCardInfo,
@@ -63,9 +63,9 @@ import {
 } from "@/axios/api";
 import { CardElement } from "@/axios/globalInterface";
 
-import CardAction from "./CardAction.vue";
-import CardDetailFuction from "./CardDetailFuction.vue";
 import { log } from "console";
+import CardAction from "@/components/card/CardAction.vue";
+import CardDetailFuction from "@/components/card/CardDetailFuction.vue";
 export default defineComponent({
   name: "NewCardButton",
   components: {
