@@ -107,7 +107,6 @@ export default defineComponent({
     };
     const close = () => {
       context.emit("close");
-      // router.push({ name: "/Layout/Board" });
     };
     //获取页面渲染数据与处理数据
     const {

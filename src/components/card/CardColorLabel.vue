@@ -163,7 +163,7 @@ export default defineComponent({
     const pressEnter = () => {
       console.log(newLabelData);
     };
-    const chooseColor = (e: MouseEvent, color: string, type: string) => {
+    const chooseColor = (e: MouseEvent, color: string, type?: string) => {
       if (type === "new") {
         newLabelData.color = color;
         const el = e.target as HTMLDivElement;
