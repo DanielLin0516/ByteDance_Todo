@@ -5,7 +5,7 @@
       <span class="product-name" style="margin-right: 1vw">{{
         productName
       }}</span>
-      <Avator></Avator>
+      <Avatar />
       <div class="inviteUser" v-show="showInviteButton" @click="inviteShow">
         <icon-user class="icon-user" />
         <div>邀请朋友</div>
@@ -31,7 +31,7 @@
               <a-button
                 type="primary"
                 style="
-                  /* margin-top: 2vw; */
+                  margin-top: 2vw;
                   width: 100%;
                   border-radius: 1vw;
                   height: 3vw;
@@ -87,7 +87,7 @@ import {
   IconLink,
 } from "@arco-design/web-vue/es/icon";
 import { computed, defineComponent, ref, onBeforeUpdate, reactive } from "vue";
-import Avator from "@/components/layout/Avator.vue";
+import Avatar from "@/layout/Avatar.vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { setTheme } from "@/theme/theme";
@@ -102,7 +102,7 @@ export default defineComponent({
     IconMoonFill,
     IconClose,
     IconLink,
-    Avator,
+    Avatar,
   },
   setup() {
     const isDark = ref(false);
@@ -171,51 +171,7 @@ export default defineComponent({
       {
         id: 7,
         color: "#00FF00",
-      },      
-      {
-        id: 8,
-        color: "#61bd4f",
-      },      
-      {
-        id: 9,
-        color: "#f5de33",
-      },      
-      {
-        id: 10,
-        color: "#ff9f1a",
-      },      
-      {
-        id: 11,
-        color: "#eb5a46",
-      },      
-      {
-        id: 12,
-        color: "#c377e0",
-      },      
-      {
-        id: 13,
-        color: "#0079bf",
-      },      
-      {
-        id: 14,
-        color: "#00c2e0",
-      },      
-      {
-        id: 15,
-        color: "#51e898",
-      },      
-      {
-        id: 16,
-        color: "#ff78cb",
-      },      
-      {
-        id: 17,
-        color: "#344563",
-      },      
-      {
-        id: 18,
-        color: "#b3bac5",
-      },      
+      },
     ]);
     const yourChoice = (c: string) => {
       upSquare.value = c;
@@ -269,7 +225,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-@import url("../card/scrollCss/scroll.scss");
+@import url("@/components/card/scrollCss/scroll.scss");
 .small-bar {
   position: relative;
   display: flex;
@@ -431,7 +387,6 @@ export default defineComponent({
   // border:1px solid rgb(103,117,139);
   border-radius: 10px;
   padding: 10px;
-
   span {
     display: inline-block;
     position: relative;
@@ -442,7 +397,6 @@ export default defineComponent({
     color: rgb(103, 117, 139);
     border-bottom: 1px solid rgb(0, 121, 191);
   }
-
   .square {
     height: 100px;
     width: 200px;
@@ -450,22 +404,18 @@ export default defineComponent({
     margin: 20px auto;
     border-radius: 10px;
   }
-
   .back-ground {
     width: 100%;
-
     .content {
       font-size: 16px;
       color: rgb(103, 117, 139);
     }
-
     .color-choose {
       margin-top: 10px;
       display: flex;
       flex-wrap: wrap;
-
       .choose {
-        width: 70px;
+        width: 60px;
         height: 30px;
         margin-right: 10px;
         border-radius: 10px;
@@ -473,7 +423,6 @@ export default defineComponent({
         cursor: pointer;
       }
     }
-
     .title {
       outline: none;
       margin-top: 10px;
@@ -484,7 +433,6 @@ export default defineComponent({
       color: #172b4d;
       border: 3px solid rgb(223, 225, 230);
     }
-
     .enter {
       width: 100%;
       height: 50px;
@@ -495,10 +443,22 @@ export default defineComponent({
       margin-top: 3vw;
       border-radius: 10px;
     }
-
     .enter:hover {
       background-color: rgb(2, 106, 167);
     }
   }
 }
 </style>
+© 2022 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete

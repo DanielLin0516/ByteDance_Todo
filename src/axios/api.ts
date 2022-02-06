@@ -357,4 +357,14 @@ export function setTime(cardId: number, obj: {
     `/cards/setCardDeadline/${cardId}`, obj
   );
 }
+/**
+ * 根据ID删除卡片
+ * @param cardId 
+ * @returns
+ */
+ export function removeCard(cardId:number) {
+  return instance.delete(
+    `/cards/removeCardById/${cardId}`
+  )
+}
 

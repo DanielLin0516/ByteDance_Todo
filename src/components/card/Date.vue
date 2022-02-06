@@ -27,7 +27,6 @@ import { defineComponent, computed, ref, inject, reactive, provide } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { setTime } from '@/axios/api'
-import { emit } from 'process';
 import { Message } from '@arco-design/web-vue';
 export default defineComponent({
     components: {
@@ -55,7 +54,6 @@ export default defineComponent({
             obj.beginTime = dayjs(dateString[0]).utc().format();
             obj.deadline = dayjs(dateString[1]).utc().format();
         }
-
         async function save() {
             context.emit('time', obj);
             lists?.forEach((item: any) => {

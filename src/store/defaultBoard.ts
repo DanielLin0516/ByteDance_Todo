@@ -1,4 +1,4 @@
-import { uuid } from './utils'
+import { uuid } from '@/utils/utils'
 export default {
     name: 'workshop',
     columns:

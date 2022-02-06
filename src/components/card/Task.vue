@@ -33,6 +33,19 @@
     />
     <card-action :task="task"></card-action>
     <card-detail-fuction @timeDate="dateTime" :lists="lists"></card-detail-fuction>
+    <a-popconfirm
+      content="将此任务删除？"
+      okText="确认"
+      cancelText="取消"
+      @ok="deleteOneTask()"
+    >
+      <a-button status="danger" class="deleteButton" shape="round">
+        <template #icon>
+          <icon-delete />
+        </template>
+        <template #default>删除任务</template>
+      </a-button>
+    /></a-popconfirm>
   </div>
 </template>
 <script lang="ts">
@@ -40,14 +53,15 @@ import {
   IconCloseCircle,
   IconRobot,
   IconAlignLeft,
+  IconDelete,
 } from "@arco-design/web-vue/es/icon";
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { useRoute, useRouter } from "vue-router";
 import { defineComponent, computed, reactive, ref, provide, inject } from "vue";
 import { useStore } from "vuex";
+import debouceRef from "@/hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
-
 import {
   getCardInfo,
   owner,
@@ -55,17 +69,18 @@ import {
   editListName,
   editCardName,
   editCardDesc,
+  removeCard
 } from "@/axios/api";
 import { CardElement } from "@/axios/globalInterface";
-import CardAction from "./CardAction.vue";
-import CardDetailFuction from "./CardDetailFuction.vue";
-import { log } from "console";
+import CardAction from "@/components/card/CardAction.vue";
+import CardDetailFuction from "@/components/card/CardDetailFuction.vue";
 export default defineComponent({
   name: "NewCardButton",
   components: {
     IconCloseCircle,
     IconRobot,
     IconAlignLeft,
+    IconDelete,
     CardAction,
     CardDetailFuction,
   },
@@ -106,8 +121,10 @@ export default defineComponent({
       task.deadline = e.deadline;
     }
     let id = parseInt(props.id as string) as number;
+
     let CardName = ref("");
     let CardDesc = ref("");
+    let delStatue = false;
     let task1 = {};
     const listName = computed(() => {
       return "listName---";
@@ -121,12 +138,19 @@ export default defineComponent({
         return (task1.content = val);
       },
     });
-    const updateTaskName = async () => {
-      await editCardName(id, CardName.value);
-    };
-    const updateTaskDesc = async () => {
-      await editCardDesc(id, CardDesc.value);
-    };
+    // let debounce = debouceRef(content.value);
+    const updateTaskName = async() => {
+      await editCardName(id, CardName.value)  
+      close()
+    }
+    const updateTaskDesc = async() => {      
+      await editCardDesc(id, CardDesc.value)  
+    }
+    const deleteOneTask = async() => {
+      delStatue = true
+      await removeCard(id)
+      close()
+    }
     const updateTaskProperty = (e: { target: any }, key: any) => {
       console.log("updateTaskProperty-----");
       store.commit("UPDATE_TASK", {
@@ -137,7 +161,12 @@ export default defineComponent({
     };
 
     const close = () => {
-      context.emit("close");
+      const param = {
+        taskId: id,
+        taskName: CardName,
+        del: delStatue
+      }
+      context.emit("close", param);
     };
     //获取页面渲染数据与处理数据
     const {
@@ -168,6 +197,7 @@ export default defineComponent({
       close,
       updateTaskName,
       updateTaskDesc,
+      deleteOneTask,
       // date,
       dayjs,
       dateTime,
@@ -286,5 +316,15 @@ export default defineComponent({
   .text:hover {
     background-color: rgba(@cardColorWrapper, 0.8);
   }
+  .deleteButton {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+  }
+  .arco-popconfirm-popup-content .arco-popconfirm-footer > button {
+    font-size: 10px;
+  }
 }
+
+
 </style>
