@@ -2,7 +2,9 @@
   <div class="small-bar">
     <!-- 第二个菜单栏 -->
     <div class="second-bar">
-      <span class="product-name" style="margin-right: 1vw;">{{ productName }}</span>
+      <span class="product-name" style="margin-right: 1vw">{{
+        productName
+      }}</span>
       <Avator></Avator>
       <div class="inviteUser" v-show="showInviteButton" @click="inviteShow">
         <icon-user class="icon-user" />
@@ -29,13 +31,14 @@
               <a-button
                 type="primary"
                 style="
-              margin-top: 2vw;
-              width: 100%;
-              border-radius: 1vw;
-              height: 3vw;
-            "
+                  margin-top: 2vw;
+                  width: 100%;
+                  border-radius: 1vw;
+                  height: 3vw;
+                "
                 @click="changeBGC"
-              >更改</a-button>
+                >更改</a-button
+              >
             </div>
           </div>
         </template>
@@ -54,26 +57,44 @@
       </div>
       <span class="create-link" @click="createLink">创建连接</span>
     </div>
-    <div style="font-size: 1vw;color: rgb(rgb(131,140,145)); margin-bottom: 1vw;">具有该链接的任何人均可加入为看板成员</div>
+    <div
+      style="font-size: 1vw; color: rgb(rgb(131, 140, 145)); margin-bottom: 1vw"
+    >
+      具有该链接的任何人均可加入为看板成员
+    </div>
     <a-spin :size="20" v-if="loading" />
-    <div style="width: 100%;display: flex;flex-direction: column;" v-show="inviteCodeData">
-      <a-input style="width: 100%;margin-bottom: 0.5vw;" allow-clear :model-value="link" />
-      <a-button type="primary" style="width: 6vw;height: 2vw;" @click="copy">复制链接</a-button>
+    <div
+      style="width: 100%; display: flex; flex-direction: column"
+      v-show="inviteCodeData"
+    >
+      <a-input
+        style="width: 100%; margin-bottom: 0.5vw"
+        allow-clear
+        :model-value="link"
+      />
+      <a-button type="primary" style="width: 6vw; height: 2vw" @click="copy"
+        >复制链接</a-button
+      >
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { IconUser, IconMoonFill, IconClose, IconLink } from "@arco-design/web-vue/es/icon";
+import {
+  IconUser,
+  IconMoonFill,
+  IconClose,
+  IconLink,
+} from "@arco-design/web-vue/es/icon";
 import { computed, defineComponent, ref, onBeforeUpdate, reactive } from "vue";
-import Avator from '@/components/layout/Avator.vue'
-import { useRoute } from 'vue-router'
+import Avator from "@/components/layout/Avator.vue";
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { setTheme } from "@/theme/theme";
-import { getInviteCode } from "@/axios/api"
+import { getInviteCode } from "@/axios/api";
 import { useRequest } from "@/hooks/useRequest";
 import { Message } from "@arco-design/web-vue";
-import { changeBackground } from "@/axios/api"
+import { changeBackground } from "@/axios/api";
 export default defineComponent({
   name: "SmallBar",
   components: {
@@ -81,7 +102,7 @@ export default defineComponent({
     IconMoonFill,
     IconClose,
     IconLink,
-    Avator
+    Avator,
   },
   setup() {
     const isDark = ref(false);
@@ -91,7 +112,7 @@ export default defineComponent({
     let upSquare = ref(String("#0079BF"));
     onBeforeUpdate(() => {
       userId = store.state.userId;
-    })
+    });
     const route = useRoute();
     let inviteCodeData = ref(null);
     let link = ref(String(null));
@@ -99,8 +120,8 @@ export default defineComponent({
       return route.params.productId;
     });
     const inviteShow = () => {
-      inviteCard.value = !inviteCard.value
-    }
+      inviteCard.value = !inviteCard.value;
+    };
     const showInviteButton = computed(() => {
       return store.state.showInviteButton;
     });
@@ -156,24 +177,32 @@ export default defineComponent({
       upSquare.value = c;
     };
     const changeBGC = async () => {
-      await changeBackground(productId.value, `${upSquare.value.slice(1,7)}`);
-      Message.success({ content: "更改成功！请刷新后查看" })
-    }
+      try {
+        await changeBackground(
+          productId.value,
+          `${upSquare.value.slice(1, 7)}`
+        );
+        Message.success({ content: "更改成功！" });
+        store.commit("setColor", upSquare.value);
+      } catch (error) {
+        console.trace(error);
+      }
+    };
     const createLink = async () => {
       const res = await run(userId);
       inviteCodeData.value = res;
-      link.value = `http://localhost:3000/#/Invite/${productId.value}/${inviteCodeData.value}`
-    }
+      link.value = `http://localhost:3000/#/Invite/${productId.value}/${inviteCodeData.value}`;
+    };
     const copy = () => {
       // console.log('复制id', link.value)
-      let eInput = document.createElement('input')
-      eInput.value = link.value
-      document.body.appendChild(eInput)
-      eInput.select() //选择对象
-      let copyText = document.execCommand('Copy') //执行浏览器的复制命令
-      eInput.style.display = 'none'
-      if (copyText) Message.success({ content: '复制成功' })
-    }
+      let eInput = document.createElement("input");
+      eInput.value = link.value;
+      document.body.appendChild(eInput);
+      eInput.select(); //选择对象
+      let copyText = document.execCommand("Copy"); //执行浏览器的复制命令
+      eInput.style.display = "none";
+      if (copyText) Message.success({ content: "复制成功" });
+    };
     return {
       changeTheme,
       store,
@@ -189,7 +218,7 @@ export default defineComponent({
       color,
       yourChoice,
       upSquare,
-      changeBGC
+      changeBGC,
     };
   },
 });

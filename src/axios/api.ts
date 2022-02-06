@@ -160,6 +160,8 @@ export function getCardInfo(cardId: number): Promise<{
   memberList: UserElement[];
   productName: string;
   tagList: TagElement[];
+  cardname: string;
+  description: string;
 }> {
   return instance.get(`/cards/queryById/${cardId}`);
 }
@@ -293,4 +295,26 @@ export function changeBackground(productId: number, bgc: string): Promise<{}> {
   return instance.post(
     `/product/setProductBackground/${productId}?background=${bgc}`
   );
+}
+/**
+ * 编辑卡片标题
+ * @param cardId 
+ * @param editContent
+ * @returns
+ */
+export function editCardName(cardId:number, editContent: string) {
+  return instance.post(
+    `/cards/editCardNameByCardId/${cardId}`, {editContent}
+  )
+}
+/**
+ * 编辑卡片描述
+ * @param cardId 
+ * @param editContent
+ * @returns
+ */
+ export function editCardDesc(cardId:number, editContent: string) {
+  return instance.post(
+    `/cards/editDescByCardId/${cardId}`, {editContent}
+  )
 }
