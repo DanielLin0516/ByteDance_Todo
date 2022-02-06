@@ -23,5 +23,5 @@
 			// "router/*": ["./src/router/*"]
 		}
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/theme/theme.ts"]
+  "include": ["src","src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/theme/theme.ts"]
 }

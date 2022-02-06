@@ -5,12 +5,11 @@
 </template>
 
 <script lang="ts">
-import TopBar from "./components/layout/TopBar.vue";
+import TopBar from "@/layout/TopBar.vue";
 import { defineComponent, onMounted, computed, watch, ComputedRef } from "vue";
-import { setTheme } from "./theme/theme";
+import { setTheme } from "@/theme/theme";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
-import router from "./router";
 export default defineComponent({
   name: "App",
   components: {

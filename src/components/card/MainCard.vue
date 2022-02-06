@@ -141,8 +141,6 @@ import {
   moveCard,
 } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
-import { getCipherInfo } from "crypto";
-import { title } from "process";
 import CardItem from "./CardItem.vue";
 import Task from "./Task.vue";
 export default defineComponent({
@@ -687,7 +685,7 @@ export default defineComponent({
 });
 </script>
 <style lang="less" scoped>
-@import url("./scrollCss/scroll.scss");
+@import url("@/components/card/scrollCss/scroll.scss");
 
 .card-wrapper {
   width: max-content;
