@@ -5,11 +5,7 @@
 </template>
 
 <script lang="ts">
-import TopBar from "@/components/layout/TopBar.vue";
-import LeftDrawer from "./LeftDrawer.vue";
-import MainCard from "../card/MainCard.vue";
-import SmallBar from "@/components/layout/SmallBar.vue";
-import { IconUser, IconMoonFill } from "@arco-design/web-vue/es/icon";
+import TopBar from "@/layout/TopBar.vue";
 import {
   defineComponent,
   ref,
@@ -18,18 +14,13 @@ import {
   nextTick,
   provide,
 } from "vue";
-import { setTheme } from "../../theme/theme";
-import { currentUser } from "../../axios/api";
+import { setTheme } from "@/theme/theme";
+import { currentUser } from "@/axios/api";
 import { useStore } from "vuex";
 export default defineComponent({
   name: "Layout",
   components: {
-    IconUser,
-    IconMoonFill,
     TopBar,
-    MainCard,
-    LeftDrawer,
-    SmallBar,
   },
   setup() {
     const isDark = ref(false);
@@ -59,7 +50,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-@import url("../card/scrollCss/scroll.scss");
+@import url("@/components/card/scrollCss/scroll.scss");
 .main-area {
   position: relative;
   display: flex;

@@ -12,7 +12,8 @@
       allow-clear
     />
     <div>
-      <div ref="addSpan">
+      <!-- <div ref="addSpan"> -->
+      <div v-show="isSuggest">
         <p>建议的成员</p>
         <p @click="suggestMember" class="new_label">
           {{ currentUser.fullname }}
@@ -20,12 +21,22 @@
       </div>
       <p>看板成员</p>
       <div class="members">
+        <!-- 原来的
         <div
           class="label"
           v-for="(user, index) in mermberList"
+          v-show="user.isShow"
+          :data-choosed="user.isChoosed"
           :key="user.userId + index"
-          data-choosed="false"
-          @click="chooseMember($event, user)"
+          @click="chooseMember($event, user, index)"
+        ></div> -->
+        <div
+          class="label"
+          v-for="(user, index) in mermberList"
+          v-show="user.isShow"
+          :class="{ choosed: user.isChoosed }"
+          :key="user.userId + index"
+          @click="chooseMember(user, index)"
         >
           {{ user.fullname }}
         </div>
@@ -62,49 +73,75 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore();
     const addSpan = ref(null);
+    const isSuggest = ref(true);
     const currentUser = store.state.currentUserInfo;
     const productId = ref(Number(route.params.productId));
     const searchValue = ref("");
-    const mermberList: UserElement[] = reactive([]);
     const cardId: number = inject("taskId") as number;
+    interface webMember extends UserElement {
+      isShow: boolean;
+      isChoosed: boolean;
+    }
+    const mermberList: webMember[] = reactive([]);
 
-    const close = () => {
-      context.emit("close");
-    };
+    const close = () => context.emit("close");
+
     const searchMember = () => {
-      console.log(searchValue.value);
+      if (!searchValue.value) {
+        mermberList.forEach((el) => (el.isShow = true));
+        return;
+      }
+      mermberList.forEach((el) => (el.isShow = false));
+      mermberList.forEach((el) => {
+        if (el.fullname.includes(searchValue.value)) {
+          el.isShow = true;
+        }
+      });
     };
     const suggestMember = () => {
-      console.log("suggestMember");
+      const index = mermberList.findIndex(
+        (el) => el.userId == currentUser.userId
+      );
+      chooseMember(currentUser, index);
     };
 
-    const chooseMember = async (e: MouseEvent, user: UserElement) => {
-      const el = e.target as HTMLDivElement;
+    const chooseMember = async (user: webMember, index: number) => {
       const userId = user.userId;
+      const flag = mermberList[index].isChoosed;
+      if (!flag) {
+        //添加到被选中的最后一个的后一个
+        const firstNotChoosed = mermberList.findIndex((el) => !el.isChoosed);
+        console.log(firstNotChoosed);
+        mermberList[index].isChoosed = true;
 
-      if (el.dataset.choosed === "false") {
-        el.classList.add("choosed");
-        el.dataset.choosed = "true";
+        const tempObj = mermberList.splice(index, 1)[0];
+        mermberList.splice(firstNotChoosed, 0, tempObj);
+        //如果是推荐人，
         if (userId == currentUser.userId) {
-          console.log(addSpan.value);
-
-          addSpan.value.style.display = "none";
+          isSuggest.value = false;
         }
+        //可能是搜索出来的
+        searchValue.value = "";
+        searchMember();
         await setExecutorApi(cardId, userId);
       } else {
-        el.classList.remove("choosed");
-        el.dataset.choosed = "false";
-        addSpan.value.style.display = "block";
+        mermberList[index].isChoosed = false;
+        if (userId == currentUser.userId) {
+          isSuggest.value = true;
+        }
         await deleteExecutorApi(cardId, userId);
       }
     };
 
-    interface webMember extends UserElement {}
     const getMemberList = async (productId: number) => {
       const res = await getMemberListApi(productId);
-      console.log(res);
       res.forEach((el) => {
-        mermberList.push(el);
+        mermberList.push(
+          Object.assign(el, {
+            isShow: true,
+            isChoosed: false,
+          })
+        );
       });
     };
     getMemberList(productId.value);
@@ -114,6 +151,7 @@ export default defineComponent({
       searchValue,
       currentUser,
       addSpan,
+      isSuggest,
 
       searchMember,
       suggestMember,

@@ -51,12 +51,28 @@ export function createProduct(obj: { background: String; description: String; is
 }
 
 /**
- * 发送邮件
+ * 发送注册邮件
  * @param email
  * @returns
  */
 export function sendEmail(email: String) {
   return instance.post(`/mail/sendVerifyCodeToMail?actionType=register&email=${email}`);
+}
+/**
+ * 发送重置密码邮件
+ * @param email
+ * @returns
+ */
+export function sendResetEmail(email: String) {
+  return instance.post(`/mail/sendVerifyCodeToMail?actionType=reset&email=${email}`);
+}
+/**
+ * 重置密码
+ * @param email
+ * @returns
+ */
+export function modifyUserPassWord(obj: { password: string; username: string; verifyCode: string }) {
+  return instance.post(`/users/modifyUserPassWord`, obj);
 }
 
 /**
@@ -259,4 +275,12 @@ export function editCardName(cardId: number, editContent: string) {
  */
 export function editCardDesc(cardId: number, editContent: string) {
   return instance.post(`/cards/editDescByCardId/${cardId}`, { editContent });
+}
+/**
+ * 根据ID删除卡片
+ * @param cardId
+ * @returns
+ */
+export function removeCard(cardId: number) {
+  return instance.delete(`/cards/removeCardById/${cardId}`);
 }

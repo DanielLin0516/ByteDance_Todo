@@ -148,7 +148,11 @@ export default defineComponent({
       edit: false,
       add: false,
     });
-    const labelList = store.state.labelList;
+    interface webLabel extends LabelElement {
+      show: boolean;
+      isChoosed: boolean;
+    }
+    const labelList: webLabel[] = store.state.labelList;
     const colors = reactive([
       "#61bd4f",
       "#f5de33",
@@ -232,7 +236,8 @@ export default defineComponent({
       if (type === "new") {
         newLabelData.color = color;
         const el = e.target as HTMLDivElement;
-        const els: HTMLDivElement[] = el.parentElement?.children;
+        const els: HTMLCollection = el.parentElement
+          ?.children as HTMLCollection;
         for (let i = 0; i < els?.length; i++) {
           if (els[i].innerText) {
             els[i].innerText = "";
@@ -254,15 +259,16 @@ export default defineComponent({
       const res = await createNewLabel(newLabelData);
       console.log(res);
       if (res.id) {
-        const tempObj: LabelElement = {
+        const tempObj: webLabel = {
           color: "",
           id: "",
           productId: "",
           tagName: "",
+          show: true,
+          isChoosed: true,
         };
-        Object.assign(res, { show: true, isChoosed: true });
-        console.log(tempObj);
-        labelList.push(res);
+        Object.assign(tempObj, res);
+        labelList.push(tempObj);
         //清空之前选中的颜色和name
         newLabelData.color = "#61bd4f";
         newLabelData.tagName = "";

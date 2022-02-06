@@ -9,19 +9,34 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
-    "types": ["node"],
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "types": [
+      "node"
+    ],
     "paths": {
-			"@/*": ["./src/*"],
-			// "apis/*": ["./src/apis/*"],
-			// "model/*": ["./src/model/*"],
-			// "utils/*": ["./src/utils/*"],
-			// "comps/*": ["./src/comps/*"],
-			// "config/*": ["./src/config/*"],
-			// "views/*": ["./src/views/*"],
-			// "layout/*": ["./src/layout/*"],
-			// "router/*": ["./src/router/*"]
-		}
+      "@/*": [
+        "./src/*"
+      ],
+      // "apis/*": ["./src/apis/*"],
+      // "model/*": ["./src/model/*"],
+      // "utils/*": ["./src/utils/*"],
+      // "comps/*": ["./src/comps/*"],
+      // "config/*": ["./src/config/*"],
+      // "views/*": ["./src/views/*"],
+      // "layout/*": ["./src/layout/*"],
+      // "router/*": ["./src/router/*"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/theme/theme.ts"]
+  "include": [
+    "src",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/theme/theme.ts",
+    "src/websocket/websocket.js"
+  ]
 }

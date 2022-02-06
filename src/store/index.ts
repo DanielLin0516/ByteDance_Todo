@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import defaultBoard from "./defaultBoard";
-import { saveStatePlugins, uuid, timetrans, getTimeStamp } from "./utils";
+import { saveStatePlugins, uuid, timetrans, getTimeStamp } from "@/utils/utils";
 // const board = JSON.parse(localStorage.getItem('board')) || defaultBoard
 export default createStore({
   plugins: [saveStatePlugins],

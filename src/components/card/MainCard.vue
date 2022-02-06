@@ -5,82 +5,97 @@
     @wheel="columnsMouseWheel"
   >
     <!-- 要渲染的列表 -->
-    <div
-      class="list-item"
-      v-for="(column, index) of lists"
-      :key="column.listId"
-      draggable="true"
-      @drop="moveTaskOrColumn($event, index, column.listId)"
-      @dragover.prevent
-      @dragenter.prevent
-      @dragstart.self="pickupColumn($event, column.listId, index)"
+    <transition-group
+      name="animate__list"
+      enter-active-class="animate__animated animate__fadeIn animate__fast"
+      leave-active-class="animate__animated animate__zoomOut animate__fast"
     >
-      <!-- 列表标题 -->
-      <a-row justify="space-between" align="center">
-        <a-col :span="21">
-          <a-input
-            class="list-title"
-            size="large"
-            :default-value="column.listName"
-            @press-enter="editListNameById(column.listId, index, $event)"
-          />
-        </a-col>
-        <a-col :span="3" style="display: flex; justify-content: flex-end">
-          <a-popconfirm
-            content="将此列表进行删除？"
-            okText="确认"
-            cancelText="取消"
-            @ok="deleteOneList(column.listId, index)"
-          >
-            <icon-close-circle :style="{ fontSize: '20px', color: '#696969' }"
-          /></a-popconfirm>
-        </a-col>
-      </a-row>
-      <div class="scroller-container">
-        <!-- 列表卡片栏也要渲染 -->
-        <div v-for="(task, taskIndex) of column.items" :key="task.cardId">
-          <div
-            class="kanban-dropzon"
-            @dragover.prevent="height($event)"
-            @dragleave.prevent="height1($event)"
-            @drop.stop="
-              moveTaskOrColumn(
-                $event,
-                index,
-                column.listId,
-                taskIndex,
-                task.cardId
-              )
-            "
-          ></div>
-          <CardItem
-            draggable="true"
-            :cardInfo="task"
-            :columnId="column.listId.toString()"
-            @click="openTask(task.cardId, column)"
-            @dragstart.stop="pickupTask($event, task.cardId, taskIndex, index)"
-            @dragover.prevent
-            @dragenter.prevent
-            @drop.stop.prevent
-          >
-          </CardItem>
-        </div>
-      </div>
-
-      <!-- 添加卡片按钮 -->
       <div
-        class="kanban-dropzon"
-        @dragover.prevent="height($event)"
-        @dragleave.prevent="height1($event)"
-        @drop="moveTaskIntoColumnEnd($event, index, column.listId)"
-      ></div>
-      <input
-        class="new-button"
-        type="text"
-        placeholder="+ 添加任务"
-        @keyup.enter="createTask($event, column.items, column.listId)"
-      />
-    </div>
+        class="list-item"
+        v-for="(column, index) of lists"
+        :key="column.listId"
+        draggable="true"
+        @drop="moveTaskOrColumn($event, index, column.listId)"
+        @dragover.prevent
+        @dragenter.prevent
+        @dragstart.self="pickupColumn($event, column.listId, index)"
+      >
+        <!-- 列表标题 -->
+        <a-row justify="space-between" align="center">
+          <a-col :span="21">
+            <a-input
+              class="list-title"
+              size="large"
+              :default-value="column.listName"
+              @press-enter="editListNameById(column.listId, index, $event)"
+            />
+          </a-col>
+          <a-col :span="3" style="display: flex; justify-content: flex-end">
+            <a-popconfirm
+              content="将此列表进行删除？"
+              okText="确认"
+              cancelText="取消"
+              @ok="deleteOneList(column.listId, index)"
+            >
+              <icon-close-circle
+                :style="{ fontSize: '20px', color: '#696969' }"
+              />
+            </a-popconfirm>
+          </a-col>
+        </a-row>
+        <div class="scroller-container">
+          <!-- 列表卡片栏也要渲染 -->
+          <transition-group
+            name="animate__card"
+            enter-active-class="animate__animated animate__bounceIn animate__fast"
+            leave-active-class="animate__animated animate__zoomOut animate__fast"
+          >
+            <div v-for="(task, taskIndex) of column.items" :key="task.cardId">
+              <div
+                class="kanban-dropzon"
+                @dragover.prevent="height($event)"
+                @dragleave.prevent="height1($event)"
+                @drop.stop="
+                  moveTaskOrColumn(
+                    $event,
+                    index,
+                    column.listId,
+                    taskIndex,
+                    task.cardId
+                  )
+                "
+              ></div>
+              <CardItem
+                draggable="true"
+                :cardInfo="task"
+                :columnId="column.listId.toString()"
+                @click="openTask(task.cardId, column)"
+                @dragstart.stop="
+                  pickupTask($event, task.cardId, taskIndex, index)
+                "
+                @dragover.prevent
+                @dragenter.prevent
+                @drop.stop.prevent
+              ></CardItem>
+            </div>
+          </transition-group>
+        </div>
+
+        <!-- 添加卡片按钮 -->
+        <div
+          class="kanban-dropzon"
+          @dragover.prevent="height($event)"
+          @dragleave.prevent="height1($event)"
+          @drop="moveTaskIntoColumnEnd($event, index, column.listId)"
+        ></div>
+        <input
+          class="new-button"
+          type="text"
+          placeholder="+ 添加任务"
+          @keyup.enter="createTask($event, column.items, column.listId)"
+        />
+      </div>
+    </transition-group>
     <div class="btn-add">
       <input
         class="add-item"
@@ -103,7 +118,14 @@
 
 <script lang="ts">
 import "animate.css";
-import { getTimeStamp, PosType, getPos, timetrans } from "../../store/utils";
+import {
+  getTimeStamp,
+  PosType,
+  getPos,
+  timetrans,
+  columnsMouseMove,
+  columnsMouseWheel,
+} from "@/utils/utils";
 import {
   IconPlus,
   IconSchedule,
@@ -117,8 +139,6 @@ import {
   watch,
   PropType,
   reactive,
-  onMounted,
-  getCurrentInstance,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -140,10 +160,9 @@ import {
   moveCard,
 } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
-import { getCipherInfo } from "crypto";
-import { title } from "process";
 import CardItem from "./CardItem.vue";
 import Task from "./Task.vue";
+import { log } from "console";
 export default defineComponent({
   name: "MainCard",
   components: {
@@ -165,19 +184,9 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const newColumnName = ref("");
-    const taskClickId = ref(1);
-    const columnName = ref("1");
+    const taskClickId = ref(NaN);
+    const columnName = ref("");
     const isTaskOpen = ref(false);
-    let cur = ref(true);
-    const time = computed(() => {
-      return {
-        time: true,
-        timedone: !cur.value,
-      };
-    });
-    const done = () => {
-      cur.value = !cur.value;
-    };
 
     // 记录移动之前列的id
     const fromListId = ref(NaN);
@@ -189,16 +198,18 @@ export default defineComponent({
     const fromCardIndex = ref(NaN);
     // 记录移动卡片之前所在列的index值
     const fromCardListIndex = ref(NaN);
+    // 记录当前操作的是列还是卡片
+    const currentActionDragType = ref("");
 
     // 传给MainCard的列数组
     const lists = reactive<ProductShowElement[]>([]);
+
     // 路由中的项目Id
     const productId = computed(() => {
       return route.params.productId;
     });
     // useRequest钩子
     const {
-      data,
       loading: productLoading,
       error,
       run,
@@ -207,6 +218,7 @@ export default defineComponent({
         console.trace(error);
       },
     });
+    
     //获取页面渲染数据与处理数据
     async function getInfo() {
       try {
@@ -266,9 +278,37 @@ export default defineComponent({
     const goToTask = (task: { id: any }, columnID: string) => {
       router.push({ name: "task", params: { cid: columnID, id: task.id } });
     };
-    const close = () => {
+    /**
+     * 子组件Task触发 关闭任务卡片后的处理
+     * @param param
+     * @returns
+     */
+    const close = (param:{
+      taskId:number,
+      taskName:string,
+      del:boolean
+    }) => {
+      if(param.del) {
+        lists.forEach(items => {
+          Array.prototype.slice.call(items.items).forEach((item, index) => {
+            if(item.cardId == param.taskId) {
+              console.log(index);
+              items.items.splice(index, 1)
+            }
+          })
+        })
+      }
+      if(param.taskName) {
+        lists.forEach(items => {
+          Array.prototype.slice.call(items.items).forEach(item => {
+            if(item.cardId == param.taskId) {
+              item.cardname = param.taskName
+            }
+          })
+        })
+      }
       isTaskOpen.value = false;
-      // router.push({ name: "Layout/Board" });
+
     };
 
     /**
@@ -419,6 +459,7 @@ export default defineComponent({
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer?.setData("type", "task");
       }
+      currentActionDragType.value = "task";
     };
     /**
      * 列抬起时触发
@@ -439,6 +480,7 @@ export default defineComponent({
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer?.setData("type", "column");
       }
+      currentActionDragType.value = "column";
     };
 
     /**
@@ -466,7 +508,6 @@ export default defineComponent({
         dom.style.boxShadow = "";
         dom.style.backgroundColor = "transparent";
         moveTask(e, toColumnIndex, toColumnId, toTaskIndex, toTaskId);
-        console.log("卡片移动完毕");
       } else if (type === "column") {
         const dom = e.target as HTMLElement;
         if (dom.className === "kanban-dropzon") {
@@ -475,8 +516,8 @@ export default defineComponent({
           dom.style.backgroundColor = "transparent";
         }
         moveColumn(e, toColumnIndex);
-        console.log("列移动完毕");
       }
+      currentActionDragType.value = "";
     };
 
     /**
@@ -620,13 +661,19 @@ export default defineComponent({
     };
 
     const height = (e: DragEvent) => {
+      if (currentActionDragType.value === "column") {
+        return;
+      }
       const dom = e.target as HTMLElement;
-      dom.style.height = "4vw";
+      dom.style.height = "63px";
       dom.style.boxShadow = "inset 0 0 3px 3px #D8D8D8";
       dom.style.backgroundColor = "#E6E6E6";
       dom.style.transition = "height 0.2s";
     };
     const height1 = (e: DragEvent) => {
+      if (currentActionDragType.value === "column") {
+        return;
+      }
       const dom = e.target as HTMLElement;
       dom.style.height = "15px";
       dom.style.boxShadow = "";
@@ -665,32 +712,6 @@ export default defineComponent({
         pos: newPos,
       });
     };
-    const columnsMouseMove = (e: MouseEvent) => {
-      const el = e.target as HTMLDivElement;
-      const elp = el.parentElement as HTMLDivElement;
-
-      const startPosition = e.clientX;
-      const startScroll = elp.scrollLeft;
-
-      if (!el.classList.contains("card-wrapper")) return;
-
-      const onMouseMove = (e: MouseEvent) => {
-        const diff = e.clientX - startPosition;
-        elp.scrollLeft = startScroll - diff;
-      };
-      const onMouseUp = () => {
-        el.removeEventListener("mousemove", onMouseMove);
-      };
-      el.addEventListener("mousemove", onMouseMove);
-      el.addEventListener("mouseup", onMouseUp);
-    };
-    const columnsMouseWheel = (e: WheelEvent) => {
-      const el = e.target as HTMLDivElement;
-      if (!el.classList.contains("card-wrapper")) return;
-      const flag = ("" + e.deltaY)[0];
-      let elP = el.parentElement as HTMLDivElement;
-      flag === "1" ? (elP.scrollLeft += 30) : (elP.scrollLeft -= 50);
-    };
     const openTask = (cardId: number, column: ProductShowElement) => {
       taskClickId.value = cardId;
       columnName.value = column.listName;
@@ -715,7 +736,6 @@ export default defineComponent({
     return {
       store,
       isTaskOpen,
-      goToTask,
       close,
       createTask,
       pickupTask,
@@ -727,8 +747,6 @@ export default defineComponent({
       height,
       height1,
       moveTaskIntoColumnEnd,
-      time,
-      done,
       columnsMouseMove,
       columnsMouseWheel,
       lists,
@@ -745,7 +763,7 @@ export default defineComponent({
 });
 </script>
 <style lang="less" scoped>
-@import url("./scrollCss/scroll.scss");
+@import url("@/components/card/scrollCss/scroll.scss");
 
 .card-wrapper {
   width: max-content;

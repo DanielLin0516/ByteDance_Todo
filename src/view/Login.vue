@@ -26,6 +26,7 @@
           >
         </form>
         <router-link to="Register" class="rebuilt">注册新账号</router-link>
+        <router-link to="Forget" class="rebuilt">忘记密码</router-link>
       </div>
     </div>
   </div>
