@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref, defineComponent, onMounted } from "vue";
+import { reactive, ref, defineComponent, onMounted, onUnmounted } from "vue";
 export default defineComponent({
   name: "Websocket",
   components: {},
@@ -98,6 +98,12 @@ export default defineComponent({
       wsInit();
       console.log("websocket 初始化结束");
     });
+
+    onUnmounted(() => {
+      console.log("项目页面卸载，销毁websocket")
+      wsDestroy();
+    });
+
     return {
       wsIsRun,
       webSocket,
