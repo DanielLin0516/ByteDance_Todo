@@ -25,7 +25,7 @@ export const createNewLabel = (newLabelData: { color: string; productId: number;
  * @param id:number~
  * @returns
  */
-export const deleteLabelById = (id: number) => {
+export const deleteLabelApi = (id: number) => {
   return instance.delete(`/tag/removeTagById/${id}`);
 };
 
@@ -34,7 +34,24 @@ export const deleteLabelById = (id: number) => {
  * @param newData:obj
  * @returns
  */
-
 export const editLabelApi = (newData: object) => {
   return instance.post("/tag/modify", newData);
+};
+
+/**
+ * 根据cardId设置对应的标签
+ * @param newData:obj
+ * @returns
+ */
+export const setTagByCardId = (cardId: string, tagId: string) => {
+  return instance.post(`/tag/${tagId}/setTagByCardId/${cardId}`);
+};
+
+/**
+ * 根据cardId与tagId删除对应的标签
+ * @param cardId与tagId
+ * @returns
+ */
+export const deleteTagInCard = (cardId: string, tagId: string) => {
+  return instance.delete(`/tag/${tagId}/removeTagByCardId/${cardId}`);
 };

@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <div class="right">
+    <div class="right"> 
       <div class="work">
         <span class="work-title">您创建的项目</span>
         <div class="project">

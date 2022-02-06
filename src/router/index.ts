@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import("../view/Login.vue"),
     },
     {
+      path: "/Forget",
+      name: "Forget",
+      component: () => import("../view/Forget.vue"),
+    },
+    {
       path: "/Register",
       name: "Register",
       component: () => import("../view/Register.vue"),
@@ -34,9 +39,9 @@ const router = createRouter({
           component: () => import("../components/layout/Board.vue"),
         },
         {
-          path:"WorkPlace",
-          name:"WorkPlace",
-          component:() => import("../components/project/WorkPlace.vue")
+          path: "WorkPlace",
+          name: "WorkPlace",
+          component: () => import("../components/project/WorkPlace.vue")
         }
       ],
     },
@@ -46,10 +51,10 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
   let token = localStorage.getItem('token');
-  if (token || to.path == "/" || to.path == "/Login" || to.path == "/Register" || (to.params.productId && to.params.link)) {
+  if (token || to.path == "/" || to.path == "/Login" || to.path == "/Register" || (to.params.productId && to.params.link) || to.path == "/Forget") {
     next();
   } else {
-    Message.error({content:"请先登录！"})
+    Message.error({ content: "请先登录！" })
     next("/Login")
   }
 })

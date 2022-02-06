@@ -55,7 +55,6 @@
     /></a-popconfirm>
     
   </div>
-  <!-- <h1>tttttttttttttttttttt</h1> -->
 </template>
 <script lang="ts">
 import {
@@ -65,11 +64,19 @@ import {
   IconDelete,
 } from "@arco-design/web-vue/es/icon";
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, computed, reactive, ref } from "vue";
+import { defineComponent, computed, reactive, ref, provide } from "vue";
 import { useStore } from "vuex";
 import debouceRef from "../../hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
-import { getCardInfo, owner, createList, editListName, editCardName, editCardDesc, removeCard } from "@/axios/api";
+import {
+  getCardInfo,
+  owner,
+  createList,
+  editListName,
+  editCardName,
+  editCardDesc,
+  removeCard
+} from "@/axios/api";
 import { CardElement } from "@/axios/globalInterface";
 
 import CardAction from "./CardAction.vue";
@@ -89,9 +96,9 @@ export default defineComponent({
     id: String,
     columnName: String,
   },
-  inject: {},
   emits: ["close"],
   setup(props, context) {
+    provide("taskId", props.id as string);
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
@@ -141,6 +148,7 @@ export default defineComponent({
         value: e.target,
       });
     };
+
     const close = () => {
       const param = {
         taskId: id,
@@ -148,7 +156,6 @@ export default defineComponent({
         del: delStatue
       }
       context.emit("close", param);
-      // router.push({ name: "/Layout/Board" });
     };
     //获取页面渲染数据与处理数据
     const {
@@ -161,24 +168,14 @@ export default defineComponent({
         console.trace(error);
       },
     });
-    async function getInfo() {
-      try {
-        console.log(props);
-        const res = await run(8);
-        console.log(res);
-      } catch (error) {
-        console.trace(error);
-      }
-    }
-    // getInfo();
-    const test = async () => {
+    const getInfo = async () => {
       await getCardInfo(id).then((res) => {
-        CardName.value = res.cardname
-        CardDesc.value = res.description
+        CardName.value = res.cardname;
+        CardDesc.value = res.description;
         Object.assign(task, res);
       });
     };
-    test();
+    getInfo();
     return {
       task,
       listName,
