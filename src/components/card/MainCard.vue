@@ -120,6 +120,7 @@ import {
   watch,
   PropType,
   reactive,
+  provide,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";

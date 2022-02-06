@@ -318,3 +318,25 @@ export function changeBackground(productId: number, bgc: string): Promise<{}> {
     `/product/setProductBackground/${productId}?background=${bgc}`
   );
 }
+/**
+ * 设置项目执行时间
+ * @param productId
+ * @param bgc
+ * @returns
+ */
+export function setTime(cardId: number, obj: {
+  beginTime: string;
+  deadline: string;
+  dueReminder: number
+}): Promise<{}> {
+  return instance.post(
+    `/cards/setCardDeadline/${cardId}`, obj
+  );
+}
+export function editCardName(cardId: number, obj: {
+  editContent:any
+}): Promise<{}> {
+  return instance.post(
+    `/cards/editCardNameByCardId/${cardId}`, obj
+  );
+}

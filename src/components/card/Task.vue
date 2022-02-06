@@ -2,32 +2,25 @@
   <div class="flex">
     <icon-close-circle class="icon-close-circle" @click.self="close" />
     <div class="header">
-      <icon-robot
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-        class="robot"
-      />
+      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
       <input
         type="text"
         v-model="task.cardname"
         class="content"
         @change="updateTaskProperty($event, 'name')"
-        @keyup.enter="updateTaskProperty($event, 'name')"
+        @keyup.enter="edit"
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ columnName }}</span
-        >中
+        <span class="listNameSpan">{{ columnName }}</span>中
       </div>
     </div>
-    <!-- <div :class="date" v-if="true">
+    <div class="date" v-if="task.begintime">
       <span>日期</span>
-      <div>{{ task.begintime }} - {{ task.deadline }}</div>
-    </div> -->
+      <div>{{ dayjs(task.begintime) }} - {{ dayjs(task.deadline) }}</div>
+    </div>
     <div class="des">
-      <icon-align-left
-        class="icon-left"
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-      />
+      <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
       <span>描述</span>
     </div>
     <a-textarea
@@ -49,14 +42,14 @@ import {
   IconRobot,
   IconAlignLeft,
 } from "@arco-design/web-vue/es/icon";
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, computed, reactive } from "vue";
+import { defineComponent, computed, reactive, provide } from "vue";
 import { useStore } from "vuex";
-import debouceRef from "../../hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
-import { getCardInfo, owner, createList, editListName } from "@/axios/api";
+import { getCardInfo, owner, createList, editListName, editCardName } from "@/axios/api";
 import { CardElement } from "@/axios/globalInterface";
-
 import CardAction from "./CardAction.vue";
 import CardDetailFuction from "./CardDetailFuction.vue";
 export default defineComponent({
@@ -75,19 +68,17 @@ export default defineComponent({
   inject: {},
   emits: ["close"],
   setup(props, context) {
+    provide("cardId", props.id as string);
+    dayjs.extend(utc);
+    let carId: any = props.id;
     const store = useStore();
     const route = useRoute();
-    const router = useRouter();
     const task = reactive<CardElement[]>([]);
-
-    let task1 = {};
     const listName = computed(() => {
       return "listName---";
-      return store.getters.getColumnName(route.params.cid);
     });
     const content = computed({
       get() {
-        // let task1 = store.getters.getTask(route.params.id);
         return "task1.content";
       },
       set(val) {
@@ -95,10 +86,8 @@ export default defineComponent({
         return (task1.content = val);
       },
     });
-    // let debounce = debouceRef(content.value);
     const updateTaskProperty = (e: { target: any }, key: any) => {
       console.log("updateTaskProperty-----");
-
       store.commit("UPDATE_TASK", {
         task,
         key,
@@ -107,7 +96,6 @@ export default defineComponent({
     };
     const close = () => {
       context.emit("close");
-      // router.push({ name: "/Layout/Board" });
     };
     //获取页面渲染数据与处理数据
     const {
@@ -147,7 +135,7 @@ export default defineComponent({
       content,
       updateTaskProperty,
       close,
-      // date,
+      dayjs,
     };
   },
 });

@@ -12,8 +12,6 @@
             show-time
             :time-picker-props="{ defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('00:00:00', 'HH:mm:ss')] }"
             format="YYYY-MM-DD HH:mm"
-            @change="onChange"
-            @select="onSelect"
             @ok="onOk"
             class="range"
         />
@@ -22,30 +20,33 @@
     </div>
 </template>
 <script lang="ts">
-import dayjs from 'dayjs';
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { IconCloseCircle } from '@arco-design/web-vue/es/icon';
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, inject, reactive } from 'vue';
 import { useStore } from 'vuex';
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
+import { setTime } from '@/axios/api'
 export default defineComponent({
     components: {
         IconCloseCircle
     },
     setup() {
+        dayjs.extend(utc);
         const store = useStore();
         let time = ref(null);
+        let cardId:any = inject('cardId');
         const route = useRoute();
         const task = computed(() => {
             return store.getters.getTask(route.params.id);
         })
-        function onSelect(dateString: any, date: any) {
-            console.log('onSelect', dateString, date);
-        }
-        function onChange(dateString: any, date: any) {
-            console.log('onChange: ', dateString, date);
-        }
-        function onOk(dateString: any, date: any) {
-            time = dateString;
+        async function onOk(dateString: string, date: string) {
+            let obj = reactive({
+                beginTime:dayjs(dateString[0]).utc().format(),
+                deadline:dayjs(dateString[1]).utc().format(),
+                dueReminder:0
+            })
+            await setTime(cardId,obj);
         }
         function save() {
             task.value.time.timePeriod = time;
@@ -57,8 +58,6 @@ export default defineComponent({
             store.state.show = false;
         }
         return {
-            onSelect,
-            onChange,
             onOk,
             dayjs,
             store,
