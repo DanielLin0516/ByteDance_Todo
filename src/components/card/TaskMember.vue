@@ -205,10 +205,12 @@ export default defineComponent({
       border-radius: 50%;
       padding: 10px;
       color: rgba(@cardTextColorMain, 0.5);
+      transition: all 0.2s;
     }
     .icon-close:hover {
       cursor: pointer;
       background-color: rgba(@cardTextColorMain, 0.1);
+      transition: all 0.2s;
     }
   }
 

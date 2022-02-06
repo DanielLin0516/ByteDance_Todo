@@ -18,7 +18,7 @@
       <span class="sidebar-text">日期</span>
     </a>
   </div>
-  <div>
+  <div style="z-index: 999">
     <CardColorLabel v-if="isColorShow" @close="closeColor"></CardColorLabel>
     <TaskMember v-if="isMemberShow" @close="closeMember"></TaskMember>
   </div>
