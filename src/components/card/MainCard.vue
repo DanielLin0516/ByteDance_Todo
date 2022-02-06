@@ -1,86 +1,93 @@
 <template>
-  <div
-    class="card-wrapper"
-    @mousedown="columnsMouseMove"
-    @wheel="columnsMouseWheel"
-  >
+  <div class="card-wrapper" @mousedown="columnsMouseMove" @wheel="columnsMouseWheel">
     <!-- 要渲染的列表 -->
-    <div
-      class="list-item"
-      v-for="(column, index) of lists"
-      :key="column.listId"
-      draggable="true"
-      @drop="moveTaskOrColumn($event, index, column.listId)"
-      @dragover.prevent
-      @dragenter.prevent
-      @dragstart.self="pickupColumn($event, column.listId, index)"
+    <transition-group
+      name="animate__animated animate__bounce"
+      enter-active-class="animate__fadeInDownBig"
+      leave-active-class="animate__zoomOutLeft"
     >
-      <!-- 列表标题 -->
-      <a-row justify="space-between" align="center">
-        <a-col :span="21">
-          <a-input
-            class="list-title"
-            size="large"
-            :default-value="column.listName"
-            @press-enter="editListNameById(column.listId, index, $event)"
-          />
-        </a-col>
-        <a-col :span="3" style="display: flex; justify-content: flex-end">
-          <a-popconfirm
-            content="将此列表进行删除？"
-            okText="确认"
-            cancelText="取消"
-            @ok="deleteOneList(column.listId, index)"
-          >
-            <icon-close-circle :style="{ fontSize: '20px', color: '#696969' }"
-          /></a-popconfirm>
-        </a-col>
-      </a-row>
-      <div class="scroller-container">
-        <!-- 列表卡片栏也要渲染 -->
-        <div v-for="(task, taskIndex) of column.items" :key="task.cardId">
-          <div
-            class="kanban-dropzon"
-            @dragover.prevent="height($event)"
-            @dragleave.prevent="height1($event)"
-            @drop.stop="
-              moveTaskOrColumn(
-                $event,
-                index,
-                column.listId,
-                taskIndex,
-                task.cardId
-              )
-            "
-          ></div>
-          <CardItem
-            draggable="true"
-            :cardInfo="task"
-            :columnId="column.listId.toString()"
-            @click="openTask(task.cardId, column)"
-            @dragstart.stop="pickupTask($event, task.cardId, taskIndex, index)"
-            @dragover.prevent
-            @dragenter.prevent
-            @drop.stop.prevent
-          >
-          </CardItem>
-        </div>
-      </div>
-
-      <!-- 添加卡片按钮 -->
       <div
-        class="kanban-dropzon"
-        @dragover.prevent="height($event)"
-        @dragleave.prevent="height1($event)"
-        @drop="moveTaskIntoColumnEnd($event, index, column.listId)"
-      ></div>
-      <input
-        class="new-button"
-        type="text"
-        placeholder="+ 添加任务"
-        @keyup.enter="createTask($event, column.items, column.listId)"
-      />
-    </div>
+        class="list-item"
+        v-for="(column, index) of lists"
+        :key="column.listId"
+        draggable="true"
+        @drop="moveTaskOrColumn($event, index, column.listId)"
+        @dragover.prevent
+        @dragenter.prevent
+        @dragstart.self="pickupColumn($event, column.listId, index)"
+      >
+        <!-- 列表标题 -->
+        <a-row justify="space-between" align="center">
+          <a-col :span="21">
+            <a-input
+              class="list-title"
+              size="large"
+              :default-value="column.listName"
+              @press-enter="editListNameById(column.listId, index, $event)"
+            />
+          </a-col>
+          <a-col :span="3" style="display: flex; justify-content: flex-end">
+            <a-popconfirm
+              content="将此列表进行删除？"
+              okText="确认"
+              cancelText="取消"
+              @ok="deleteOneList(column.listId, index)"
+            >
+              <icon-close-circle :style="{ fontSize: '20px', color: '#696969' }" />
+            </a-popconfirm>
+          </a-col>
+        </a-row>
+        <div class="scroller-container">
+          <!-- 列表卡片栏也要渲染 -->
+          <transition-group
+            name="animate__animated animate__bounce"
+            enter-active-class="animate__bounceIn"
+            leave-active-class="animate__zoomOutLeft"
+          >
+            <div v-for="(task, taskIndex) of column.items" :key="task.cardId">
+              <div
+                class="kanban-dropzon"
+                @dragover.prevent="height($event)"
+                @dragleave.prevent="height1($event)"
+                @drop.stop="
+                  moveTaskOrColumn(
+                    $event,
+                    index,
+                    column.listId,
+                    taskIndex,
+                    task.cardId
+                  )
+                "
+              ></div>
+              <CardItem
+                draggable="true"
+                :cardInfo="task"
+                :columnId="column.listId.toString()"
+                @click="openTask(task.cardId, column)"
+                @dragstart.stop="pickupTask($event, task.cardId, taskIndex, index)"
+                @dragover.prevent
+                @dragenter.prevent
+                @drop.stop.prevent
+              ></CardItem>
+            </div>
+          </transition-group>
+        </div>
+
+        <!-- 添加卡片按钮 -->
+        <div
+          class="kanban-dropzon"
+          @dragover.prevent="height($event)"
+          @dragleave.prevent="height1($event)"
+          @drop="moveTaskIntoColumnEnd($event, index, column.listId)"
+        ></div>
+        <input
+          class="new-button"
+          type="text"
+          placeholder="+ 添加任务"
+          @keyup.enter="createTask($event, column.items, column.listId)"
+        />
+      </div>
+    </transition-group>
     <div class="btn-add">
       <input
         class="add-item"
@@ -92,11 +99,7 @@
     </div>
     <div class="task-bg" v-if="isTaskOpen" @click.self="close">
       <!-- <router-view /> -->
-      <Task
-        :id="taskClickId.toString()"
-        :columnName="columnName"
-        @close="close"
-      ></Task>
+      <Task :id="taskClickId.toString()" :columnName="columnName" @close="close"></Task>
     </div>
   </div>
 </template>
@@ -117,8 +120,6 @@ import {
   watch,
   PropType,
   reactive,
-  onMounted,
-  getCurrentInstance,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -135,8 +136,6 @@ import {
   moveCard,
 } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
-import { getCipherInfo } from "crypto";
-import { title } from "process";
 import CardItem from "./CardItem.vue";
 import Task from "./Task.vue";
 export default defineComponent({
@@ -400,11 +399,11 @@ export default defineComponent({
     ) => {
       console.log(
         "卡片从" +
-          fromColumnIndex +
-          "列出发，id为" +
-          fromTaskId +
-          " index为：" +
-          fromTaskIndex
+        fromColumnIndex +
+        "列出发，id为" +
+        fromTaskId +
+        " index为：" +
+        fromTaskIndex
       );
       fromCardId.value = fromTaskId;
       fromCardIndex.value = fromTaskIndex;
@@ -490,11 +489,11 @@ export default defineComponent({
     ) => {
       console.log(
         "卡片插入到" +
-          toColumnIndex +
-          "列，id为" +
-          toTaskId +
-          " index为：" +
-          toTaskIndex
+        toColumnIndex +
+        "列，id为" +
+        toTaskId +
+        " index为：" +
+        toTaskIndex
       );
       let newPos: number = NaN;
 
@@ -524,15 +523,15 @@ export default defineComponent({
           newPos =
             toTaskIndex === 0
               ? getPos(
-                  0,
-                  lists[fromCardListIndex.value].items[toTaskIndex].pos,
-                  PosType.first
-                )
+                0,
+                lists[fromCardListIndex.value].items[toTaskIndex].pos,
+                PosType.first
+              )
               : getPos(
-                  lists[fromCardListIndex.value].items[toTaskIndex - 1].pos,
-                  lists[fromCardListIndex.value].items[toTaskIndex].pos,
-                  PosType.middle
-                );
+                lists[fromCardListIndex.value].items[toTaskIndex - 1].pos,
+                lists[fromCardListIndex.value].items[toTaskIndex].pos,
+                PosType.middle
+              );
           const temp =
             lists[fromCardListIndex.value].items[fromCardIndex.value];
           temp.pos = newPos;
@@ -544,15 +543,15 @@ export default defineComponent({
         newPos =
           toTaskIndex === 0
             ? getPos(
-                0,
-                lists[toColumnIndex].items[toTaskIndex].pos,
-                PosType.first
-              )
+              0,
+              lists[toColumnIndex].items[toTaskIndex].pos,
+              PosType.first
+            )
             : getPos(
-                lists[toColumnIndex].items[toTaskIndex - 1].pos,
-                lists[toColumnIndex].items[toTaskIndex].pos,
-                PosType.middle
-              );
+              lists[toColumnIndex].items[toTaskIndex - 1].pos,
+              lists[toColumnIndex].items[toTaskIndex].pos,
+              PosType.middle
+            );
         const temp = lists[fromCardListIndex.value].items[fromCardIndex.value];
         temp.pos = newPos;
         lists[fromCardListIndex.value].items.splice(fromCardIndex.value, 1);
@@ -587,22 +586,22 @@ export default defineComponent({
         toColumnIndex === 0
           ? getPos(0, lists[toColumnIndex].pos, PosType.first)
           : toColumnIndex === len - 1
-          ? getPos(
+            ? getPos(
               lists[toColumnIndex].pos,
               lists[toColumnIndex].pos,
               PosType.end
             )
-          : direction === "right"
-          ? getPos(
-              lists[toColumnIndex].pos,
-              lists[toColumnIndex + 1].pos,
-              PosType.middle
-            )
-          : getPos(
-              lists[toColumnIndex - 1].pos,
-              lists[toColumnIndex].pos,
-              PosType.middle
-            );
+            : direction === "right"
+              ? getPos(
+                lists[toColumnIndex].pos,
+                lists[toColumnIndex + 1].pos,
+                PosType.middle
+              )
+              : getPos(
+                lists[toColumnIndex - 1].pos,
+                lists[toColumnIndex].pos,
+                PosType.middle
+              );
       // 更改出发列的pos值
       lists[fromListIndex.value].pos = newPos;
       // 暂存出发列，并删除出发列

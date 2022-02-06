@@ -74,13 +74,37 @@ export function createProduct(obj: {
 }
 
 /**
- * 发送邮件
+ * 发送注册邮件
  * @param email
  * @returns
  */
 export function sendEmail(email: String) {
   return instance.post(
     `/mail/sendVerifyCodeToMail?actionType=register&email=${email}`
+  );
+}
+/**
+ * 发送重置密码邮件
+ * @param email
+ * @returns
+ */
+export function sendResetEmail(email: String) {
+  return instance.post(
+    `/mail/sendVerifyCodeToMail?actionType=reset&email=${email}`
+  );
+}
+/**
+ * 重置密码
+ * @param email
+ * @returns
+ */
+export function modifyUserPassWord(obj: {
+  password: string;
+  username: string;
+  verifyCode: string;
+}) {
+  return instance.post(
+    `/users/modifyUserPassWord`, obj
   );
 }
 

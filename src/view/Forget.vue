@@ -6,15 +6,8 @@
                 <span>Todo</span>
             </header>
             <div class="login">
-                <span class="title">注册您的账户</span>
+                <span class="title">更改密码Todo</span>
                 <form class="form">
-                    <input
-                        type="text"
-                        name="fullname"
-                        placeholder="输入你的全名"
-                        class="fullname"
-                        v-model="form.fullname"
-                    />
                     <div class="email">
                         <input
                             type="text"
@@ -62,29 +55,30 @@
                     font-size: 1.5vw;
                     font-weight: 400;
                     border: none;"
-                    >注册</a-button>
+                    >确认更改</a-button>
                 </form>
                 <router-link to="Login" class="rebuilt">已有账号？登录</router-link>
+                <router-link to="Forget" class="rebuilt">忘记密码</router-link>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { IconBytedanceColor } from '@arco-design/web-vue/es/icon';
-import { Message } from '@arco-design/web-vue';
-import { useStore } from 'vuex'
+import { IconBytedanceColor } from "@arco-design/web-vue/es/icon";
+import { Message } from "@arco-design/web-vue";
+import { reactive, ref, defineComponent, toRefs, toRef, watch } from "vue";
+import { sendResetEmail, modifyUserPassWord } from '@/axios/api'
+import store from "@/store";
 import { useRoute, useRouter } from 'vue-router'
-import { reactive, ref, defineComponent, watch } from 'vue';
-import router from '@/router';
-import { sendEmail,registerUser } from '@/axios/api'
+import { useRequest } from "@/hooks/useRequest";
+
 export default defineComponent({
     components: {
-        IconBytedanceColor
+        IconBytedanceColor,
     },
     setup(props) {
         const form = reactive({
-            fullname: "",
             username: "",
             verifyCode: "",
             password: ""
@@ -97,6 +91,7 @@ export default defineComponent({
             button_disabled: true,
             sec: 60
         });
+        const router = useRouter();
         let timer: any = null;
         const getTime = () => {
             // 避免重复执行 setTimeout
@@ -118,7 +113,7 @@ export default defineComponent({
             getTime();
             try {
                 time.button_loading = true;
-                const res = await sendEmail(form.username);
+                const res = await sendResetEmail(form.username);
                 time.button_loading = false;
                 Message.success('邮件发送成功！')
                 console.log(res)
@@ -126,7 +121,7 @@ export default defineComponent({
                 Message.error(`${error}`)
             }
         }
-        watch(() => [form.fullname, form.username, form.verifyCode, form.password], () => {
+        watch(() => [form.username, form.verifyCode, form.password], () => {
             const regEmail = /^([A-Za-z0-9_\-\.\u4e00-\u9fa5])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,8})$/;
             if (regEmail.test(form.username)) {
                 rule.value = "邮箱格式正确";
@@ -135,7 +130,7 @@ export default defineComponent({
                 rule.value = "请输入正确的邮箱地址！";
                 time.button_disabled = true;
             }
-            if (form.fullname && regEmail.test(form.username) && form.verifyCode && form.password) {
+            if (regEmail.test(form.username) && form.verifyCode && form.password) {
                 disabled.value = false;
             } else {
                 disabled.value = true;
@@ -143,10 +138,9 @@ export default defineComponent({
         })
         async function register() {
             try {
-                const res = await registerUser(form);
-                Message.success({ content: "注册成功！" });
-                localStorage.setItem('token', `${res}`);
-                router.push('/Layout/WorkPlace');
+                const res = await modifyUserPassWord(form);
+                Message.success({ content: "更改成功" });
+                router.push('/Login');
             } catch (error) {
                 Message.error({ content: `${error}` })
             }
@@ -159,8 +153,8 @@ export default defineComponent({
             time,
             count
         }
-    }
-})
+    },
+});
 </script>
 
 <style scoped lang="less">
