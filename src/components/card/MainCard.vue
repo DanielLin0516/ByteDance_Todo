@@ -220,7 +220,7 @@ export default defineComponent({
         console.trace(error);
       },
     });
-    
+
     //获取页面渲染数据与处理数据
     async function getInfo() {
       try {
@@ -285,32 +285,31 @@ export default defineComponent({
      * @param param
      * @returns
      */
-    const close = (param:{
-      taskId:number,
-      taskName:string,
-      del:boolean
+    const close = (param: {
+      taskId: number;
+      taskName: string;
+      del: boolean;
     }) => {
-      if(param.del) {
-        lists.forEach(items => {
+      if (param.del) {
+        lists.forEach((items) => {
           Array.prototype.slice.call(items.items).forEach((item, index) => {
-            if(item.cardId == param.taskId) {
+            if (item.cardId == param.taskId) {
               console.log(index);
-              items.items.splice(index, 1)
+              items.items.splice(index, 1);
             }
-          })
-        })
+          });
+        });
       }
-      if(param.taskName) {
-        lists.forEach(items => {
-          Array.prototype.slice.call(items.items).forEach(item => {
-            if(item.cardId == param.taskId) {
-              item.cardname = param.taskName
+      if (param.taskName) {
+        lists.forEach((items) => {
+          Array.prototype.slice.call(items.items).forEach((item) => {
+            if (item.cardId == param.taskId) {
+              item.cardname = param.taskName;
             }
-          })
-        })
+          });
+        });
       }
       isTaskOpen.value = false;
-
     };
 
     /**

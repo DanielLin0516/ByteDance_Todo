@@ -1,5 +1,5 @@
 import instance from "./request";
-import { LabelElement } from "./globalInterface";
+import { LabelElement, UserElement } from "./globalInterface";
 
 /**
  * 获取项目内的label
@@ -54,4 +54,34 @@ export const setTagByCardId = (cardId: string, tagId: string) => {
  */
 export const deleteTagInCard = (cardId: string, tagId: string) => {
   return instance.delete(`/tag/${tagId}/removeTagByCardId/${cardId}`);
+};
+
+/**
+ * 暂存-product级--getMemberList
+ * @param {productId}
+ * @returns
+ */
+
+export const getMemberListApi = (productId: number): Promise<UserElement[]> => {
+  return instance.get(`/product/getMemberList/${productId}`);
+};
+
+/**
+ * 暂存---添加卡片的执行人
+ * @param cardId
+ * @returns
+ */
+
+export const setExecutorApi = (cardId: number, userId: number) => {
+  return instance.post(`/cards/setExecutor/${cardId}?userId=${userId}`);
+};
+
+/**
+ * 暂存---删除卡片的执行人
+ * @param cardId
+ * @returns
+ */
+
+export const deleteExecutorApi = (cardId: number, userId: number) => {
+  return instance.delete(`/cards/removeExecutor/${cardId}?userId=${userId}`);
 };

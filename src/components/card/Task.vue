@@ -2,7 +2,10 @@
   <div class="flex">
     <icon-close-circle class="icon-close-circle" @click.self="close" />
     <div class="header">
-      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
+      <icon-robot
+        :style="{ fontSize: '1.2em', margin: '0 10px' }"
+        class="robot"
+      />
       <input
         type="text"
         v-model="CardName"
@@ -12,15 +15,22 @@
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ columnName }}</span>中
+        <span class="listNameSpan">{{ columnName }}</span
+        >中
       </div>
     </div>
     <div class="date" v-if="task.begintime">
       <span>日期</span>
-      <div>{{ dayjs(task.begintime).format('YYYY-MM-DD') }} ~ {{ dayjs(task.deadline).format('YYYY-MM-DD') }}</div>
+      <div>
+        {{ dayjs(task.begintime).format("YYYY-MM-DD") }} ~
+        {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
+      </div>
     </div>
     <div class="des">
-      <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
+      <icon-align-left
+        class="icon-left"
+        :style="{ fontSize: '1.2em', margin: '0 10px' }"
+      />
       <span>描述</span>
     </div>
     <a-textarea
@@ -32,7 +42,10 @@
       :auto-size="{ minRows: 2, maxRows: 5 }"
     />
     <card-action :task="task"></card-action>
-    <card-detail-fuction @timeDate="dateTime" :lists="lists"></card-detail-fuction>
+    <card-detail-fuction
+      @timeDate="dateTime"
+      :lists="lists"
+    ></card-detail-fuction>
     <a-popconfirm
       content="将此任务删除？"
       okText="确认"
@@ -45,7 +58,8 @@
         </template>
         <template #default>删除任务</template>
       </a-button>
-    /></a-popconfirm>
+      /></a-popconfirm
+    >
   </div>
 </template>
 <script lang="ts">
@@ -55,8 +69,8 @@ import {
   IconAlignLeft,
   IconDelete,
 } from "@arco-design/web-vue/es/icon";
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { useRoute, useRouter } from "vue-router";
 import { defineComponent, computed, reactive, ref, provide, inject } from "vue";
 import { useStore } from "vuex";
@@ -69,7 +83,7 @@ import {
   editListName,
   editCardName,
   editCardDesc,
-  removeCard
+  removeCard,
 } from "@/axios/api";
 import { CardElement } from "@/axios/globalInterface";
 import CardAction from "@/components/card/CardAction.vue";
@@ -87,18 +101,20 @@ export default defineComponent({
   props: {
     id: String,
     columnName: String,
-    lists:Object
+    lists: Object,
   },
   emits: ["close"],
   setup(props, context) {
     // provide("taskId", props.id as string);
     provide("cardId", props.id as string);
+    console.log(`task里---${props.id}`);
+
     dayjs.extend(utc);
     const store = useStore();
     const route = useRoute();
     let time = reactive({
       begintime: "",
-      deadline:"",
+      deadline: "",
     });
     const task = reactive<CardElement>({
       begintime: "",
@@ -119,7 +135,7 @@ export default defineComponent({
     const dateTime = (e: any) => {
       task.begintime = e.beginTime;
       task.deadline = e.deadline;
-    }
+    };
     let id = parseInt(props.id as string) as number;
 
     let CardName = ref("");
@@ -139,18 +155,18 @@ export default defineComponent({
       },
     });
     // let debounce = debouceRef(content.value);
-    const updateTaskName = async() => {
-      await editCardName(id, CardName.value)  
-      close()
-    }
-    const updateTaskDesc = async() => {      
-      await editCardDesc(id, CardDesc.value)  
-    }
-    const deleteOneTask = async() => {
-      delStatue = true
-      await removeCard(id)
-      close()
-    }
+    const updateTaskName = async () => {
+      await editCardName(id, CardName.value);
+      close();
+    };
+    const updateTaskDesc = async () => {
+      await editCardDesc(id, CardDesc.value);
+    };
+    const deleteOneTask = async () => {
+      delStatue = true;
+      await removeCard(id);
+      close();
+    };
     const updateTaskProperty = (e: { target: any }, key: any) => {
       console.log("updateTaskProperty-----");
       store.commit("UPDATE_TASK", {
@@ -164,8 +180,8 @@ export default defineComponent({
       const param = {
         taskId: id,
         taskName: CardName,
-        del: delStatue
-      }
+        del: delStatue,
+      };
       context.emit("close", param);
     };
     //获取页面渲染数据与处理数据
@@ -201,7 +217,7 @@ export default defineComponent({
       // date,
       dayjs,
       dateTime,
-      time
+      time,
     };
   },
 });
@@ -325,6 +341,4 @@ export default defineComponent({
     font-size: 10px;
   }
 }
-
-
 </style>
