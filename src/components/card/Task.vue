@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <icon-close-circle class="icon-close-circle" @click.self="close" />
+    <icon-close-circle class="icon-close-circle" @click.stop="close" />
     <div class="header">
       <icon-robot
         :style="{ fontSize: '1.2em', margin: '0 10px' }"
@@ -177,6 +177,7 @@ export default defineComponent({
     };
 
     const close = () => {
+      console.log("关闭")
       const param = {
         taskId: id,
         taskName: CardName,
