@@ -123,7 +123,12 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { ProductShowElement, CardElement } from "@/axios/globalInterface";
+import {
+  ProductShowElement,
+  CardElement,
+  LabelElement,
+} from "@/axios/globalInterface";
+import { getTagsByProductId } from "@/axios/labelApi";
 import { useRequest } from "@/hooks/useRequest";
 import {
   getProductInfo,
@@ -690,6 +695,21 @@ export default defineComponent({
       columnName.value = column.listName;
       isTaskOpen.value = true;
     };
+
+    interface webLabel extends LabelElement {
+      show: boolean;
+      isChoosed: boolean;
+    }
+    const labelList: webLabel[] = reactive([]);
+    const getProductLabels = async () => {
+      const res = await getTagsByProductId(productId.value as string);
+      res.forEach((el: LabelElement) => {
+        labelList.push(Object.assign(el, { show: true, isChoosed: false }));
+        // choosedList.push(false);
+      });
+      store.commit("setLabelList", labelList);
+    };
+    getProductLabels();
     getInfo();
     return {
       store,

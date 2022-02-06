@@ -8,15 +8,26 @@
       </div>
       <a-input
         :style="{ width: '100%' }"
+        v-model="searchValue"
         placeholder="搜索标签~~"
-        @press-enter="pressEnter"
+        @input="searchTag($event)"
         allow-clear
         class="fontsize"
       />
       <p>标签</p>
       <div class="labels">
-        <div class="label" v-for="item in labelList" :key="item.id">
-          <div :style="{ backgroundColor: item.color }" class="label_color">
+        <div
+          class="label"
+          v-for="(item, index) in labelList"
+          :key="item.id"
+          v-show="item.show"
+        >
+          <div
+            :style="{ backgroundColor: item.color }"
+            class="label_color"
+            data-choosed="false"
+            @click="labelClick(item.id, index, $event)"
+          >
             {{ item.tagName }}
           </div>
           <span class="icon_pen">
@@ -24,7 +35,7 @@
           </span>
         </div>
       </div>
-      <p @click="showAddLabel" class="new_label">新建标签</p>
+      <p @click="showAddLabel" class="new_label" ref="addSpan">新建标签</p>
     </div>
     <!-- 新增 -->
     <div v-show="isShow.add">
@@ -37,7 +48,6 @@
       <a-input
         v-model="newLabelData.tagName"
         :style="{ width: '100%' }"
-        @blur="pressEnter"
         allow-clear
       />
       <p>选择一个颜色</p>
@@ -47,7 +57,7 @@
           v-for="(color, index) in colors"
           :key="index"
           :style="{ backgroundColor: color }"
-          @click="chooseColor($event, color)"
+          @click="chooseColor($event, color, 'new')"
         >
           <span v-if="index === 0">✔</span>
         </div>
@@ -70,9 +80,8 @@
       </div>
       <p>标签名</p>
       <a-input
-        :model-value="editData.tagName"
+        v-model="editData.tagName"
         :style="{ width: '100%' }"
-        @press-enter="pressEnter"
         allow-clear
       />
       <p>选择一个颜色</p>
@@ -108,15 +117,17 @@ import {
   IconLeft,
 } from "@arco-design/web-vue/es/icon";
 import { Message } from "@arco-design/web-vue";
-import { defineComponent, computed, ref, reactive } from "vue";
+import { defineComponent, inject, ref, reactive, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import { LabelElement } from "@/axios/globalInterface";
 import {
   createNewLabel,
-  deleteLabelById,
+  deleteLabelApi,
   getTagsByProductId,
   editLabelApi,
+  setTagByCardId,
+  deleteTagInCard,
 } from "@/axios/labelApi";
 export default defineComponent({
   components: {
@@ -124,13 +135,11 @@ export default defineComponent({
     IconPenFill,
     IconLeft,
   },
-  data() {
-    return {
-      searchValue: "",
-    };
-  },
   emits: ["close"],
   setup(props, context) {
+    const addSpan = ref(null);
+    const cardId: string = inject("taskId") as string;
+
     const route = useRoute();
     const store = useStore();
     const productId = ref(route.params.productId);
@@ -139,6 +148,7 @@ export default defineComponent({
       edit: false,
       add: false,
     });
+    const labelList = store.state.labelList;
     const colors = reactive([
       "#61bd4f",
       "#f5de33",
@@ -152,22 +162,77 @@ export default defineComponent({
       "#344563",
       "#b3bac5",
     ]);
-    // const task = computed(() => {
-    //   return store.getters.getTask(route.params.id);
-    // });
     const newLabelData = reactive({
       color: "#61bd4f",
       tagName: "",
       productId: parseInt(productId.value as string),
     });
-    const pressEnter = () => {
-      console.log(newLabelData);
+
+    const close = () => {
+      context.emit("close");
     };
+    const showAddLabel = () => {
+      isShow.add = true;
+      isShow.all = false;
+    };
+    const backToAll = () => {
+      isShow.edit = false;
+      isShow.add = false;
+      isShow.all = true;
+    };
+
+    const labelClick = async (tagId: string, index: number, e: MouseEvent) => {
+      const el: HTMLDivElement = e.target as HTMLDivElement;
+      el.dataset;
+      if (el.dataset.choosed === "false") {
+        el.dataset.choosed = "true";
+        el.classList.add("choosed");
+        //加到数据库
+        await setTagByCardId(cardId, tagId);
+        return true;
+      } else {
+        el.dataset.choosed = "false";
+        el.classList.remove("choosed");
+        await deleteTagInCard(cardId, tagId);
+        return false;
+      }
+    };
+
+    // const isShowChoosed = (e: MouseEvent) => {
+    //   const el: HTMLSpanElement = e.target as HTMLSpanElement;
+    //   const elp: HTMLDivElement = el.parentElement as HTMLDivElement;
+
+    //   return elp.dataset.choosed == "true";
+    // };
+
+    const searchValue = ref("");
+    const searchTag = (e: string) => {
+      if (e) {
+        labelList.forEach((el) => (el.show = false));
+        let count = 0;
+        labelList.forEach((el) => {
+          if (el.tagName.includes(e)) {
+            el.show = true;
+            count++;
+          }
+        });
+        if (!count) {
+          // console.log(addSpan.value);
+          addSpan.value.innerText = `创建名为"${e}"的标签`;
+          newLabelData.tagName = e;
+        }
+      } else {
+        addSpan.value.innerText = `新建标签`;
+        newLabelData.tagName = "";
+        labelList.forEach((el) => (el.show = true));
+      }
+    };
+
     const chooseColor = (e: MouseEvent, color: string, type: string) => {
       if (type === "new") {
         newLabelData.color = color;
         const el = e.target as HTMLDivElement;
-        const els = el.parentElement?.children;
+        const els: HTMLDivElement[] = el.parentElement?.children;
         for (let i = 0; i < els?.length; i++) {
           if (els[i].innerText) {
             els[i].innerText = "";
@@ -178,6 +243,7 @@ export default defineComponent({
       } else if (type === "edit") {
       }
     };
+
     const addNewLabel = async () => {
       // console.log("addNewLabel---" + JSON.stringify(newLabelData));
       if (!newLabelData.color || !newLabelData.tagName) {
@@ -194,45 +260,46 @@ export default defineComponent({
           productId: "",
           tagName: "",
         };
-        Object.assign(tempObj, res);
+        Object.assign(res, { show: true, isChoosed: true });
         console.log(tempObj);
-        console.log(res);
-        console.log(res == tempObj);
-        console.log(res === tempObj);
-
-        labelList.push({
-          tempObj,
-        });
+        labelList.push(res);
+        //清空之前选中的颜色和name
+        newLabelData.color = "#61bd4f";
+        newLabelData.tagName = "";
+        //返回
+        backToAll();
+        //可能是搜索时候创建的，此时需要清空
+        searchValue.value = "";
+        searchTag("");
       }
     };
-    const close = () => {
-      context.emit("close");
-    };
-    const showAddLabel = () => {
-      isShow.add = true;
-      isShow.all = false;
-    };
-    const backToAll = () => {
-      isShow.edit = false;
-      isShow.add = false;
-      isShow.all = true;
-    };
 
-    const showEditLabel = (item: LabelElement) => {
-      isShow.all = false;
-      isShow.edit = true;
-      Object.assign(editData, item);
-    };
     const editData = reactive({
       color: "",
       id: 0,
       productId: 0,
       tagName: "",
     });
+    let tempItem: LabelElement;
+    const showEditLabel = (item: LabelElement) => {
+      isShow.all = false;
+      isShow.edit = true;
+      //editData赋值
+      Object.assign(editData, item);
+      //保存item
+      tempItem = item;
+    };
     const editLabel = async () => {
       console.log(editData);
-      // const res = editLabelApi(editData);
-      // console.log(res);
+      const res = await editLabelApi(editData);
+      console.log(res);
+
+      //修改本地
+      tempItem.tagName = editData.tagName;
+      //返回
+      backToAll();
+      //垃圾回收--ts报错--LabelElement
+      // tempItem = null;
     };
 
     /**
@@ -242,19 +309,35 @@ export default defineComponent({
      */
     const deleteLabel = async () => {
       const id = editData.id;
-      const res = deleteLabelById(id);
-      console.log(res);
+      const result = await deleteLabelApi(id); //删除了返回{}
+
+      if (!result) {
+        Message.success("删除成功~");
+        //删除本地
+        const index = labelList.findIndex(
+          (item: LabelElement) => item.id === id.toString()
+        );
+        labelList.splice(index, 1);
+        backToAll();
+      }
     };
 
-    const labelList: LabelElement[] = reactive([]);
-    const getLabels = async () => {
-      const productId = route.params.productId as string;
-      const res = await getTagsByProductId(productId);
-      res.forEach((el: LabelElement) => {
-        labelList.push(el);
-      });
-    };
-    getLabels();
+    // interface webLabel extends LabelElement {
+    //   show: boolean;
+    //   isChoosed: boolean;
+    // }
+    // const labelList: webLabel[] = reactive([]);
+    // const choosedList: boolean[] = reactive([]);
+    // const getProductLabels = async () => {
+    //   const productId = route.params.productId as string;
+    //   const res = await getTagsByProductId(productId);
+    //   res.forEach((el: LabelElement) => {
+    //     labelList.push(Object.assign(el, { show: true, isChoosed: false }));
+    //     choosedList.push(false);
+    //   });
+    //   // console.log(labelList);
+    // };
+    // getProductLabels();
     return {
       store,
       colors,
@@ -262,7 +345,10 @@ export default defineComponent({
       newLabelData,
       labelList,
       editData,
-      pressEnter,
+      addSpan,
+      searchValue,
+
+      searchTag,
       chooseColor,
       addNewLabel,
       showEditLabel,
@@ -271,12 +357,15 @@ export default defineComponent({
       backToAll,
       deleteLabel,
       editLabel,
+      labelClick,
+      // isShowChoosed,
     };
   },
 });
 </script>
 
 <style lang="scss" scoped>
+@import url("./scrollCss/scroll.scss");
 $color: red;
 $white: rgb(255, 255, 255);
 .outer {
@@ -295,7 +384,6 @@ $white: rgb(255, 255, 255);
   box-shadow: 0px 0px 6px gray;
   // border-left: 1px solid rgba(0, 0, 0, 0.3);
 
-  // overflow-y: scroll;
   .header {
     position: relative;
 
@@ -340,10 +428,8 @@ $white: rgb(255, 255, 255);
   }
 
   .labels {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    max-height: 40vh;
+    overflow-y: scroll;
     p {
       width: 100px;
     }
@@ -354,7 +440,12 @@ $white: rgb(255, 255, 255);
       width: 100%;
       margin-top: 10px;
 
+      :hover {
+        transform: scale(1.02);
+        cursor: pointer;
+      }
       .label_color {
+        position: relative;
         display: flex;
         align-items: center;
 
@@ -368,6 +459,19 @@ $white: rgb(255, 255, 255);
 
         color: white;
         font-weight: 800;
+
+        span {
+          position: absolute;
+          right: 5%;
+        }
+      }
+      .choosed {
+        &::after {
+          content: "✔";
+          color: white;
+          position: absolute;
+          right: 20px;
+        }
       }
       .icon_pen {
         position: absolute;
