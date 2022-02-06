@@ -126,6 +126,7 @@ export default defineComponent({
     // let debounce = debouceRef(content.value);
     const updateTaskName = async() => {
       await editCardName(id, CardName.value)  
+      close()
     }
     const updateTaskDesc = async() => {      
       await editCardDesc(id, CardDesc.value)  
