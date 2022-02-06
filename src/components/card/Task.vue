@@ -21,7 +21,7 @@
     </div>
     <div class="date" v-if="task.begintime">
       <span>日期</span>
-      <div>
+      <div style="background-color: rgb(242,212,0);">
         {{ dayjs(task.begintime).format("YYYY-MM-DD") }} ~
         {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
       </div>
@@ -301,6 +301,7 @@ export default defineComponent({
       margin-left: 10px;
       margin-bottom: 10px;
       border-radius: 10px;
+      color: white;
     }
     div:hover {
       background-color: rgba(@cardTextColorMain, 0.1);

@@ -71,6 +71,15 @@ export default defineComponent({
         async function del() {
             obj.beginTime = "";
             obj.deadline = "";
+            context.emit('time', obj);
+            lists?.forEach((item: any) => {
+                item.items.forEach((item1: any) => {
+                    if (cardId === item1.cardId) {
+                        item1.begintime = "";
+                        item1.deadline = "";
+                    }
+                })
+            })
             await setTime(cardId, obj);
             store.state.show = !store.state.show;
         }
