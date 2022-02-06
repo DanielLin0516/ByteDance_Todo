@@ -8,10 +8,10 @@
       />
       <input
         type="text"
-        v-model="task.cardname"
+        v-model="CardName"
         class="content"
-        @change="updateTaskProperty($event, 'name')"
-        @keyup.enter="updateTaskProperty($event, 'name')"
+        @change="updateTaskName()"
+        @keyup.enter="updateTaskName()"
       />
       <div class="listName">
         在列表
@@ -33,9 +33,9 @@
     <a-textarea
       default-value="添加详细描述..."
       class="text"
-      v-model="task.cardname"
+      v-model="CardDesc"
       placeholder="添加详细描述..."
-      @change="updateTaskProperty($event, 'description')"
+      @change="updateTaskDesc()"
       :auto-size="{ minRows: 2, maxRows: 5 }"
     />
     <card-action :task="task"></card-action>
@@ -50,15 +50,16 @@ import {
   IconAlignLeft,
 } from "@arco-design/web-vue/es/icon";
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, computed, reactive } from "vue";
+import { defineComponent, computed, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import debouceRef from "../../hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
-import { getCardInfo, owner, createList, editListName } from "@/axios/api";
+import { getCardInfo, owner, createList, editListName, editCardName, editCardDesc } from "@/axios/api";
 import { CardElement } from "@/axios/globalInterface";
 
 import CardAction from "./CardAction.vue";
 import CardDetailFuction from "./CardDetailFuction.vue";
+import { log } from "console";
 export default defineComponent({
   name: "NewCardButton",
   components: {
@@ -79,6 +80,9 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const task = reactive<CardElement[]>([]);
+    let id = parseInt(props.id as string) as number;
+    let CardName = ref('');
+    let CardDesc = ref('')
 
     let task1 = {};
     const listName = computed(() => {
@@ -96,6 +100,17 @@ export default defineComponent({
       },
     });
     // let debounce = debouceRef(content.value);
+    const updateTaskName = async() => {
+      await editCardName(id, CardName.value)  
+    }
+    const updateTaskDesc = async() => {      
+      await editCardDesc(id, CardDesc.value)  
+    }
+    
+    // const changeBGC = async () => {
+    //   await changeBackground(productId.value, `${upSquare.value.slice(1,7)}`);
+    //   Message.success({ content: "更改成功！请刷新后查看" })
+    // }
     const updateTaskProperty = (e: { target: any }, key: any) => {
       console.log("updateTaskProperty-----");
 
@@ -125,18 +140,15 @@ export default defineComponent({
         console.log(props);
         const res = await run(8);
         console.log(res);
-        // task = res
       } catch (error) {
         console.trace(error);
       }
     }
     // getInfo();
     const test = async () => {
-      // console.log(props.id);
-      let id = parseInt(props.id as string) as number;
-
       await getCardInfo(id).then((res) => {
-        // console.log(res);
+        CardName.value = res.cardname
+        CardDesc.value = res.description
         Object.assign(task, res);
       });
     };
@@ -144,9 +156,13 @@ export default defineComponent({
     return {
       task,
       listName,
+      CardName,
       content,
+      CardDesc,
       updateTaskProperty,
       close,
+      updateTaskName,
+      updateTaskDesc,
       // date,
     };
   },
