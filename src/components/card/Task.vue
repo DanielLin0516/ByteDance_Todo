@@ -21,7 +21,7 @@
     </div>
     <div class="date" v-if="task.begintime">
       <span>日期</span>
-      <div style="background-color: rgb(242,212,0);">
+      <div style="background-color: rgb(242, 212, 0)">
         {{ dayjs(task.begintime).format("YYYY-MM-DD") }} ~
         {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
       </div>
@@ -130,6 +130,15 @@ export default defineComponent({
       productId: NaN,
       tagList: [],
       createdTime: "",
+      creator: {
+        avatar: "",
+        fullname: "",
+        userId: 0,
+        username: "",
+      },
+      background: "",
+      completed: true,
+      action: [],
     });
 
     const dateTime = (e: any) => {
@@ -177,7 +186,7 @@ export default defineComponent({
     };
 
     const close = () => {
-      console.log("关闭")
+      console.log("关闭");
       const param = {
         taskId: id,
         taskName: CardName,

@@ -39,6 +39,10 @@ export interface CardElement {
   productId: number;
   tagList: TagElement[];
   createdTime: string;
+  creator: UserElement;
+  background: string;
+  completed: true;
+  action: Array<any>;
 }
 
 export interface ListElement {

@@ -166,7 +166,7 @@ import { Message } from "@arco-design/web-vue";
 import CardItem from "./CardItem.vue";
 import Task from "./Task.vue";
 import { log } from "console";
-import Websocket from "@/components/websocket/Websocket.vue"
+import Websocket from "@/components/websocket/Websocket.vue";
 
 export default defineComponent({
   name: "MainCard",
@@ -359,6 +359,15 @@ export default defineComponent({
             tagName: "",
           },
         ],
+        creator: {
+          avatar: "",
+          fullname: "",
+          userId: 0,
+          username: "",
+        },
+        background: "",
+        completed: true,
+        action: [],
       };
       tasks.push(emptyCard);
       const newCardData = {
