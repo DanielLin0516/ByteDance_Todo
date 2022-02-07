@@ -7,7 +7,6 @@
 <script lang="ts">
 import TopBar from "@/layout/TopBar.vue";
 import { defineComponent, ref, onMounted, computed, nextTick, provide } from "vue";
-import { setTheme } from "@/theme/theme";
 import { currentUser } from "@/axios/api";
 import { useStore } from "vuex";
 export default defineComponent({
@@ -50,3 +49,4 @@ export default defineComponent({
   }
 }
 </style>
+

@@ -387,7 +387,6 @@ export default defineComponent({
   // border:1px solid rgb(103,117,139);
   border-radius: 10px;
   padding: 10px;
-
   span {
     display: inline-block;
     position: relative;
@@ -398,7 +397,6 @@ export default defineComponent({
     color: rgb(103, 117, 139);
     border-bottom: 1px solid rgb(0, 121, 191);
   }
-
   .square {
     height: 100px;
     width: 200px;
@@ -406,20 +404,16 @@ export default defineComponent({
     margin: 20px auto;
     border-radius: 10px;
   }
-
   .back-ground {
     width: 100%;
-
     .content {
       font-size: 16px;
       color: rgb(103, 117, 139);
     }
-
     .color-choose {
       margin-top: 10px;
       display: flex;
       flex-wrap: wrap;
-
       .choose {
         width: 60px;
         height: 30px;
@@ -429,7 +423,6 @@ export default defineComponent({
         cursor: pointer;
       }
     }
-
     .title {
       outline: none;
       margin-top: 10px;
@@ -440,7 +433,6 @@ export default defineComponent({
       color: #172b4d;
       border: 3px solid rgb(223, 225, 230);
     }
-
     .enter {
       width: 100%;
       height: 50px;
@@ -451,10 +443,22 @@ export default defineComponent({
       margin-top: 3vw;
       border-radius: 10px;
     }
-
     .enter:hover {
       background-color: rgb(2, 106, 167);
     }
   }
 }
 </style>
+© 2022 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete
