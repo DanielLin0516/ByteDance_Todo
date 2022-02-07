@@ -118,7 +118,7 @@ export default defineComponent({
     margin-top: 10px;
     display: flex;
     font-size: 12px;
-    width: 150px;
+    width: fit-content;
     align-items: center;
     background-color: rgb(242, 214, 0);
     justify-content: space-between;
@@ -132,8 +132,8 @@ export default defineComponent({
     .time2 {
       height: 30px;
       width: 30px;
-      margin-left: 5px;
-      // margin-right: 20px;
+      margin-left: 10px;
+      margin-right: 10px;
     }
   }
   .time:hover {
