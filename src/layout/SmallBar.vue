@@ -108,14 +108,13 @@ export default defineComponent({
     const isDark = ref(false);
     const store = useStore();
     const inviteCard = ref(false);
-    let userId = ref(null);
     let upSquare = ref(String("#0079BF"));
-    onBeforeUpdate(() => {
-      userId = store.state.userId;
-    });
     const route = useRoute();
     let inviteCodeData = ref(null);
     let link = ref(String(null));
+    const userId = computed(()=>{
+      return store.state.currentUserInfo.userId;
+    })
     const productId: any = computed(() => {
       return route.params.productId;
     });
@@ -191,7 +190,8 @@ export default defineComponent({
       }
     };
     const createLink = async () => {
-      const res = await run(userId);
+      
+      const res = await run(userId.value);
       inviteCodeData.value = res;
       link.value = `http://localhost:3000/#/Invite/${productId.value}/${inviteCodeData.value}`;
     };

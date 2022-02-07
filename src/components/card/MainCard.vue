@@ -114,7 +114,7 @@
         :lists="lists"
       ></Task>
     </div>
-    <!-- <Websocket /> -->
+    <!-- <Websocket :productId="productId" :userId="userId"/> -->
   </div>
 </template>
 
@@ -149,6 +149,7 @@ import {
   ProductShowElement,
   CardElement,
   LabelElement,
+webLabel,
 } from "@/axios/globalInterface";
 import { getTagsByProductId } from "@/axios/labelApi";
 import { useRequest } from "@/hooks/useRequest";
@@ -214,6 +215,10 @@ export default defineComponent({
     const productId = computed(() => {
       return route.params.productId;
     });
+
+    const userId = () => {
+      return store.state.currentUserInfo.userId;
+    };
     // useRequest钩子
     const {
       loading: productLoading,
@@ -732,10 +737,6 @@ export default defineComponent({
       isTaskOpen.value = true;
     };
 
-    interface webLabel extends LabelElement {
-      show: boolean;
-      isChoosed: boolean;
-    }
     const labelList: webLabel[] = reactive([]);
     const getProductLabels = async () => {
       const res = await getTagsByProductId(productId.value as string);
@@ -750,6 +751,8 @@ export default defineComponent({
     return {
       store,
       isTaskOpen,
+      productId,
+      userId,
       close,
       createTask,
       pickupTask,
@@ -813,7 +816,7 @@ export default defineComponent({
       background-color: transparent;
     }
     :deep(.arco-input-wrapper .arco-input) {
-      color: rgba(@cardTextColorMain,1);
+      color: rgba(@cardTextColorMain, 1);
     }
     :deep(.arco-input-wrapper:focus-within) {
       border-color: rgba(@cardColorMain, 0.4);

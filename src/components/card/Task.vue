@@ -150,20 +150,9 @@ export default defineComponent({
     let CardName = ref("");
     let CardDesc = ref("");
     let delStatue = false;
-    let task1 = {};
     const listName = computed(() => {
       return "listName---";
     });
-    const content = computed({
-      get() {
-        return "task1.content";
-      },
-      set(val) {
-        let task1 = store.getters.getTask(route.params.id);
-        return (task1.content = val);
-      },
-    });
-    // let debounce = debouceRef(content.value);
     const updateTaskName = async () => {
       await editCardName(id, CardName.value);
       close();
@@ -175,14 +164,6 @@ export default defineComponent({
       delStatue = true;
       await removeCard(id);
       close();
-    };
-    const updateTaskProperty = (e: { target: any }, key: any) => {
-      console.log("updateTaskProperty-----");
-      store.commit("UPDATE_TASK", {
-        task,
-        key,
-        value: e.target,
-      });
     };
 
     const close = () => {
@@ -217,9 +198,7 @@ export default defineComponent({
       task,
       listName,
       CardName,
-      content,
       CardDesc,
-      updateTaskProperty,
       close,
       updateTaskName,
       updateTaskDesc,
