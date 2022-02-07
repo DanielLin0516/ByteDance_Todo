@@ -1,4 +1,20 @@
 /**
+ * store类型
+ */
+export interface Store {
+  currentUserInfo: UserElement;
+  productList: ProductElement[];
+  currentProductName: string;
+  memberList: UserElement[];
+  background: string;
+  shareProductList: ProductElement[];
+  showInviteButton: boolean;
+  userEvent: Array<any>;
+  isCardDetailShow: boolean;
+  tagList: TagElement[];
+  labelList: webLabel[];
+}
+/**
  * 项目类型
  */
 export interface ProductElement {
@@ -39,6 +55,10 @@ export interface CardElement {
   productId: number;
   tagList: TagElement[];
   createdTime: string;
+  creator: UserElement;
+  background: string;
+  completed: true;
+  action: Array<any>;
 }
 
 export interface ListElement {
@@ -66,4 +86,9 @@ export interface LabelElement {
   id: string;
   productId: string;
   tagName: string;
+}
+
+export interface webLabel extends LabelElement {
+  show: boolean;
+  isChoosed: boolean;
 }

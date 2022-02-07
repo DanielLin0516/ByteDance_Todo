@@ -1,5 +1,10 @@
 <template>
   <div class="flex">
+    <div
+      class="bgcColor"
+      v-show="task.background"
+      :style="{ background: task.background }"
+    ></div>
     <icon-close-circle class="icon-close-circle" @click.stop="close" />
     <div class="header">
       <icon-robot
@@ -71,10 +76,9 @@
         <template #icon>
           <icon-delete />
         </template>
-        <template #default>删除任务</template>
-      </a-button>
-      /></a-popconfirm
-    >
+        <template #default>删除任务</template> </a-button
+      >/>
+    </a-popconfirm>
   </div>
 </template>
 <script lang="ts">
@@ -118,10 +122,9 @@ export default defineComponent({
     columnName: String,
     lists: Object,
   },
-  emits: ["close"],
+  emits: ["close", "change"],
   setup(props, context) {
     provide("cardId", props.id as string);
-
     dayjs.extend(utc);
     const store = useStore();
     const route = useRoute();
@@ -143,6 +146,15 @@ export default defineComponent({
       productId: NaN,
       tagList: [],
       createdTime: "",
+      creator: {
+        avatar: "",
+        fullname: "",
+        userId: 0,
+        username: "",
+      },
+      background: "",
+      completed: true,
+      action: [],
     });
 
     const dateTime = (e: any) => {
@@ -150,24 +162,12 @@ export default defineComponent({
       task.deadline = e.deadline;
     };
     let id = parseInt(props.id as string) as number;
-
     let CardName = ref("");
     let CardDesc = ref("");
     let delStatue = false;
-    let task1 = {};
     const listName = computed(() => {
       return "listName---";
     });
-    const content = computed({
-      get() {
-        return "task1.content";
-      },
-      set(val) {
-        let task1 = store.getters.getTask(route.params.id);
-        return (task1.content = val);
-      },
-    });
-    // let debounce = debouceRef(content.value);
     const updateTaskName = async () => {
       await editCardName(id, CardName.value);
       close();
@@ -179,14 +179,6 @@ export default defineComponent({
       delStatue = true;
       await removeCard(id);
       close();
-    };
-    const updateTaskProperty = (e: { target: any }, key: any) => {
-      console.log("updateTaskProperty-----");
-      store.commit("UPDATE_TASK", {
-        task,
-        key,
-        value: e.target,
-      });
     };
 
     const close = () => {
@@ -226,16 +218,17 @@ export default defineComponent({
       });
     };
     getTaskInfo();
+    const change = (e) => {
+      task.background = e.background;
+    };
     return {
       task,
       listName,
       CardName,
-      content,
       CardDesc,
       time,
       dayjs,
 
-      updateTaskProperty,
       close,
       updateTaskName,
       updateTaskDesc,
@@ -243,6 +236,7 @@ export default defineComponent({
       dateTime,
       addExecutor,
       removeExecutor,
+      change,
     };
   },
 });
@@ -250,6 +244,12 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .flex {
+  .bgcColor {
+    height: 100px;
+    width: 100%;
+    border-radius: 10px;
+    position: relative;
+  }
   position: relative;
   display: flex;
   height: 75vh;

@@ -9,6 +9,10 @@ import { reactive, ref, defineComponent, onMounted, onUnmounted } from "vue";
 export default defineComponent({
   name: "Websocket",
   components: {},
+  props: {
+    productId: Number,
+    userId: Number,
+  },
   setup(props) {
     // ws是否启动
     const wsIsRun = ref(false);
@@ -27,7 +31,9 @@ export default defineComponent({
       }
     };
     const wsInit = () => {
-      const wsuri = "ws://localhost:8090/websocket/conghuhu";
+      const wsuri = "ws://101.201.143.127:8090/api/websocket/conghuhu";
+
+      // const wsuri = "ws://localhost:8090/websocket/conghuhu";
       ws.value = wsuri;
       if (!wsIsRun.value) return;
       // 销毁ws
@@ -75,7 +81,7 @@ export default defineComponent({
      */
     function wsCloseHanler(event) {
       console.log(event, "ws关闭");
-      wsInit();
+      wsDestroy();
     }
     /**
      * 销毁ws
@@ -100,7 +106,7 @@ export default defineComponent({
     });
 
     onUnmounted(() => {
-      console.log("项目页面卸载，销毁websocket")
+      console.log("项目页面卸载，销毁websocket");
       wsDestroy();
     });
 

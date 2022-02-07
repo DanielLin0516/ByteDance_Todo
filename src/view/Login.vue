@@ -59,7 +59,7 @@ export default defineComponent({
     });
     async function login() {
       const res = await run(form);
-      store.commit("setUserId", res.userId);
+      store.commit("setCurrentUser", res.userInfo);
       localStorage.setItem("token", `${res.token}`);
       Message.success({ content: "登陆成功！" });
       router.push("/Layout/WorkPlace");

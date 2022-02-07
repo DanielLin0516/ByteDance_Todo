@@ -26,9 +26,6 @@ export default defineComponent({
     let fullName: any = ref(null);
     const currentUserFunc = async () => {
       const res = await currentUser();
-      store.commit("setUserId", res.userId);
-      store.commit("fullName", res.fullname);
-      store.commit("Email", res.username);
       store.commit("setCurrentUser", res);
     };
     currentUserFunc();

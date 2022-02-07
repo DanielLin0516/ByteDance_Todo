@@ -9,14 +9,16 @@
       <icon-tag />
       <span class="sidebar-text">标签</span>
     </a>
-    <a
-      class="button-link"
-      @mousedown="store.state.show = !store.state.show"
-      title="日期"
-    >
+    <a class="button-link" @mousedown="store.state.show = !store.state.show" title="日期">
       <icon-schedule />
       <span class="sidebar-text">日期</span>
     </a>
+
+    <a class="button-link" title="拉伸" @click="bgc = !bgc">
+      <icon-layout />
+      <span class="sidebar-text">拉伸</span>
+    </a>
+    <card-bgc :id="id" :columnName="columnName" :lists="lists" v-show="bgc" :bgc="bgc" @bgcShow="bgcShow" @change="change"></card-bgc>
   </div>
   <div style="z-index: 999">
     <CardColorLabel v-if="isColorShow" @close="closeColor"></CardColorLabel>
@@ -37,11 +39,13 @@ import {
   IconUnorderedList,
   IconSchedule,
   IconFile,
+  IconLayout
 } from "@arco-design/web-vue/es/icon";
 import { defineComponent, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import CardColorLabel from "@/components/card/CardColorLabel.vue";
 import TaskMember from "@/components/card/TaskMember.vue";
+import CardBgc from "@/components/card/CardBgc.vue";
 export default defineComponent({
   inheritAttrs: false,
   components: {
@@ -53,20 +57,25 @@ export default defineComponent({
     Date,
     CardColorLabel,
     TaskMember,
+    IconLayout,
+    CardBgc
   },
   props: {
     lists: Object,
+    id: String,
+    columnName: String,
   },
-  emits: ["timeDate"],
+  emits: ["timeDate","change"],
   setup(props, context) {
     console.log("context.attrs", {
       ...context.attrs,
     });
     const store = useStore();
+    console.log(props.id, 'detail')
     let show = store.state.show;
     const isColorShow = ref(false);
     const isMemberShow = ref(false);
-
+    let bgc = ref(false);
     let timePeriod = reactive({});
     const showColorLable = () => {
       isColorShow.value = true;
@@ -85,6 +94,14 @@ export default defineComponent({
       timePeriod = e;
       context.emit("timeDate", timePeriod);
     };
+    const bgcShow =(e) => {
+      console.log('收到的值',e)
+      bgc.value = e;
+    }
+    const change = (e) => {
+      console.log(e)
+     context.emit("change",e)
+    }
 
     return {
       store,
@@ -95,6 +112,9 @@ export default defineComponent({
       closeMember,
       showMember,
       recieveTime,
+      bgcShow,
+      bgc,
+      change
     };
   },
 });
