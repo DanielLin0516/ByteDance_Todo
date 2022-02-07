@@ -115,7 +115,7 @@
         :lists="lists"
       ></Task>
     </div>
-    <Websocket :productId="productId" :userId="userId" />
+    <!-- <Websocket :productId="productId" :userId="userId" /> -->
   </div>
 </template>
 
