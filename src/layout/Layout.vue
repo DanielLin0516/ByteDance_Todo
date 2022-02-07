@@ -6,7 +6,14 @@
 
 <script lang="ts">
 import TopBar from "@/layout/TopBar.vue";
-import { defineComponent, ref, onMounted, computed, nextTick, provide } from "vue";
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  computed,
+  nextTick,
+  provide,
+} from "vue";
 import { currentUser } from "@/axios/api";
 import { useStore } from "vuex";
 export default defineComponent({
@@ -16,15 +23,16 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    let fullName:any = ref(null)
+    let fullName: any = ref(null);
     const currentUserFunc = async () => {
       const res = await currentUser();
       store.commit("setUserId", res.userId);
-      store.commit("fullName",res.fullname)
-      store.commit("Email",res.username)
-    }
-    currentUserFunc()
-    return {fullName};
+      store.commit("fullName", res.fullname);
+      store.commit("Email", res.username);
+      store.commit("setCurrentUser", res);
+    };
+    currentUserFunc();
+    return { fullName };
   },
 });
 </script>

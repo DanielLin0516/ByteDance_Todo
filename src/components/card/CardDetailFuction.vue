@@ -20,7 +20,11 @@
   </div>
   <div style="z-index: 999">
     <CardColorLabel v-if="isColorShow" @close="closeColor"></CardColorLabel>
-    <TaskMember v-if="isMemberShow" @close="closeMember"></TaskMember>
+    <TaskMember
+      v-if="isMemberShow"
+      @close="closeMember"
+      v-bind="$attrs"
+    ></TaskMember>
   </div>
   <date v-show="store.state.show" @time="recieveTime" :lists="lists" />
 </template>
@@ -39,6 +43,7 @@ import { useStore } from "vuex";
 import CardColorLabel from "@/components/card/CardColorLabel.vue";
 import TaskMember from "@/components/card/TaskMember.vue";
 export default defineComponent({
+  inheritAttrs: false,
   components: {
     IconUser,
     IconTag,
@@ -54,6 +59,9 @@ export default defineComponent({
   },
   emits: ["timeDate"],
   setup(props, context) {
+    console.log("context.attrs", {
+      ...context.attrs,
+    });
     const store = useStore();
     let show = store.state.show;
     const isColorShow = ref(false);

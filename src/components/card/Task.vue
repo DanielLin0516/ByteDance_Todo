@@ -19,9 +19,22 @@
         >中
       </div>
     </div>
+    <div class="member_content" v-if="task.executorList[0]">
+      <span>标签</span>
+      <div class="member_items">
+        <a
+          class="member_item"
+          v-for="(user, index) in task.executorList"
+          :key="user.userId + index"
+          :title="user.fullname"
+        >
+          <!-- {{ user.fullname }} -->
+        </a>
+      </div>
+    </div>
     <div class="date" v-if="task.begintime">
       <span>日期</span>
-      <div style="background-color: rgb(242,212,0);">
+      <div style="background-color: rgb(242, 212, 0)">
         {{ dayjs(task.begintime).format("YYYY-MM-DD") }} ~
         {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
       </div>
@@ -42,10 +55,12 @@
       :auto-size="{ minRows: 2, maxRows: 5 }"
     />
     <card-action :task="task"></card-action>
-    <card-detail-fuction
+    <CardDetailFuction
       @timeDate="dateTime"
       :lists="lists"
-    ></card-detail-fuction>
+      @addExecutor="addExecutor"
+      @removeExecutor="removeExecutor"
+    ></CardDetailFuction>
     <a-popconfirm
       content="将此任务删除？"
       okText="确认"
@@ -105,9 +120,7 @@ export default defineComponent({
   },
   emits: ["close"],
   setup(props, context) {
-    // provide("taskId", props.id as string);
     provide("cardId", props.id as string);
-    console.log(`task里---${props.id}`);
 
     dayjs.extend(utc);
     const store = useStore();
@@ -177,13 +190,20 @@ export default defineComponent({
     };
 
     const close = () => {
-      console.log("关闭")
+      console.log("关闭");
       const param = {
         taskId: id,
         taskName: CardName,
         del: delStatue,
       };
       context.emit("close", param);
+    };
+    const addExecutor = (executor) => {
+      task.executorList.push(executor);
+    };
+    const removeExecutor = (userId: number) => {
+      const index = task.executorList.findIndex((el) => el.userId == userId);
+      task.executorList.splice(index, 1);
     };
     //获取页面渲染数据与处理数据
     const {
@@ -196,29 +216,33 @@ export default defineComponent({
         console.trace(error);
       },
     });
-    const getInfo = async () => {
+    const getTaskInfo = async () => {
       await getCardInfo(id).then((res) => {
         CardName.value = res.cardname;
         CardDesc.value = res.description;
         Object.assign(task, res);
+        // console.log(task);
+        // console.log(task.executorList);
       });
     };
-    getInfo();
+    getTaskInfo();
     return {
       task,
       listName,
       CardName,
       content,
       CardDesc,
+      time,
+      dayjs,
+
       updateTaskProperty,
       close,
       updateTaskName,
       updateTaskDesc,
       deleteOneTask,
-      // date,
-      dayjs,
       dateTime,
-      time,
+      addExecutor,
+      removeExecutor,
     };
   },
 });
@@ -290,6 +314,43 @@ export default defineComponent({
   }
   .mySpan {
     color: rgba(@cardTextColorMain, 0.8);
+  }
+  .member_content {
+    margin-left: 20px;
+    span {
+      display: inline-block;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(@cardTextColorMain, 0.7);
+      margin-bottom: 10px;
+    }
+    .member_items {
+      display: flex;
+
+      .member_item {
+        margin-left: 10px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60px;
+        width: 60px;
+        // margin-top: 10px;
+        border-radius: 50%;
+        user-select: none;
+
+        font-weight: 1000;
+
+        background: url(https://joeschmoe.io/api/v1/random);
+        background-color: rgba(0, 0, 0, 0.1);
+
+        &:hover {
+          transform: scale(1.04);
+          background-color: rgba(0, 0, 0, 0.2);
+          cursor: pointer;
+        }
+      }
+    }
   }
   .date {
     span {

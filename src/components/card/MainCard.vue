@@ -166,7 +166,7 @@ import { Message } from "@arco-design/web-vue";
 import CardItem from "./CardItem.vue";
 import Task from "./Task.vue";
 import { log } from "console";
-import Websocket from "@/components/websocket/Websocket.vue"
+import Websocket from "@/components/websocket/Websocket.vue";
 
 export default defineComponent({
   name: "MainCard",
@@ -804,7 +804,7 @@ export default defineComponent({
       background-color: transparent;
     }
     :deep(.arco-input-wrapper .arco-input) {
-      color: rgba(@cardTextColorMain,1);
+      color: rgba(@cardTextColorMain, 1);
     }
     :deep(.arco-input-wrapper:focus-within) {
       border-color: rgba(@cardColorMain, 0.4);

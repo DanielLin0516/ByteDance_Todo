@@ -5,32 +5,40 @@
       <div class="des">{{ cardInfo?.description }}</div>
       <div class="time" v-show="cardInfo?.begintime">
         <div class="time1">
-          <div>{{ dayjs(cardInfo?.begintime).format('YYYY-MM-DD') }}</div>
-          <div>{{ dayjs(cardInfo?.deadline).format('YYYY-MM-DD') }}</div>
+          <div>{{ dayjs(cardInfo?.begintime).format("YYYY-MM-DD") }}</div>
+          <div>{{ dayjs(cardInfo?.deadline).format("YYYY-MM-DD") }}</div>
         </div>
         <icon-schedule class="time2" />
+      </div>
+      <div class="member_content" v-if="cardInfo?.executorList[0]">
+        <div class="member_items">
+          <a
+            class="member_item"
+            v-for="(user, index) in cardInfo?.executorList"
+            :key="user.userId + index"
+            :title="user.fullname"
+          >
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import dayjs from 'dayjs'
-import {
-  IconSchedule
-} from "@arco-design/web-vue/es/icon";
+import dayjs from "dayjs";
+import { IconSchedule } from "@arco-design/web-vue/es/icon";
 import { defineComponent, inject } from "vue";
 import { CardElement } from "@/axios/globalInterface";
 export default defineComponent({
   name: "CardItem",
   components: {
-    IconSchedule
+    IconSchedule,
   },
   props: {
     cardInfo: Object,
     columnId: String,
   },
   setup(props) {
-    
     return {
       dayjs,
     };
@@ -40,6 +48,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .card-menu {
+  position: relative;
   height: auto;
   // width: 100%;
   background-color: rgba(@cardColorMain, 1);
@@ -87,6 +96,38 @@ export default defineComponent({
   }
   .timedone:hover {
     background-color: rgb(81, 152, 57);
+  }
+
+  .member_content {
+    position: relative;
+    right: 5px;
+    display: flex;
+    justify-content: flex-end;
+    .member_items {
+      display: flex;
+      .member_item {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        width: 40px;
+        // margin-top: 10px;
+        border-radius: 50%;
+        user-select: none;
+
+        font-weight: 1000;
+
+        background: url(https://joeschmoe.io/api/v1/random);
+        background-color: rgba(0, 0, 0, 0.1);
+
+        &:hover {
+          transform: scale(1.04);
+          background-color: rgba(0, 0, 0, 0.2);
+          cursor: pointer;
+        }
+      }
+    }
   }
 }
 .card-menu:hover {
