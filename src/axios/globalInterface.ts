@@ -57,7 +57,7 @@ export interface CardElement {
   createdTime: string;
   creator: UserElement;
   background: string;
-  completed: true;
+  completed: boolean;
   action: Array<any>;
 }
 

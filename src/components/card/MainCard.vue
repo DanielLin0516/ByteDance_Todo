@@ -118,7 +118,7 @@
         @removeExecutor="removeExecutor"
       ></Task>
     </div>
-    <!-- <Websocket :productId="productId" :userId="userId"/> -->
+    <!-- <Websocket :productId="productId" :userId="userId" /> -->
   </div>
 </template>
 
@@ -218,13 +218,13 @@ export default defineComponent({
     const lists = reactive<ProductShowElement[]>([]);
 
     // 路由中的项目Id
-    const productId = computed(() => {
-      return route.params.productId;
+    const productId: ComputedRef<string> = computed(() => {
+      return route.params.productId as string;
     });
 
-    const userId = () => {
+    const userId: ComputedRef<number> = computed(() => {
       return store.state.currentUserInfo.userId;
-    };
+    });
     // useRequest钩子
     const {
       loading: productLoading,

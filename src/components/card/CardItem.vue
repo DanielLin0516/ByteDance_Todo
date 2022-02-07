@@ -6,7 +6,7 @@
         :style="{ background: cardInfo.background }"
         v-show="cardInfo?.background"
       ></div>
-      {{ cardInfo?.cardname }}
+      {{ cardInfo.cardname }}
       <div class="des">{{ cardInfo?.description }}</div>
       <div
         class="time"
@@ -37,7 +37,7 @@
 <script lang="ts">
 import dayjs from "dayjs";
 import { IconSchedule } from "@arco-design/web-vue/es/icon";
-import { defineComponent, inject, computed } from "vue";
+import { defineComponent, inject, computed, PropType } from "vue";
 import { CardElement } from "@/axios/globalInterface";
 import { taskComplete } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
@@ -47,19 +47,21 @@ export default defineComponent({
     IconSchedule,
   },
   props: {
-    cardInfo: Object,
+    cardInfo: {
+      type: Object as PropType<CardElement>,
+      required: true,
+    },
     columnId: String,
     lists: Array,
   },
   setup(props) {
-    const done = async (Info) => {
+    const done = async (Info: CardElement) => {
       try {
         await taskComplete(Info.cardId, !Info.completed);
         Info.completed = !Info.completed;
       } catch (error) {
         console.trace(error);
       }
-
       // props.lists.forEach((item) => {
       //   item.items.forEach((item1) => {
       //     if (Info.carId === item1.cardId) {
