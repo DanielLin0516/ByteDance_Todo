@@ -803,6 +803,9 @@ export default defineComponent({
     :deep(.arco-input-wrapper) {
       background-color: transparent;
     }
+    :deep(.arco-input-wrapper .arco-input) {
+      color: rgba(@cardTextColorMain,1);
+    }
     :deep(.arco-input-wrapper:focus-within) {
       border-color: rgba(@cardColorMain, 0.4);
     }
@@ -822,6 +825,7 @@ export default defineComponent({
   }
   .new-button {
     background-color: transparent;
+    color: rgba(@cardTextColorMain, 0.4);
     border: none;
     outline: 0;
     height: 30px;

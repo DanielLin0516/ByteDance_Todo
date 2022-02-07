@@ -86,7 +86,7 @@ import {
   IconClose,
   IconLink,
 } from "@arco-design/web-vue/es/icon";
-import { computed, defineComponent, ref, onBeforeUpdate, reactive } from "vue";
+import { computed, defineComponent, ref, onBeforeUpdate, reactive, inject } from "vue";
 import Avatar from "@/layout/Avatar.vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -137,7 +137,9 @@ export default defineComponent({
         setTheme("default");
       }
       isDark.value = !isDark.value;
+      sendIsDarkToApp(isDark.value)
     };
+    const sendIsDarkToApp:any = inject('sendIsDarkToApp')
     const { data, loading, error, run } = useRequest(getInviteCode, {
       onError: () => {
         console.trace(error);

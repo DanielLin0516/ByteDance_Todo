@@ -3,7 +3,7 @@
         <header class="addFile-header">
             <div>
                 <icon-link :style="{ fontSize: '1em', margin: '0 10px 0 0' }" />
-                <span class="desc-title">活动</span>
+                <span class="mySpan">活动</span>
             </div>
             <div class="header-button">
                 <a-button @click="changeActionListIsShow($event)">隐藏详情</a-button>
@@ -86,6 +86,9 @@ export default defineComponent({
 }
 .header-button {
     margin-right: 10px;
+}
+.mySpan {
+    color: rgba(@cardTextColorMain, 0.8);
 }
 main {
     margin: 15px auto;

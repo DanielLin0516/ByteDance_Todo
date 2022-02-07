@@ -49,6 +49,7 @@ export default defineComponent({
   margin-left: 5px;
   margin-right: 8px;
   border-radius: 10px;
+  color: rgba(@cardTextColorMain, 0.8);
   box-shadow: 0 1px 2px 1px rgba(@cardTextColorMain, 0.2);
   cursor: pointer;
   font-size: 18px;
