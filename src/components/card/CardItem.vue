@@ -105,6 +105,7 @@ export default defineComponent({
     width: 150px;
     align-items: center;
     background-color: rgb(242, 214, 0);
+    justify-content: space-between;
     padding: 5px;
     border-radius: 10px;
     color: rgba(@cardColorMain, 1);
@@ -116,6 +117,7 @@ export default defineComponent({
       height: 30px;
       width: 30px;
       margin-left: 5px;
+      // margin-right: 20px;
     }
   }
   .time:hover {
