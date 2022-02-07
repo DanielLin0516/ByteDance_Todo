@@ -16,7 +16,6 @@ export default defineComponent({
     TopBar,
   },
   setup() {
-    const isDark = ref(false);
     const store = useStore();
     let fullName:any = ref(null)
     const currentUserFunc = async () => {
@@ -26,17 +25,7 @@ export default defineComponent({
       store.commit("Email",res.username)
     }
     currentUserFunc()
-    const changeTheme = (e: any) => {
-      if (!isDark.value) {
-        e.currentTarget.innerText = "切换默认模式";
-        setTheme("dark");
-      } else {
-        e.currentTarget.innerText = "切换夜间模式";
-        setTheme("default");
-      }
-      isDark.value = !isDark.value;
-    };
-    return { changeTheme ,fullName};
+    return {fullName};
   },
 });
 </script>

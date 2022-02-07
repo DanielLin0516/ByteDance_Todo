@@ -45,6 +45,7 @@
 
 <script lang="ts">
 import { IconLink, IconUser } from '@arco-design/web-vue/es/icon';
+import { log } from 'console';
 import { reactive, ref, defineComponent } from 'vue';
 export default defineComponent({
     components: {
@@ -57,6 +58,8 @@ export default defineComponent({
         let isShowActionList = ref(true)
         let curComment = ref('')
         const actions = props.task ? props.task.actions : {}
+        console.log(props.task);
+        
         const changeActionListIsShow = (e: any) => {
             if (e.target.innerHTML == '<!--v-if-->隐藏详情') {
                 e.target.innerHTML = '<!--v-if-->查看详情'

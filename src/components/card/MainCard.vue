@@ -259,7 +259,7 @@ export default defineComponent({
         });
         // console.log(lists);
         // 告知父组件，加载完毕
-        context.emit("loadingOver", bgcColor);
+        context.emit("loadingOver");
       } catch (error) {
         console.trace(error);
       }
