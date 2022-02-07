@@ -13,7 +13,7 @@
       />
       <input
         type="text"
-        v-model="CardName"
+        v-model="task.cardname"
         class="content"
         @change="updateTaskName()"
         @keyup.enter="updateTaskName()"
@@ -54,7 +54,7 @@
     <a-textarea
       default-value="添加详细描述..."
       class="text"
-      v-model="CardDesc"
+      v-model="task.description"
       placeholder="添加详细描述..."
       @change="updateTaskDesc()"
       :auto-size="{ minRows: 2, maxRows: 5 }"
@@ -63,8 +63,7 @@
     <CardDetailFuction
       @timeDate="dateTime"
       :lists="lists"
-      @addExecutor="addExecutor"
-      @removeExecutor="removeExecutor"
+      v-bind="$attrs"
     ></CardDetailFuction>
     <a-popconfirm
       content="将此任务删除？"
@@ -91,7 +90,15 @@ import {
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, computed, reactive, ref, provide, inject } from "vue";
+import {
+  defineComponent,
+  computed,
+  reactive,
+  ref,
+  provide,
+  inject,
+  PropType,
+} from "vue";
 import { useStore } from "vuex";
 import debouceRef from "@/hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
@@ -109,6 +116,7 @@ import CardAction from "@/components/card/CardAction.vue";
 import CardDetailFuction from "@/components/card/CardDetailFuction.vue";
 export default defineComponent({
   name: "NewCardButton",
+  inheritAttrs: false,
   components: {
     IconCloseCircle,
     IconRobot,
@@ -121,41 +129,45 @@ export default defineComponent({
     id: String,
     columnName: String,
     lists: Object,
+    taskInfo: Object as PropType<CardElement>,
   },
   emits: ["close", "change"],
   setup(props, context) {
     provide("cardId", props.id as string);
     dayjs.extend(utc);
+    const task: CardElement = props.taskInfo as CardElement;
+    console.log(props.taskInfo?.cardname);
+
     const store = useStore();
     const route = useRoute();
     let time = reactive({
       begintime: "",
       deadline: "",
     });
-    const task = reactive<CardElement>({
-      begintime: "",
-      cardId: NaN,
-      cardname: "",
-      closed: false,
-      deadline: "",
-      description: "",
-      executorList: [],
-      expired: false,
-      listId: NaN,
-      pos: NaN,
-      productId: NaN,
-      tagList: [],
-      createdTime: "",
-      creator: {
-        avatar: "",
-        fullname: "",
-        userId: 0,
-        username: "",
-      },
-      background: "",
-      completed: true,
-      action: [],
-    });
+    // const task = reactive<CardElement>({
+    //   begintime: "",
+    //   cardId: NaN,
+    //   cardname: "",
+    //   closed: false,
+    //   deadline: "",
+    //   description: "",
+    //   executorList: [],
+    //   expired: false,
+    //   listId: NaN,
+    //   pos: NaN,
+    //   productId: NaN,
+    //   tagList: [],
+    //   createdTime: "",
+    //   creator: {
+    //     avatar: "",
+    //     fullname: "",
+    //     userId: 0,
+    //     username: "",
+    //   },
+    //   background: "",
+    //   completed: true,
+    //   action: [],
+    // });
 
     const dateTime = (e: any) => {
       task.begintime = e.beginTime;
@@ -190,34 +202,34 @@ export default defineComponent({
       };
       context.emit("close", param);
     };
-    const addExecutor = (executor) => {
-      task.executorList.push(executor);
-    };
-    const removeExecutor = (userId: number) => {
-      const index = task.executorList.findIndex((el) => el.userId == userId);
-      task.executorList.splice(index, 1);
-    };
+    // const addExecutor = (executor) => {
+    //   task.executorList.push(executor);
+    // };
+    // const removeExecutor = (userId: number) => {
+    //   const index = task.executorList.findIndex((el) => el.userId == userId);
+    //   task.executorList.splice(index, 1);
+    // };
     //获取页面渲染数据与处理数据
-    const {
-      data,
-      loading: productLoading,
-      error,
-      run,
-    } = useRequest(getCardInfo, {
-      onError: () => {
-        console.trace(error);
-      },
-    });
-    const getTaskInfo = async () => {
-      await getCardInfo(id).then((res) => {
-        CardName.value = res.cardname;
-        CardDesc.value = res.description;
-        Object.assign(task, res);
-        // console.log(task);
-        // console.log(task.executorList);
-      });
-    };
-    getTaskInfo();
+    // const {
+    //   data,
+    //   loading: productLoading,
+    //   error,
+    //   run,
+    // } = useRequest(getCardInfo, {
+    //   onError: () => {
+    //     console.trace(error);
+    //   },
+    // });
+    // const getTaskInfo = async () => {
+    //   await getCardInfo(id).then((res) => {
+    //     CardName.value = res.cardname;
+    //     CardDesc.value = res.description;
+    //     Object.assign(task, res);
+    //     // console.log(task);
+    //     // console.log(task.executorList);
+    //   });
+    // };
+    // getTaskInfo();
     const change = (e) => {
       task.background = e.background;
     };
@@ -234,8 +246,8 @@ export default defineComponent({
       updateTaskDesc,
       deleteOneTask,
       dateTime,
-      addExecutor,
-      removeExecutor,
+      // addExecutor,
+      // removeExecutor,
       change,
     };
   },
