@@ -31,7 +31,7 @@
         class="icon-left"
         :style="{ fontSize: '1.2em', margin: '0 10px' }"
       />
-      <span>描述</span>
+      <span class="mySpan">描述</span>
     </div>
     <a-textarea
       default-value="添加详细描述..."
@@ -296,6 +296,9 @@ export default defineComponent({
       margin: 0 5px;
       text-decoration: underline;
     }
+  }
+  .mySpan {
+    color: rgba(@cardTextColorMain, 0.8);
   }
   .date {
     span {

@@ -265,7 +265,7 @@ export default defineComponent({
         });
         // console.log(lists);
         // 告知父组件，加载完毕
-        context.emit("loadingOver", bgcColor);
+        context.emit("loadingOver");
       } catch (error) {
         console.trace(error);
       }
@@ -812,6 +812,9 @@ export default defineComponent({
     :deep(.arco-input-wrapper) {
       background-color: transparent;
     }
+    :deep(.arco-input-wrapper .arco-input) {
+      color: rgba(@cardTextColorMain,1);
+    }
     :deep(.arco-input-wrapper:focus-within) {
       border-color: rgba(@cardColorMain, 0.4);
     }
@@ -831,6 +834,7 @@ export default defineComponent({
   }
   .new-button {
     background-color: transparent;
+    color: rgba(@cardTextColorMain, 0.4);
     border: none;
     outline: 0;
     height: 30px;
