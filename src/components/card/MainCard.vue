@@ -23,11 +23,12 @@
         <!-- 列表标题 -->
         <a-row justify="space-between" align="center">
           <a-col :span="21">
-            <a-input
+            <input
+              type="text"
+              v-model="column.listName"
               class="list-title"
-              size="large"
-              :default-value="column.listName"
-              @press-enter="editListNameById(column.listId, index, $event)"
+              @change="changeListName(index, $event)"
+              @keyup.enter="editListNameById(column.listId, index, $event)"
             />
           </a-col>
           <a-col :span="3" style="display: flex; justify-content: flex-end">
@@ -115,7 +116,11 @@
         :lists="lists"
       ></Task>
     </div>
-    <!-- <Websocket :productId="productId" :userId="userId" /> -->
+    <Websocket
+      v-if="!productLoading"
+      :productId="productId"
+      @updateList="updateList"
+    />
   </div>
 </template>
 
@@ -143,15 +148,17 @@ import {
   PropType,
   reactive,
   provide,
-ComputedRef,
+  ComputedRef,
+  nextTick,
 } from "vue";
-import { useStore } from "vuex";
+import { Store, useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import {
   ProductShowElement,
   CardElement,
   LabelElement,
   webLabel,
+  StoreState,
 } from "@/axios/globalInterface";
 import { getTagsByProductId } from "@/axios/labelApi";
 import { useRequest } from "@/hooks/useRequest";
@@ -189,7 +196,7 @@ export default defineComponent({
   },
   emits: ["loadingOver"],
   setup(props, context) {
-    const store = useStore();
+    const store: Store<StoreState> = useStore();
     const route = useRoute();
     const router = useRouter();
     const newColumnName = ref("");
@@ -214,13 +221,10 @@ export default defineComponent({
     const lists = reactive<ProductShowElement[]>([]);
 
     // 路由中的项目Id
-    const productId:ComputedRef<string> = computed(() => {
+    const productId: ComputedRef<string> = computed(() => {
       return route.params.productId as string;
     });
 
-    const userId:ComputedRef<number> = computed(() => {
-      return store.state.currentUserInfo.userId;
-    });
     // useRequest钩子
     const {
       loading: productLoading,
@@ -278,20 +282,6 @@ export default defineComponent({
       }
     }
     /**
-     * 工具函数 获取当前column的name
-     * @param e
-     */
-    const getCurColumnName = (e: any) => {
-      if (e.currentTarget.parentElement.className == "card-wrapper") {
-        return e.currentTarget.firstElementChild.innerHTML;
-      } else {
-        return e.currentTarget.parentElement.firstElementChild.innerHTML;
-      }
-    };
-    const goToTask = (task: { id: any }, columnID: string) => {
-      router.push({ name: "task", params: { cid: columnID, id: task.id } });
-    };
-    /**
      * 子组件Task触发 关闭任务卡片后的处理
      * @param param
      * @returns
@@ -321,6 +311,10 @@ export default defineComponent({
         });
       }
       isTaskOpen.value = false;
+    };
+
+    const changeListName = (index: number, e: any) => {
+      lists[index].listName = e.target.value;
     };
 
     /**
@@ -748,13 +742,21 @@ export default defineComponent({
       });
       store.commit("setLabelList", labelList);
     };
+
+    const updateList = (detail: any) => {
+      console.log(detail);
+      lists.forEach((list) => {
+        if (list.listId == detail.id) {
+          list.listName = detail.name;
+        }
+      });
+    };
     getProductLabels();
     getInfo();
     return {
       store,
       isTaskOpen,
       productId,
-      userId,
       close,
       createTask,
       pickupTask,
@@ -777,6 +779,8 @@ export default defineComponent({
       columnName,
       deleteOneList,
       moveTaskOrColumn,
+      updateList,
+      changeListName,
     };
   },
 });
@@ -808,23 +812,18 @@ export default defineComponent({
       height: 40px;
       opacity: 1;
       padding: 10px;
-
-      font-family: PingFang-Bold-2;
-      :deep(.arco-input-size-large) {
-        font-size: 22px;
-      }
-    }
-    :deep(.arco-input-wrapper) {
       background-color: transparent;
-    }
-    :deep(.arco-input-wrapper .arco-input) {
+      font-family: PingFang-Bold-2;
+      border: unset;
       color: rgba(@cardTextColorMain, 1);
     }
-    :deep(.arco-input-wrapper:focus-within) {
-      border-color: rgba(@cardColorMain, 0.4);
+    input:focus {
+      outline: none;
+      border: transparent;
     }
-    :deep(.arco-input-wrapper.arco-input-focus) {
-      background-color: rgba(@cardColorMain, 0.4);
+    input:focus-visible {
+      outline: none;
+      border: transparent;
     }
     .scroller-container {
       overflow-x: hidden;

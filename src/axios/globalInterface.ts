@@ -1,7 +1,7 @@
 /**
  * store类型
  */
-export interface Store {
+export interface StoreState {
   currentUserInfo: UserElement;
   productList: ProductElement[];
   currentProductName: string;

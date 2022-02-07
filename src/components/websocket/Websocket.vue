@@ -5,16 +5,24 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref, defineComponent, onMounted, onUnmounted } from "vue";
+import {
+  reactive,
+  ref,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  computed,
+} from "vue";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "Websocket",
   components: {},
   props: {
     productId: String,
-    userId: Number,
   },
-  
-  setup(props) {
+  emits: ["updateList"],
+  setup(props, context) {
+    const store = useStore();
     // ws是否启动
     const wsIsRun = ref(false);
     // 定义ws对象
@@ -24,6 +32,10 @@ export default defineComponent({
     // ws定时器
     const wsTimer = ref(null);
 
+    const userId = computed(() => {
+      return store.state.currentUserInfo.userId;
+    });
+
     const sendDataToServer = () => {
       if (webSocket.value.readyState === 1) {
         webSocket.value.send("来自前端的数据");
@@ -32,9 +44,7 @@ export default defineComponent({
       }
     };
     const wsInit = () => {
-      
-
-      const wsuri = `ws://localhost:8090/websocket/${props.productId}/${props.userId}`;
+      const wsuri = `ws://localhost:8090/websocket/${props.productId}/${userId.value}`;
       ws.value = wsuri;
       if (!wsIsRun.value) return;
       // 销毁ws
@@ -65,10 +75,9 @@ export default defineComponent({
       console.log("ws建立连接成功");
     };
     const wsMessageHanler = (e) => {
-      console.log("wsMessageHanler");
-      console.log(e);
-      //const redata = JSON.parse(e.data)
-      //console.log(redata)
+      const res = JSON.parse(e.data);
+      console.log(res);
+      context.emit("updateList", res.detail);
     };
     /**
      * ws通信发生错误

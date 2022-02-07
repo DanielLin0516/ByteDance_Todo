@@ -2,13 +2,13 @@ import { createStore } from "vuex";
 import defaultBoard from "./defaultBoard";
 import {
   ProductElement,
-  Store,
+  StoreState,
   TagElement,
   UserElement,
   webLabel,
 } from "@/axios/globalInterface";
 
-export default createStore<Store>({
+export default createStore<StoreState>({
   state: {
     currentUserInfo: {
       avatar: "",
