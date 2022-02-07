@@ -44,7 +44,10 @@ export default defineComponent({
       }
     };
     const wsInit = () => {
-      const wsuri = `ws://localhost:8090/websocket/${props.productId}/${userId.value}`;
+      // const wsuri = `ws://localhost:8090/websocket/${props.productId}/${userId.value}`;
+
+      
+      const wsuri = `ws://101.201.143.127:8090/api/websocket/${props.productId}/${userId.value}`;
       ws.value = wsuri;
       if (!wsIsRun.value) return;
       // 销毁ws
