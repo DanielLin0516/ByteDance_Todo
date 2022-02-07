@@ -20,6 +20,17 @@
         </div>
         <icon-schedule class="time2" />
       </div>
+      <div class="member_content" v-if="cardInfo?.executorList[0]">
+        <div class="member_items">
+          <a
+            class="member_item"
+            v-for="(user, index) in cardInfo?.executorList"
+            :key="user.userId + index"
+            :title="user.fullname"
+          >
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -44,7 +55,7 @@ export default defineComponent({
     lists: Array,
   },
   setup(props) {
-    const done = async (Info:CardElement) => {
+    const done = async (Info: CardElement) => {
       try {
         await taskComplete(Info.cardId, !Info.completed);
         Info.completed = !Info.completed;
@@ -128,6 +139,38 @@ export default defineComponent({
   }
   .timedone:hover {
     background-color: rgb(81, 152, 57);
+  }
+
+  .member_content {
+    position: relative;
+    right: 5px;
+    display: flex;
+    justify-content: flex-end;
+    .member_items {
+      display: flex;
+      .member_item {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        width: 40px;
+        // margin-top: 10px;
+        border-radius: 50%;
+        user-select: none;
+
+        font-weight: 1000;
+
+        background: url(https://joeschmoe.io/api/v1/random);
+        background-color: rgba(0, 0, 0, 0.1);
+
+        &:hover {
+          transform: scale(1.04);
+          background-color: rgba(0, 0, 0, 0.2);
+          cursor: pointer;
+        }
+      }
+    }
   }
 }
 .card-menu:hover {

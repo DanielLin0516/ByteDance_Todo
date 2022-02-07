@@ -113,6 +113,9 @@
         :columnName="columnName"
         @close="close"
         :lists="lists"
+        :taskInfo="taskInfo"
+        @addExecutor="addExecutor"
+        @removeExecutor="removeExecutor"
       ></Task>
     </div>
     <!-- <Websocket :productId="productId" :userId="userId" /> -->
@@ -143,7 +146,7 @@ import {
   PropType,
   reactive,
   provide,
-ComputedRef,
+  ComputedRef,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -168,7 +171,6 @@ import {
 import { Message } from "@arco-design/web-vue";
 import CardItem from "./CardItem.vue";
 import Task from "./Task.vue";
-import { log } from "console";
 import Websocket from "@/components/websocket/Websocket.vue";
 
 export default defineComponent({
@@ -196,6 +198,8 @@ export default defineComponent({
     const taskClickId = ref(NaN);
     const columnName = ref("");
     const isTaskOpen = ref(false);
+    const currentCardId = ref(0);
+    const currentColumnId = ref(0);
 
     // 记录移动之前列的id
     const fromListId = ref(NaN);
@@ -214,11 +218,11 @@ export default defineComponent({
     const lists = reactive<ProductShowElement[]>([]);
 
     // 路由中的项目Id
-    const productId:ComputedRef<string> = computed(() => {
+    const productId: ComputedRef<string> = computed(() => {
       return route.params.productId as string;
     });
 
-    const userId:ComputedRef<number> = computed(() => {
+    const userId: ComputedRef<number> = computed(() => {
       return store.state.currentUserInfo.userId;
     });
     // useRequest钩子
@@ -301,25 +305,25 @@ export default defineComponent({
       taskName: string;
       del: boolean;
     }) => {
-      if (param.del) {
-        lists.forEach((items) => {
-          Array.prototype.slice.call(items.items).forEach((item, index) => {
-            if (item.cardId == param.taskId) {
-              console.log(index);
-              items.items.splice(index, 1);
-            }
-          });
-        });
-      }
-      if (param.taskName) {
-        lists.forEach((items) => {
-          Array.prototype.slice.call(items.items).forEach((item) => {
-            if (item.cardId == param.taskId) {
-              item.cardname = param.taskName;
-            }
-          });
-        });
-      }
+      // if (param.del) {
+      //   lists.forEach((items) => {
+      //     Array.prototype.slice.call(items.items).forEach((item, index) => {
+      //       if (item.cardId == param.taskId) {
+      //         console.log(index);
+      //         items.items.splice(index, 1);
+      //       }
+      //     });
+      //   });
+      // }
+      // if (param.taskName) {
+      //   lists.forEach((items) => {
+      //     Array.prototype.slice.call(items.items).forEach((item) => {
+      //       if (item.cardId == param.taskId) {
+      //         item.cardname = param.taskName;
+      //       }
+      //     });
+      //   });
+      // }
       isTaskOpen.value = false;
     };
 
@@ -733,10 +737,16 @@ export default defineComponent({
         pos: newPos,
       });
     };
+    // let taskInfo;
     const openTask = (cardId: number, column: ProductShowElement) => {
       taskClickId.value = cardId;
       columnName.value = column.listName;
       isTaskOpen.value = true;
+
+      //保存当前打开的task状态
+      currentCardId.value = cardId;
+      currentColumnId.value = column.listId;
+      // taskInfo = getCurrentCard();
     };
 
     const labelList: webLabel[] = reactive([]);
@@ -747,6 +757,34 @@ export default defineComponent({
         // choosedList.push(false);
       });
       store.commit("setLabelList", labelList);
+    };
+    const getCurrentCard = () => {
+      const column = lists.filter(
+        (el) => el.listId === currentColumnId.value
+      )[0];
+      console.log(column);
+      const task = column.items.filter(
+        (el) => el.cardId === currentCardId.value
+      )[0];
+      return task;
+    };
+    const taskInfo = computed(() => getCurrentCard());
+
+    /**
+     * 主页中cardItme添加成员
+     */
+    const addExecutor = (executor) => {
+      const task = getCurrentCard();
+      console.log(task);
+      task.executorList.push(executor);
+    };
+    /**
+     * 主页中cardItme删除成员
+     */
+    const removeExecutor = (userId: number) => {
+      const task = getCurrentCard();
+      const index = task.executorList.findIndex((el) => el.userId == userId);
+      task.executorList.splice(index, 1);
     };
     getProductLabels();
     getInfo();
@@ -777,6 +815,9 @@ export default defineComponent({
       columnName,
       deleteOneList,
       moveTaskOrColumn,
+      removeExecutor,
+      addExecutor,
+      taskInfo,
     };
   },
 });

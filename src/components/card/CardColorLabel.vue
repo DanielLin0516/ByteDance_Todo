@@ -248,6 +248,17 @@ export default defineComponent({
         }
         el.innerText = "✔";
       } else if (type === "edit") {
+        editData.color = color;
+        const el = e.target as HTMLDivElement;
+        const els: HTMLCollection = el.parentElement
+          ?.children as HTMLCollection;
+        for (let i = 0; i < els?.length; i++) {
+          if (els[i].innerText) {
+            els[i].innerText = "";
+            break;
+          }
+        }
+        el.innerText = "✔";
       }
     };
 
@@ -304,6 +315,7 @@ export default defineComponent({
 
       //修改本地
       tempItem.tagName = editData.tagName;
+      tempItem.color = editData.color;
       //返回
       backToAll();
       //垃圾回收--ts报错--LabelElement

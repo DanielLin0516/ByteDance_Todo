@@ -1,19 +1,40 @@
 <template>
   <div class="flex">
-    <div class="bgcColor" v-show="task.background" :style="{ background: task.background }"></div>
+    <div
+      class="bgcColor"
+      v-show="task.background"
+      :style="{ background: task.background }"
+    ></div>
     <icon-close-circle class="icon-close-circle" @click.stop="close" />
     <div class="header">
-      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
+      <icon-robot
+        :style="{ fontSize: '1.2em', margin: '0 10px' }"
+        class="robot"
+      />
       <input
         type="text"
-        v-model="CardName"
+        v-model="task.cardname"
         class="content"
         @change="updateTaskName()"
         @keyup.enter="updateTaskName()"
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ columnName }}</span>中
+        <span class="listNameSpan">{{ columnName }}</span
+        >中
+      </div>
+    </div>
+    <div class="member_content" v-if="task.executorList[0]">
+      <span>标签</span>
+      <div class="member_items">
+        <a
+          class="member_item"
+          v-for="(user, index) in task.executorList"
+          :key="user.userId + index"
+          :title="user.fullname"
+        >
+          <!-- {{ user.fullname }} -->
+        </a>
       </div>
     </div>
     <div class="date" v-if="task.begintime">
@@ -33,20 +54,29 @@
     <a-textarea
       default-value="添加详细描述..."
       class="text"
-      v-model="CardDesc"
+      v-model="task.description"
       placeholder="添加详细描述..."
       @change="updateTaskDesc()"
       :auto-size="{ minRows: 2, maxRows: 5 }"
     />
     <card-action :task="task"></card-action>
-    <card-detail-fuction @timeDate="dateTime" @change="change" :lists="lists" :id="id" :columnName="columnName"></card-detail-fuction>
-    <a-popconfirm content="将此任务删除？" okText="确认" cancelText="取消" @ok="deleteOneTask()">
+    <CardDetailFuction
+      @timeDate="dateTime"
+      :lists="lists"
+      v-bind="$attrs"
+    ></CardDetailFuction>
+    <a-popconfirm
+      content="将此任务删除？"
+      okText="确认"
+      cancelText="取消"
+      @ok="deleteOneTask()"
+    >
       <a-button status="danger" class="deleteButton" shape="round">
         <template #icon>
           <icon-delete />
         </template>
-        <template #default>删除任务</template>
-      </a-button>/>
+        <template #default>删除任务</template> </a-button
+      >/>
     </a-popconfirm>
   </div>
 </template>
@@ -60,7 +90,15 @@ import {
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useRoute, useRouter } from "vue-router";
-import { defineComponent, computed, reactive, ref, provide, inject } from "vue";
+import {
+  defineComponent,
+  computed,
+  reactive,
+  ref,
+  provide,
+  inject,
+  PropType,
+} from "vue";
 import { useStore } from "vuex";
 import debouceRef from "@/hooks/debounce";
 import { useRequest } from "@/hooks/useRequest";
@@ -78,6 +116,7 @@ import CardAction from "@/components/card/CardAction.vue";
 import CardDetailFuction from "@/components/card/CardDetailFuction.vue";
 export default defineComponent({
   name: "NewCardButton",
+  inheritAttrs: false,
   components: {
     IconCloseCircle,
     IconRobot,
@@ -90,43 +129,45 @@ export default defineComponent({
     id: String,
     columnName: String,
     lists: Object,
+    taskInfo: Object as PropType<CardElement>,
   },
-  emits: ["close","change"],
+  emits: ["close", "change"],
   setup(props, context) {
-    // provide("taskId", props.id as string);
     provide("cardId", props.id as string);
-    console.log(`task里---${props.id}`);
     dayjs.extend(utc);
+    const task: CardElement = props.taskInfo as CardElement;
+    console.log(props.taskInfo?.cardname);
+
     const store = useStore();
     const route = useRoute();
     let time = reactive({
       begintime: "",
       deadline: "",
     });
-    const task = reactive<CardElement>({
-      begintime: "",
-      cardId: NaN,
-      cardname: "",
-      closed: false,
-      deadline: "",
-      description: "",
-      executorList: [],
-      expired: false,
-      listId: NaN,
-      pos: NaN,
-      productId: NaN,
-      tagList: [],
-      createdTime: "",
-      creator: {
-        avatar: "",
-        fullname: "",
-        userId: 0,
-        username: "",
-      },
-      background: "",
-      completed: true,
-      action: [],
-    });
+    // const task = reactive<CardElement>({
+    //   begintime: "",
+    //   cardId: NaN,
+    //   cardname: "",
+    //   closed: false,
+    //   deadline: "",
+    //   description: "",
+    //   executorList: [],
+    //   expired: false,
+    //   listId: NaN,
+    //   pos: NaN,
+    //   productId: NaN,
+    //   tagList: [],
+    //   createdTime: "",
+    //   creator: {
+    //     avatar: "",
+    //     fullname: "",
+    //     userId: 0,
+    //     username: "",
+    //   },
+    //   background: "",
+    //   completed: true,
+    //   action: [],
+    // });
 
     const dateTime = (e: any) => {
       task.begintime = e.beginTime;
@@ -161,42 +202,53 @@ export default defineComponent({
       };
       context.emit("close", param);
     };
+    // const addExecutor = (executor) => {
+    //   task.executorList.push(executor);
+    // };
+    // const removeExecutor = (userId: number) => {
+    //   const index = task.executorList.findIndex((el) => el.userId == userId);
+    //   task.executorList.splice(index, 1);
+    // };
     //获取页面渲染数据与处理数据
-    const {
-      data,
-      loading: productLoading,
-      error,
-      run,
-    } = useRequest(getCardInfo, {
-      onError: () => {
-        console.trace(error);
-      },
-    });
-    const getInfo = async () => {
-      await getCardInfo(id).then((res) => {
-        CardName.value = res.cardname;
-        CardDesc.value = res.description;
-        Object.assign(task, res);
-      });
-    };
-    getInfo();
+    // const {
+    //   data,
+    //   loading: productLoading,
+    //   error,
+    //   run,
+    // } = useRequest(getCardInfo, {
+    //   onError: () => {
+    //     console.trace(error);
+    //   },
+    // });
+    // const getTaskInfo = async () => {
+    //   await getCardInfo(id).then((res) => {
+    //     CardName.value = res.cardname;
+    //     CardDesc.value = res.description;
+    //     Object.assign(task, res);
+    //     // console.log(task);
+    //     // console.log(task.executorList);
+    //   });
+    // };
+    // getTaskInfo();
     const change = (e) => {
       task.background = e.background;
-    }
+    };
     return {
       task,
       listName,
       CardName,
       CardDesc,
+      time,
+      dayjs,
+
       close,
       updateTaskName,
       updateTaskDesc,
       deleteOneTask,
-      // date,
-      dayjs,
       dateTime,
-      time,
-      change
+      // addExecutor,
+      // removeExecutor,
+      change,
     };
   },
 });
@@ -274,6 +326,43 @@ export default defineComponent({
   }
   .mySpan {
     color: rgba(@cardTextColorMain, 0.8);
+  }
+  .member_content {
+    margin-left: 20px;
+    span {
+      display: inline-block;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(@cardTextColorMain, 0.7);
+      margin-bottom: 10px;
+    }
+    .member_items {
+      display: flex;
+
+      .member_item {
+        margin-left: 10px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60px;
+        width: 60px;
+        // margin-top: 10px;
+        border-radius: 50%;
+        user-select: none;
+
+        font-weight: 1000;
+
+        background: url(https://joeschmoe.io/api/v1/random);
+        background-color: rgba(0, 0, 0, 0.1);
+
+        &:hover {
+          transform: scale(1.04);
+          background-color: rgba(0, 0, 0, 0.2);
+          cursor: pointer;
+        }
+      }
+    }
   }
   .date {
     span {
