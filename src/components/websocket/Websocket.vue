@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <!-- <div>
     <a-button type="primary" @click="sendDataToServer">向后台发送消息</a-button>
-  </div>
+  </div> -->
 </template>
 
 <script lang="ts">

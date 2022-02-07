@@ -68,8 +68,13 @@ export default defineComponent({
   components: {
     IconCloseCircle,
   },
-  emits: ["close"],
+  // inheritAttrs: false,
+  emits: ["close", "addExecutor", "removeExecutor"],
   setup(props, context) {
+    console.log("taskMember--context.attrs", {
+      ...context.attrs,
+    });
+
     const route = useRoute();
     const store = useStore();
     const addSpan = ref(null);
@@ -77,7 +82,7 @@ export default defineComponent({
     const currentUser = store.state.currentUserInfo;
     const productId = ref(Number(route.params.productId));
     const searchValue = ref("");
-    const cardId: number = inject("taskId") as number;
+    const cardId: number = inject("cardId") as number;
     interface webMember extends UserElement {
       isShow: boolean;
       isChoosed: boolean;
@@ -123,12 +128,17 @@ export default defineComponent({
         //可能是搜索出来的
         searchValue.value = "";
         searchMember();
+        //c
+        context.emit("addExecutor", user);
+        //后端接口
         await setExecutorApi(cardId, userId);
       } else {
         mermberList[index].isChoosed = false;
         if (userId == currentUser.userId) {
           isSuggest.value = true;
         }
+        context.emit("removeExecutor", user.userId);
+        //后端接口
         await deleteExecutorApi(cardId, userId);
       }
     };
