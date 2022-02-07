@@ -851,7 +851,9 @@ export default defineComponent({
     .list-title {
       cursor: pointer;
       // width: 100%;
-      height: 40px;
+      font-size: 23px;
+      font-weight: 700;
+      height: 30px;
       opacity: 1;
       padding: 10px;
       background-color: transparent;
