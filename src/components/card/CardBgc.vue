@@ -9,7 +9,6 @@
         <div class="color-choose">
           <div
             class="choose"
-            :class="{ active: choose.id === key }"
             :style="{ background: choose.color }"
             v-for="choose in color"
             :key="choose.id"

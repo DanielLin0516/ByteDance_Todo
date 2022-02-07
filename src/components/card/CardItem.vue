@@ -58,6 +58,11 @@ export default defineComponent({
     const done = async (Info: CardElement) => {
       try {
         await taskComplete(Info.cardId, !Info.completed);
+        if(!Info.completed === true) {
+          Message.success({content:"任务已经完成"})
+        }else {
+          Message.warning({content:"任务未完成"})
+        }
         Info.completed = !Info.completed;
       } catch (error) {
         console.trace(error);

@@ -1,16 +1,9 @@
 <template>
   <div class="flex">
-    <div
-      class="bgcColor"
-      v-show="task.background"
-      :style="{ background: task.background }"
-    ></div>
+    <div class="bgcColor" v-show="task.background" :style="{ background: task.background }"></div>
     <icon-close-circle class="icon-close-circle" @click.stop="close" />
     <div class="header">
-      <icon-robot
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-        class="robot"
-      />
+      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
       <input
         type="text"
         v-model="task.cardname"
@@ -20,8 +13,7 @@
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ columnName }}</span
-        >中
+        <span class="listNameSpan">{{ columnName }}</span>中
       </div>
     </div>
     <div class="member_content" v-if="task.executorList[0]">
@@ -45,10 +37,7 @@
       </div>
     </div>
     <div class="des">
-      <icon-align-left
-        class="icon-left"
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-      />
+      <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
       <span class="mySpan">描述</span>
     </div>
     <a-textarea
@@ -64,19 +53,17 @@
       @timeDate="dateTime"
       :lists="lists"
       v-bind="$attrs"
+      @change="change"
+      :id="id"
+      :columnName="columnName"
     ></CardDetailFuction>
-    <a-popconfirm
-      content="将此任务删除？"
-      okText="确认"
-      cancelText="取消"
-      @ok="deleteOneTask()"
-    >
+    <a-popconfirm content="将此任务删除？" okText="确认" cancelText="取消" @ok="deleteOneTask()">
       <a-button status="danger" class="deleteButton" shape="round">
         <template #icon>
           <icon-delete />
         </template>
-        <template #default>删除任务</template> </a-button
-      >/>
+        <template #default>删除任务</template>
+      </a-button>/>
     </a-popconfirm>
   </div>
 </template>
@@ -137,7 +124,6 @@ export default defineComponent({
     dayjs.extend(utc);
     const task: CardElement = props.taskInfo as CardElement;
     console.log(props.taskInfo?.cardname);
-
     const store = useStore();
     const route = useRoute();
     let time = reactive({
@@ -201,7 +187,7 @@ export default defineComponent({
         del: delStatue,
       };
       context.emit("close", param);
-    };
+    }
     // const addExecutor = (executor) => {
     //   task.executorList.push(executor);
     // };
