@@ -1,11 +1,9 @@
 <template>
   <div class="flex">
+    <div class="bgcColor" v-show="task.background" :style="{ background: task.background }"></div>
     <icon-close-circle class="icon-close-circle" @click.stop="close" />
     <div class="header">
-      <icon-robot
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-        class="robot"
-      />
+      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
       <input
         type="text"
         v-model="CardName"
@@ -15,8 +13,7 @@
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ columnName }}</span
-        >中
+        <span class="listNameSpan">{{ columnName }}</span>中
       </div>
     </div>
     <div class="date" v-if="task.begintime">
@@ -27,10 +24,7 @@
       </div>
     </div>
     <div class="des">
-      <icon-align-left
-        class="icon-left"
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-      />
+      <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
       <span>描述</span>
     </div>
     <a-textarea
@@ -42,24 +36,15 @@
       :auto-size="{ minRows: 2, maxRows: 5 }"
     />
     <card-action :task="task"></card-action>
-    <card-detail-fuction
-      @timeDate="dateTime"
-      :lists="lists"
-    ></card-detail-fuction>
-    <a-popconfirm
-      content="将此任务删除？"
-      okText="确认"
-      cancelText="取消"
-      @ok="deleteOneTask()"
-    >
+    <card-detail-fuction @timeDate="dateTime" @change="change" :lists="lists" :id="id" :columnName="columnName"></card-detail-fuction>
+    <a-popconfirm content="将此任务删除？" okText="确认" cancelText="取消" @ok="deleteOneTask()">
       <a-button status="danger" class="deleteButton" shape="round">
         <template #icon>
           <icon-delete />
         </template>
         <template #default>删除任务</template>
-      </a-button>
-      /></a-popconfirm
-    >
+      </a-button>/>
+    </a-popconfirm>
   </div>
 </template>
 <script lang="ts">
@@ -103,12 +88,11 @@ export default defineComponent({
     columnName: String,
     lists: Object,
   },
-  emits: ["close"],
+  emits: ["close","change"],
   setup(props, context) {
     // provide("taskId", props.id as string);
     provide("cardId", props.id as string);
     console.log(`task里---${props.id}`);
-
     dayjs.extend(utc);
     const store = useStore();
     const route = useRoute();
@@ -137,7 +121,6 @@ export default defineComponent({
       task.deadline = e.deadline;
     };
     let id = parseInt(props.id as string) as number;
-
     let CardName = ref("");
     let CardDesc = ref("");
     let delStatue = false;
@@ -204,6 +187,9 @@ export default defineComponent({
       });
     };
     getInfo();
+    const change = (e) => {
+      task.background = e.background;
+    }
     return {
       task,
       listName,
@@ -219,6 +205,7 @@ export default defineComponent({
       dayjs,
       dateTime,
       time,
+      change
     };
   },
 });
@@ -226,6 +213,12 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .flex {
+  .bgcColor {
+    height: 100px;
+    width: 100%;
+    border-radius: 10px;
+    position: relative;
+  }
   position: relative;
   display: flex;
   height: 75vh;

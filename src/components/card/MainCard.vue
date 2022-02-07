@@ -69,6 +69,7 @@
                 draggable="true"
                 :cardInfo="task"
                 :columnId="column.listId.toString()"
+                :lists="lists"
                 @click="openTask(task.cardId, column)"
                 @dragstart.stop="
                   pickupTask($event, task.cardId, taskIndex, index)

@@ -300,3 +300,21 @@ export function setTime(
 export function removeCard(cardId: number) {
   return instance.delete(`/cards/removeCardById/${cardId}`);
 }
+/**
+ * 根据ID删除卡片
+ * @param cardId
+ * @param color
+ * @returns
+ */
+export function setCardColor(cardId: number,color:string) {
+  return instance.post(`/cards/setCardBackground/${cardId}?background=${color}`);
+}
+/**
+ * 根据ID删除卡片
+ * @param cardId
+ * @param complete
+ * @returns
+ */
+export function taskComplete(cardId: number,complete:boolean) {
+  return instance.post(`/cards/changeCardCompleteStatus/${cardId}?completed=${complete}`);
+}

@@ -1,10 +1,20 @@
 <template>
   <div>
     <div class="card-menu">
+      <div
+        class="top-color"
+        :style="{ background: cardInfo.background }"
+        v-show="cardInfo?.background"
+      ></div>
       {{ cardInfo?.cardname }}
       <div class="des">{{ cardInfo?.description }}</div>
-      <div class="time" v-show="cardInfo?.begintime">
-        <div class="time1">
+      <div
+        class="time"
+        :class="{ timedone: cardInfo.completed }"
+        v-show="cardInfo?.begintime"
+        @click.stop="done(cardInfo)"
+      >
+        <div>
           <div>{{ dayjs(cardInfo?.begintime).format('YYYY-MM-DD') }}</div>
           <div>{{ dayjs(cardInfo?.deadline).format('YYYY-MM-DD') }}</div>
         </div>
@@ -18,8 +28,10 @@ import dayjs from 'dayjs'
 import {
   IconSchedule
 } from "@arco-design/web-vue/es/icon";
-import { defineComponent, inject } from "vue";
+import { defineComponent, inject, computed } from "vue";
 import { CardElement } from "@/axios/globalInterface";
+import { taskComplete } from "@/axios/api"
+import { Message } from '@arco-design/web-vue';
 export default defineComponent({
   name: "CardItem",
   components: {
@@ -28,11 +40,29 @@ export default defineComponent({
   props: {
     cardInfo: Object,
     columnId: String,
+    lists: Array
   },
   setup(props) {
-    
+
+    const done = async (Info) => {
+      try {
+        await taskComplete(Info.cardId, !Info.completed);
+        Info.completed = !Info.completed;
+      } catch (error) {
+        console.trace(error)
+      }
+
+      // props.lists.forEach((item) => {
+      //   item.items.forEach((item1) => {
+      //     if (Info.carId === item1.cardId) {
+      //       item1.completed = !Info.completed;
+      //     }
+      //   })
+      // })
+    }
     return {
       dayjs,
+      done
     };
   },
 });
@@ -40,6 +70,15 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .card-menu {
+  overflow: hidden;
+  .top-color {
+    height: 40px;
+    width: 300px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    margin-left: -15px;
+    margin-top: -10px;
+  }
   height: auto;
   // width: 100%;
   background-color: rgba(@cardColorMain, 1);
@@ -76,6 +115,7 @@ export default defineComponent({
     .time2 {
       height: 30px;
       width: 30px;
+      margin-left: 5px;
     }
   }
   .time:hover {
