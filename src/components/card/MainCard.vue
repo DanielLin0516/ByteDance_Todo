@@ -115,7 +115,7 @@
         :lists="lists"
       ></Task>
     </div>
-    <!-- <Websocket :productId="productId" :userId="userId"/> -->
+    <Websocket :productId="productId" :userId="userId" />
   </div>
 </template>
 
@@ -143,6 +143,7 @@ import {
   PropType,
   reactive,
   provide,
+ComputedRef,
 } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -150,7 +151,7 @@ import {
   ProductShowElement,
   CardElement,
   LabelElement,
-webLabel,
+  webLabel,
 } from "@/axios/globalInterface";
 import { getTagsByProductId } from "@/axios/labelApi";
 import { useRequest } from "@/hooks/useRequest";
@@ -213,13 +214,13 @@ export default defineComponent({
     const lists = reactive<ProductShowElement[]>([]);
 
     // 路由中的项目Id
-    const productId = computed(() => {
-      return route.params.productId;
+    const productId:ComputedRef<string> = computed(() => {
+      return route.params.productId as string;
     });
 
-    const userId = () => {
+    const userId:ComputedRef<number> = computed(() => {
       return store.state.currentUserInfo.userId;
-    };
+    });
     // useRequest钩子
     const {
       loading: productLoading,
