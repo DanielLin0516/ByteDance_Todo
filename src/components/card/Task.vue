@@ -18,14 +18,17 @@
     </div>
     <div class="date" v-if="task.begintime">
       <span>日期</span>
-      <div style="background-color: rgb(242,212,0);">
+      <div style="background-color: rgb(242, 212, 0)">
         {{ dayjs(task.begintime).format("YYYY-MM-DD") }} ~
         {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
       </div>
     </div>
     <div class="des">
-      <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
-      <span>描述</span>
+      <icon-align-left
+        class="icon-left"
+        :style="{ fontSize: '1.2em', margin: '0 10px' }"
+      />
+      <span class="mySpan">描述</span>
     </div>
     <a-textarea
       default-value="添加详细描述..."
@@ -114,6 +117,15 @@ export default defineComponent({
       productId: NaN,
       tagList: [],
       createdTime: "",
+      creator: {
+        avatar: "",
+        fullname: "",
+        userId: 0,
+        username: "",
+      },
+      background: "",
+      completed: true,
+      action: [],
     });
 
     const dateTime = (e: any) => {
@@ -124,20 +136,9 @@ export default defineComponent({
     let CardName = ref("");
     let CardDesc = ref("");
     let delStatue = false;
-    let task1 = {};
     const listName = computed(() => {
       return "listName---";
     });
-    const content = computed({
-      get() {
-        return "task1.content";
-      },
-      set(val) {
-        let task1 = store.getters.getTask(route.params.id);
-        return (task1.content = val);
-      },
-    });
-    // let debounce = debouceRef(content.value);
     const updateTaskName = async () => {
       await editCardName(id, CardName.value);
       close();
@@ -150,17 +151,9 @@ export default defineComponent({
       await removeCard(id);
       close();
     };
-    const updateTaskProperty = (e: { target: any }, key: any) => {
-      console.log("updateTaskProperty-----");
-      store.commit("UPDATE_TASK", {
-        task,
-        key,
-        value: e.target,
-      });
-    };
 
     const close = () => {
-      console.log("关闭")
+      console.log("关闭");
       const param = {
         taskId: id,
         taskName: CardName,
@@ -194,9 +187,7 @@ export default defineComponent({
       task,
       listName,
       CardName,
-      content,
       CardDesc,
-      updateTaskProperty,
       close,
       updateTaskName,
       updateTaskDesc,
@@ -280,6 +271,9 @@ export default defineComponent({
       margin: 0 5px;
       text-decoration: underline;
     }
+  }
+  .mySpan {
+    color: rgba(@cardTextColorMain, 0.8);
   }
   .date {
     span {

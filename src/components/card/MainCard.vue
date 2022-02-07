@@ -115,7 +115,7 @@
         :lists="lists"
       ></Task>
     </div>
-    <!-- <Websocket /> -->
+    <!-- <Websocket :productId="productId" :userId="userId"/> -->
   </div>
 </template>
 
@@ -150,6 +150,7 @@ import {
   ProductShowElement,
   CardElement,
   LabelElement,
+webLabel,
 } from "@/axios/globalInterface";
 import { getTagsByProductId } from "@/axios/labelApi";
 import { useRequest } from "@/hooks/useRequest";
@@ -167,7 +168,7 @@ import { Message } from "@arco-design/web-vue";
 import CardItem from "./CardItem.vue";
 import Task from "./Task.vue";
 import { log } from "console";
-import Websocket from "@/components/websocket/Websocket.vue"
+import Websocket from "@/components/websocket/Websocket.vue";
 
 export default defineComponent({
   name: "MainCard",
@@ -215,6 +216,10 @@ export default defineComponent({
     const productId = computed(() => {
       return route.params.productId;
     });
+
+    const userId = () => {
+      return store.state.currentUserInfo.userId;
+    };
     // useRequest钩子
     const {
       loading: productLoading,
@@ -266,7 +271,7 @@ export default defineComponent({
         });
         // console.log(lists);
         // 告知父组件，加载完毕
-        context.emit("loadingOver", bgcColor);
+        context.emit("loadingOver");
       } catch (error) {
         console.trace(error);
       }
@@ -360,6 +365,15 @@ export default defineComponent({
             tagName: "",
           },
         ],
+        creator: {
+          avatar: "",
+          fullname: "",
+          userId: 0,
+          username: "",
+        },
+        background: "",
+        completed: true,
+        action: [],
       };
       tasks.push(emptyCard);
       const newCardData = {
@@ -724,10 +738,6 @@ export default defineComponent({
       isTaskOpen.value = true;
     };
 
-    interface webLabel extends LabelElement {
-      show: boolean;
-      isChoosed: boolean;
-    }
     const labelList: webLabel[] = reactive([]);
     const getProductLabels = async () => {
       const res = await getTagsByProductId(productId.value as string);
@@ -742,6 +752,8 @@ export default defineComponent({
     return {
       store,
       isTaskOpen,
+      productId,
+      userId,
       close,
       createTask,
       pickupTask,
@@ -804,6 +816,9 @@ export default defineComponent({
     :deep(.arco-input-wrapper) {
       background-color: transparent;
     }
+    :deep(.arco-input-wrapper .arco-input) {
+      color: rgba(@cardTextColorMain, 1);
+    }
     :deep(.arco-input-wrapper:focus-within) {
       border-color: rgba(@cardColorMain, 0.4);
     }
@@ -823,6 +838,7 @@ export default defineComponent({
   }
   .new-button {
     background-color: transparent;
+    color: rgba(@cardTextColorMain, 0.4);
     border: none;
     outline: 0;
     height: 30px;

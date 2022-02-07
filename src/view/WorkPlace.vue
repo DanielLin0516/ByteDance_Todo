@@ -201,7 +201,7 @@ export default defineComponent({
     let url = localStorage.getItem("url");
     onBeforeUpdate(() => {
       if (url && data && data.userId === 0) {
-        data.userId = store.state.userId;
+        data.userId = store.state.currentUserInfo.userId;
         router.push({
           name: "Invite",
           params: { productId: data.productId, link: url },
@@ -251,12 +251,12 @@ export default defineComponent({
       background: upSquare,
       description: "",
       isPrivate: true,
-      ownerId: store.state.userId,
+      ownerId: NaN,
       productName: title,
     });
     async function send() {
       try {
-        obj.ownerId = store.state.userId;
+        obj.ownerId = store.state.currentUserInfo.userId;
         let res = await createProduct(obj);
         const productRes = await getProduct();
         // Vue3中清空响应式数组唯一方法

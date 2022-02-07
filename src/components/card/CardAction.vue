@@ -3,7 +3,7 @@
         <header class="addFile-header">
             <div>
                 <icon-link :style="{ fontSize: '1em', margin: '0 10px 0 0' }" />
-                <span class="desc-title">活动</span>
+                <span class="mySpan">活动</span>
             </div>
             <div class="header-button">
                 <a-button @click="changeActionListIsShow($event)">隐藏详情</a-button>
@@ -45,6 +45,7 @@
 
 <script lang="ts">
 import { IconLink, IconUser } from '@arco-design/web-vue/es/icon';
+import { log } from 'console';
 import { reactive, ref, defineComponent } from 'vue';
 export default defineComponent({
     components: {
@@ -57,6 +58,8 @@ export default defineComponent({
         let isShowActionList = ref(true)
         let curComment = ref('')
         const actions = props.task ? props.task.actions : {}
+        console.log(props.task);
+        
         const changeActionListIsShow = (e: any) => {
             if (e.target.innerHTML == '<!--v-if-->隐藏详情') {
                 e.target.innerHTML = '<!--v-if-->查看详情'
@@ -83,6 +86,9 @@ export default defineComponent({
 }
 .header-button {
     margin-right: 10px;
+}
+.mySpan {
+    color: rgba(@cardTextColorMain, 0.8);
 }
 main {
     margin: 15px auto;

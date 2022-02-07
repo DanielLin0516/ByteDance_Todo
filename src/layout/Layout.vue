@@ -6,15 +6,7 @@
 
 <script lang="ts">
 import TopBar from "@/layout/TopBar.vue";
-import {
-  defineComponent,
-  ref,
-  onMounted,
-  computed,
-  nextTick,
-  provide,
-} from "vue";
-import { setTheme } from "@/theme/theme";
+import { defineComponent, ref, onMounted, computed, nextTick, provide } from "vue";
 import { currentUser } from "@/axios/api";
 import { useStore } from "vuex";
 export default defineComponent({
@@ -23,28 +15,14 @@ export default defineComponent({
     TopBar,
   },
   setup() {
-    const isDark = ref(false);
     const store = useStore();
-    let fullName: any = ref(null);
+    let fullName:any = ref(null)
     const currentUserFunc = async () => {
       const res = await currentUser();
-      store.commit("setUserId", res.userId);
-      store.commit("fullName", res.fullname);
-      store.commit("Email", res.username);
-      store.commit("setCurrentUser", res);
-    };
-    currentUserFunc();
-    const changeTheme = (e: any) => {
-      if (!isDark.value) {
-        e.currentTarget.innerText = "切换默认模式";
-        setTheme("dark");
-      } else {
-        e.currentTarget.innerText = "切换夜间模式";
-        setTheme("default");
-      }
-      isDark.value = !isDark.value;
-    };
-    return { changeTheme, fullName };
+      store.commit("setCurrentUser",res);
+    }
+    currentUserFunc()
+    return {fullName};
   },
 });
 </script>
@@ -69,3 +47,4 @@ export default defineComponent({
   }
 }
 </style>
+

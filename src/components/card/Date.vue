@@ -41,9 +41,6 @@ export default defineComponent({
         let time = ref(null);
         let cardId: any = inject('cardId');
         const route = useRoute();
-        const task = computed(() => {
-            return store.getters.getTask(route.params.id);
-        })
         let lists = props.lists;
         let obj = reactive({
             beginTime: "",

@@ -23,7 +23,6 @@ import {
   defineComponent,
   ref,
 } from "vue";
-import { useStore } from "vuex";
 import { setTheme } from "@/theme/theme";
 export default defineComponent({
   name: "Board",
@@ -33,10 +32,8 @@ export default defineComponent({
     SmallBar,
   },
   setup() {
-    const store = useStore();
     const isDark = ref(false);
     const loading = ref(true);
-    let projectColor = ref("");
     const changeTheme = (e: any) => {
       if (!isDark.value) {
         e.currentTarget.innerText = "切换默认模式";
@@ -48,11 +45,10 @@ export default defineComponent({
       isDark.value = !isDark.value;
     };
     // 加载完成,子组件加载完成调用
-    const loadingOver = (bgcColor: string) => {
-      projectColor.value = bgcColor;
+    const loadingOver = () => {
       loading.value = false;
     };
-    return { changeTheme, loading, loadingOver, projectColor };
+    return { changeTheme, loading, loadingOver };
   },
 });
 </script>
