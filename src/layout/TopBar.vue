@@ -67,6 +67,7 @@ import {
 import { defineComponent, computed, watch, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import { Message } from "@arco-design/web-vue";
 export default defineComponent({
   name: "TopBar",
   components: {
@@ -82,6 +83,7 @@ export default defineComponent({
     let inviteCard = ref(false);
     const show = ref(false);
     const toboard = () => {
+      Message.success({ content: "已退出账号" });
       localStorage.removeItem("token");
       router.push({ name: "Home" });
     };
@@ -94,25 +96,6 @@ export default defineComponent({
     const email = computed(() => {
       return store.state.currentUserInfo.username;
     });
-    // watch(
-    //   task,
-    //   (newVal, oldVal) => {
-    //     if (oldVal && newVal) {
-    //       store.state.userEvent.unshift({
-    //         content: newVal.content,
-    //         id: newVal.id,
-    //       });
-    //     }
-    //   },
-    //   { deep: true }
-    // );
-    // watch(
-    //   store.state.board.columns,
-    //   (newVal, oldVal) => {
-    //     console.log(newVal, oldVal);
-    //   },
-    //   { deep: true }
-    // );
 
     return {
       show,

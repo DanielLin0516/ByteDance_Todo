@@ -96,7 +96,7 @@ export default defineComponent({
     /**
      * ws通信发生错误
      */
-    function wsErrorHanler(event: any) {
+    function wsErrorHanler(event: Event) {
       console.log(event, "通信发生错误");
       wsInit();
     }

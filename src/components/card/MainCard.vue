@@ -108,7 +108,6 @@
       />
     </div>
     <div class="task-bg" v-if="isTaskOpen" @click.self="close">
-      <!-- <router-view /> -->
       <Task
         :id="taskClickId.toString()"
         :columnName="columnName"
@@ -133,10 +132,8 @@
 <script lang="ts">
 import "animate.css";
 import {
-  getTimeStamp,
   PosType,
   getPos,
-  timetrans,
   columnsMouseMove,
   columnsMouseWheel,
 } from "@/utils/utils";
@@ -155,6 +152,7 @@ import {
   reactive,
   provide,
   ComputedRef,
+  onBeforeUnmount,
 } from "vue";
 import { Store, useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
@@ -167,7 +165,6 @@ import {
   NotifyMessage,
   DetailElement,
 } from "@/axios/globalInterface";
-import { getTagsByProductId } from "@/axios/labelApi";
 import { useRequest } from "@/hooks/useRequest";
 import {
   getProductInfo,
@@ -180,8 +177,8 @@ import {
   moveCard,
 } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
-import CardItem from "./CardItem.vue";
-import Task from "./Task.vue";
+import CardItem from "@/components/card/CardItem.vue";
+import Task from "@/components/card/Task.vue";
 import Websocket from "@/components/websocket/Websocket.vue";
 
 export default defineComponent({
@@ -233,6 +230,9 @@ export default defineComponent({
 
     const labelList: TagElement[] = reactive([]);
 
+    // 请求失败进行重新拉取
+    const fetchTimer = ref<NodeJS.Timer>();
+
     // 路由中的项目Id
     const productId: ComputedRef<string> = computed(() => {
       return route.params.productId as string;
@@ -245,6 +245,20 @@ export default defineComponent({
     } = useRequest(getProductInfo, {
       onError: () => {
         console.trace(error);
+        clearInterval(Number(fetchTimer.value));
+        fetchTimer.value = setInterval(
+          (function fetchAgain() {
+            if (productLoading.value) {
+              console.log(productLoading.value);
+              clearInterval(Number(fetchTimer.value));
+            } else {
+              console.log("项目拉取数据失败");
+              getInfo();
+            }
+            return fetchAgain;
+          })(),
+          4000
+        );
       },
     });
 
@@ -292,6 +306,7 @@ export default defineComponent({
           labelList.push(tagEl);
         });
         store.commit("setLabelList", labelList);
+        clearInterval(Number(fetchTimer.value));
       } catch (error) {
         console.trace(error);
       }
@@ -301,11 +316,7 @@ export default defineComponent({
      * @param param
      * @returns
      */
-    const close = (param: {
-      taskId: number;
-      taskName: string;
-      del: boolean;
-    }) => {
+    const close = () => {
       isTaskOpen.value = false;
     };
 
@@ -383,7 +394,6 @@ export default defineComponent({
      */
     const deleteOneList = async (listId: number, index: number) => {
       await deleteListById(listId);
-      // lists.splice(index, 1);
     };
 
     /**
@@ -669,13 +679,13 @@ export default defineComponent({
       });
     };
     const openTask = (cardId: number, column: ProductShowElement) => {
-      taskClickId.value = cardId;
-      columnName.value = column.listName;
-      isTaskOpen.value = true;
-
       //保存当前打开的task状态
       currentCardId.value = cardId;
       currentColumnId.value = column.listId;
+
+      taskClickId.value = cardId;
+      columnName.value = column.listName;
+      isTaskOpen.value = true;
     };
 
     //计算属性记录currentTask
@@ -886,6 +896,9 @@ export default defineComponent({
       }
     };
 
+    onBeforeUnmount(() => {
+      clearInterval(Number(fetchTimer.value));
+    });
     getInfo();
     return {
       store,

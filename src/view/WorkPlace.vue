@@ -19,7 +19,7 @@
             @click.self="enterInto(product.id)"
           >
             {{ product.productName }}
-            <a-popconfirm content="Are you sure you want to delete?" @ok="deleteItem(product.id)">
+            <a-popconfirm content="删除此项目?" @ok="deleteItem(product.id)">
               <icon-delete class="delete" />
             </a-popconfirm>
           </div>
