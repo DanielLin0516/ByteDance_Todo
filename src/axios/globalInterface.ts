@@ -1,7 +1,7 @@
 /**
  * store类型
  */
-export interface Store {
+export interface StoreState {
   currentUserInfo: UserElement;
   productList: ProductElement[];
   currentProductName: string;
@@ -13,6 +13,7 @@ export interface Store {
   isCardDetailShow: boolean;
   tagList: TagElement[];
   labelList: TagElement[];
+  isDark: boolean;
 }
 /**
  * 项目类型

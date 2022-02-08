@@ -1,8 +1,8 @@
 import { createStore } from "vuex";
 import defaultBoard from "./defaultBoard";
-import { ProductElement, Store, TagElement, UserElement, webLabel } from "@/axios/globalInterface";
+import { ProductElement, StoreState, TagElement, UserElement, webLabel } from "@/axios/globalInterface";
 
-export default createStore<Store>({
+export default createStore<StoreState>({
   state: {
     currentUserInfo: {
       avatar: "",
@@ -10,6 +10,7 @@ export default createStore<Store>({
       userId: NaN,
       username: "",
     },
+    isDark: false,
     productList: [],
     currentProductName: "",
     memberList: [],
@@ -23,6 +24,9 @@ export default createStore<Store>({
   },
   getters: {},
   mutations: {
+    setIsDark(state, value: boolean) {
+      state.isDark = value;
+    },
     setCurrentUser(state, value: UserElement) {
       state.currentUserInfo = value;
     },

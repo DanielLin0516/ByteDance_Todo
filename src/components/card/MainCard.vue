@@ -23,11 +23,12 @@
         <!-- 列表标题 -->
         <a-row justify="space-between" align="center">
           <a-col :span="21">
-            <a-input
+            <input
+              type="text"
+              v-model="column.listName"
               class="list-title"
-              size="large"
-              :default-value="column.listName"
-              @press-enter="editListNameById(column.listId, index, $event)"
+              @change="changeListName(index, $event)"
+              @keyup.enter="editListNameById(column.listId, index, $event)"
             />
           </a-col>
           <a-col :span="3" style="display: flex; justify-content: flex-end">
@@ -120,7 +121,11 @@
         @removeTag="removeTag"
       ></Task>
     </div>
-    <!-- <Websocket :productId="productId" :userId="userId" /> -->
+    <Websocket
+      v-if="!productLoading"
+      :productId="productId"
+      @updateList="updateList"
+    />
   </div>
 </template>
 
@@ -150,13 +155,14 @@ import {
   provide,
   ComputedRef,
 } from "vue";
-import { useStore } from "vuex";
+import { Store, useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import {
   ProductShowElement,
   CardElement,
   TagElement,
   UserElement,
+  StoreState,
 } from "@/axios/globalInterface";
 import { getTagsByProductId } from "@/axios/labelApi";
 import { useRequest } from "@/hooks/useRequest";
@@ -193,7 +199,7 @@ export default defineComponent({
   },
   emits: ["loadingOver"],
   setup(props, context) {
-    const store = useStore();
+    const store: Store<StoreState> = useStore();
     const route = useRoute();
     const router = useRouter();
     const newColumnName = ref("");
@@ -222,10 +228,6 @@ export default defineComponent({
     // 路由中的项目Id
     const productId: ComputedRef<string> = computed(() => {
       return route.params.productId as string;
-    });
-
-    const userId: ComputedRef<number> = computed(() => {
-      return store.state.currentUserInfo.userId;
     });
     // useRequest钩子
     const {
@@ -284,20 +286,6 @@ export default defineComponent({
       }
     }
     /**
-     * 工具函数 获取当前column的name
-     * @param e
-     */
-    const getCurColumnName = (e: any) => {
-      if (e.currentTarget.parentElement.className == "card-wrapper") {
-        return e.currentTarget.firstElementChild.innerHTML;
-      } else {
-        return e.currentTarget.parentElement.firstElementChild.innerHTML;
-      }
-    };
-    const goToTask = (task: { id: any }, columnID: string) => {
-      router.push({ name: "task", params: { cid: columnID, id: task.id } });
-    };
-    /**
      * 子组件Task触发 关闭任务卡片后的处理
      * @param param
      * @returns
@@ -327,6 +315,10 @@ export default defineComponent({
       //   });
       // }
       isTaskOpen.value = false;
+    };
+
+    const changeListName = (index: number, e: any) => {
+      lists[index].listName = e.target.value;
     };
 
     /**
@@ -745,6 +737,17 @@ export default defineComponent({
       store.commit("setLabelList", labelList);
     };
 
+    /**
+     * websocket更改list
+     */
+    const updateList = (detail: any) => {
+      console.log(detail);
+      lists.forEach((list) => {
+        if (list.listId == detail.id) {
+          list.listName = detail.name;
+        }
+      });
+    };
     //计算属性记录currentTask
     const currentTask: ComputedRef<CardElement> = computed(() => {
       const column = lists.filter(
@@ -786,7 +789,6 @@ export default defineComponent({
       store,
       isTaskOpen,
       productId,
-      userId,
       close,
       createTask,
       pickupTask,
@@ -809,6 +811,8 @@ export default defineComponent({
       columnName,
       deleteOneList,
       moveTaskOrColumn,
+      updateList,
+      changeListName,
       removeExecutor,
       addExecutor,
       currentTask,
@@ -842,26 +846,23 @@ export default defineComponent({
     .list-title {
       cursor: pointer;
       // width: 100%;
-      height: 40px;
+      font-size: 23px;
+      font-weight: 700;
+      height: 30px;
       opacity: 1;
       padding: 10px;
-
-      font-family: PingFang-Bold-2;
-      :deep(.arco-input-size-large) {
-        font-size: 22px;
-      }
-    }
-    :deep(.arco-input-wrapper) {
       background-color: transparent;
-    }
-    :deep(.arco-input-wrapper .arco-input) {
+      font-family: PingFang-Bold-2;
+      border: unset;
       color: rgba(@cardTextColorMain, 1);
     }
-    :deep(.arco-input-wrapper:focus-within) {
-      border-color: rgba(@cardColorMain, 0.4);
+    input:focus {
+      outline: none;
+      border: transparent;
     }
-    :deep(.arco-input-wrapper.arco-input-focus) {
-      background-color: rgba(@cardColorMain, 0.4);
+    input:focus-visible {
+      outline: none;
+      border: transparent;
     }
     .scroller-container {
       overflow-x: hidden;
@@ -876,7 +877,7 @@ export default defineComponent({
   }
   .new-button {
     background-color: transparent;
-    color: rgba(@cardTextColorMain, 0.4);
+    color: rgba(@cardTextColorMain, 0.7);
     border: none;
     outline: 0;
     height: 30px;
