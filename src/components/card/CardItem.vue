@@ -26,7 +26,7 @@
         </span>
       </div>
       {{ cardInfo.cardname }}
-      <div class="des">{{ cardInfo?.description }}</div>
+      <!-- <div class="des">{{ cardInfo?.description }}</div> -->
       <div
         class="time"
         :class="{ timedone: cardInfo.completed }"
@@ -191,13 +191,13 @@ export default defineComponent({
     }
   }
   .after_click_tags {
-    display: inline-block;
+    display: block;
     // display: flex;
     position: relative;
     flex: 0 0 30%;
     margin-right: 5px;
     width: fit-content;
-    height: 10px;
+    // height: 10px;
     border-radius: 5px;
     margin-bottom: 5px;
     transition: height ease-in-out 0.5s;
