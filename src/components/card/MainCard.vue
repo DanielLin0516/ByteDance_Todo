@@ -742,7 +742,6 @@ export default defineComponent({
           lists.sort((a, b) => a.pos - b.pos);
           break;
         case "removeModels":
-          console.log(lists);
           lists.forEach((list, index) => {
             if (list.listId == detail.id) {
               lists.splice(index, 1);
@@ -780,8 +779,58 @@ export default defineComponent({
           updateCardByActionTags(detail, message.tags);
           break;
         case "moveModels":
+          if (message.tags.includes("same")) {
+            const listIndex = lists.findIndex(
+              (item) => item.listId == detail.listAfterId
+            );
+            if (listIndex >= 0) {
+              const cardList = lists[listIndex].items;
+              cardList.forEach((item) => {
+                if (item.cardId == detail.id) {
+                  item.pos = detail.pos;
+                }
+              });
+              cardList.sort((a, b) => a.pos - b.pos);
+            }
+          } else {
+            let listIndex = NaN;
+            let listBeforeIndex = NaN;
+            lists.forEach((item, index) => {
+              if (item.listId == detail.listAfterId) {
+                listIndex = index;
+              }
+              if (item.listId == detail.listBeforeId) {
+                listBeforeIndex = index;
+              }
+            });
+            if (listIndex >= 0) {
+              const cardList = lists[listIndex].items;
+              const cardBeforeList = lists[listBeforeIndex].items;
+              let temp: CardElement;
+              cardBeforeList.forEach((item, index) => {
+                if (item.cardId == detail.id) {
+                  item.pos = detail.pos;
+                  temp = item;
+                  cardBeforeList.splice(index, 1);
+                  cardList.push(temp);
+                }
+              });
+              cardList.sort((a, b) => a.pos - b.pos);
+            }
+          }
           break;
         case "removeModels":
+          const listIndex = lists.findIndex(
+            (item) => item.listId == detail.listAfterId
+          );
+          if (listIndex >= 0) {
+            const cardList = lists[listIndex].items;
+            cardList.forEach((item, index) => {
+              if (item.cardId == detail.id) {
+                cardList.splice(index, 1);
+              }
+            });
+          }
           break;
         case "addModels":
           const emptyCard: CardElement = {

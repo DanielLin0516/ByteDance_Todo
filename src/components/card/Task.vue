@@ -194,7 +194,6 @@ export default defineComponent({
       task.deadline = e.deadline;
     };
     let id = parseInt(props.id as string) as number;
-    let delStatue = false;
     const listName = computed(() => {
       return "listName---";
     });
@@ -206,28 +205,13 @@ export default defineComponent({
       await editCardDesc(id, task.description);
     };
     const deleteOneTask = async () => {
-      delStatue = true;
       await removeCard(id);
       close();
     };
 
     const close = () => {
-      // console.log("关闭");
-      // const param = {
-      //   taskId: id,
-      //   taskName: CardName,
-      //   del: delStatue,
-      // };
-      // context.emit("close", param);
       context.emit("close");
     };
-    // const addExecutor = (executor) => {
-    //   task.executorList.push(executor);
-    // };
-    // const removeExecutor = (userId: number) => {
-    //   const index = task.executorList.findIndex((el) => el.userId == userId);
-    //   task.executorList.splice(index, 1);
-    // };
     //获取页面渲染数据与处理数据
     const {
       data,
