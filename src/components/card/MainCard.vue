@@ -125,6 +125,7 @@
       v-if="!productLoading"
       :productId="productId"
       @updateList="updateList"
+      @updateCard="updateCard"
     />
   </div>
 </template>
@@ -163,6 +164,8 @@ import {
   TagElement,
   UserElement,
   StoreState,
+  NotifyMessage,
+  DetailElement,
 } from "@/axios/globalInterface";
 import { getTagsByProductId } from "@/axios/labelApi";
 import { useRequest } from "@/hooks/useRequest";
@@ -221,6 +224,9 @@ export default defineComponent({
     const fromCardListIndex = ref(NaN);
     // 记录当前操作的是列还是卡片
     const currentActionDragType = ref("");
+
+    // 记录用户是否为操作者
+    const actionStatus = ref(false);
 
     // 传给MainCard的列数组
     const lists = reactive<ProductShowElement[]>([]);
@@ -295,25 +301,6 @@ export default defineComponent({
       taskName: string;
       del: boolean;
     }) => {
-      // if (param.del) {
-      //   lists.forEach((items) => {
-      //     Array.prototype.slice.call(items.items).forEach((item, index) => {
-      //       if (item.cardId == param.taskId) {
-      //         console.log(index);
-      //         items.items.splice(index, 1);
-      //       }
-      //     });
-      //   });
-      // }
-      // if (param.taskName) {
-      //   lists.forEach((items) => {
-      //     Array.prototype.slice.call(items.items).forEach((item) => {
-      //       if (item.cardId == param.taskId) {
-      //         item.cardname = param.taskName;
-      //       }
-      //     });
-      //   });
-      // }
       isTaskOpen.value = false;
     };
 
@@ -336,31 +323,6 @@ export default defineComponent({
       }
       const lastTask = tasks.at(-1);
       const pos = lastTask?.pos ? lastTask.pos + 60000 : 60000;
-      const localCard: CardElement = {
-        begintime: "",
-        deadline: "",
-        cardname: el.value,
-        description: "",
-        listId: listId,
-        pos: pos,
-        cardId: 0,
-        closed: false,
-        productId: parseInt(productId.value as string) as number,
-        expired: false,
-        createdTime: "",
-        executorList: [],
-        tagList: [],
-        creator: {
-          avatar: "",
-          fullname: "",
-          userId: 0,
-          username: "",
-        },
-        background: "",
-        completed: true,
-        action: [],
-      };
-      tasks.push(localCard);
       const newCardData = {
         cardname: el.value,
         listId: listId,
@@ -368,15 +330,10 @@ export default defineComponent({
         productId: Number(productId.value),
       };
       el.value = "";
-      const len = tasks.length;
       try {
-        const res = await createNewCard(newCardData);
-        Object.assign(localCard, res);
-        tasks.splice(len - 1, 1, localCard);
+        await createNewCard(newCardData);
       } catch (error) {
         console.trace(error);
-        // 卡片回滚
-        tasks.splice(len - 1, 1);
       }
     };
 
@@ -390,17 +347,6 @@ export default defineComponent({
         listName: newColumnName.value,
         pos: maxPos + 60000,
       });
-      const temp: ProductShowElement = {
-        listName: "",
-        listId: 0,
-        productId: 0,
-        closed: false,
-        pos: 0,
-        items: [],
-      };
-      Object.assign(temp, res);
-      temp.listId = res.id;
-      lists.push(temp);
       newColumnName.value = "";
     };
 
@@ -432,7 +378,7 @@ export default defineComponent({
      */
     const deleteOneList = async (listId: number, index: number) => {
       await deleteListById(listId);
-      lists.splice(index, 1);
+      // lists.splice(index, 1);
     };
 
     /**
@@ -737,17 +683,6 @@ export default defineComponent({
       store.commit("setLabelList", labelList);
     };
 
-    /**
-     * websocket更改list
-     */
-    const updateList = (detail: any) => {
-      console.log(detail);
-      lists.forEach((list) => {
-        if (list.listId == detail.id) {
-          list.listName = detail.name;
-        }
-      });
-    };
     //计算属性记录currentTask
     const currentTask: ComputedRef<CardElement> = computed(() => {
       const column = lists.filter(
@@ -783,6 +718,130 @@ export default defineComponent({
       const index = tagList.findIndex((el) => el.id === tag.id);
       tagList.splice(index, 1);
     };
+
+    /**
+     * websocket更改list
+     */
+    const updateList = (message: NotifyMessage) => {
+      const detail = message.detail;
+      console.log(detail);
+      switch (message.event) {
+        case "updateModels":
+          lists.forEach((list) => {
+            if (list.listId == detail.id) {
+              list.listName = detail.name;
+            }
+          });
+          break;
+        case "moveModels":
+          lists.forEach((list) => {
+            if (list.listId == detail.id) {
+              list.pos = detail.pos;
+            }
+          });
+          lists.sort((a, b) => a.pos - b.pos);
+          break;
+        case "removeModels":
+          console.log(lists);
+          lists.forEach((list, index) => {
+            if (list.listId == detail.id) {
+              lists.splice(index, 1);
+            }
+          });
+          break;
+        case "addModels":
+          const emptyList: ProductShowElement = {
+            listName: detail.name,
+            listId: detail.id,
+            productId: detail.productId,
+            closed: detail.closed,
+            pos: detail.pos,
+            items: [],
+          };
+          lists.push(emptyList);
+          const len = lists.length;
+          if (len > 1 && detail.pos <= lists[len - 2].pos) {
+            lists.sort((a, b) => a.pos - b.pos);
+          }
+          break;
+        default:
+          break;
+      }
+    };
+
+    /**
+     * websocket更改卡片
+     */
+    const updateCard = (message: NotifyMessage) => {
+      const detail = message.detail;
+      console.log(detail);
+      switch (message.event) {
+        case "updateModels":
+          updateCardByActionTags(detail, message.tags);
+          break;
+        case "moveModels":
+          break;
+        case "removeModels":
+          break;
+        case "addModels":
+          const emptyCard: CardElement = {
+            begintime: "",
+            deadline: "",
+            cardname: detail.name,
+            description: "",
+            listId: detail.listAfterId,
+            pos: detail.pos,
+            cardId: detail.id,
+            closed: detail.closed,
+            productId: detail.productId,
+            expired: false,
+            createdTime: detail.createdTime,
+            executorList: [],
+            tagList: [],
+            creator: detail.creator,
+            background: "",
+            completed: false,
+            action: [],
+          };
+          const consistListIndex = lists.findIndex(
+            (item) => item.listId == detail.listAfterId
+          );
+          if (consistListIndex >= 0) {
+            const cardList = lists[consistListIndex].items;
+            cardList.push(emptyCard);
+            const len = cardList.length;
+            if (len > 1 && detail.pos <= cardList[len - 2].pos) {
+              cardList.sort((a, b) => a.pos - b.pos);
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    };
+
+    /**
+     * 根据ws的tags标签，做具体的更新动作
+     */
+    const updateCardByActionTags = (
+      detail: DetailElement,
+      tags: Array<string>
+    ) => {
+      if (tags.includes("name")) {
+        const consistListIndex = lists.findIndex(
+          (item) => item.listId == detail.listId
+        );
+        if (consistListIndex >= 0) {
+          const cardList = lists[consistListIndex].items;
+          cardList.forEach((item) => {
+            if (item.cardId == detail.id) {
+              item.cardname = detail.name;
+            }
+          });
+        }
+      }
+    };
+
     getProductLabels();
     getInfo();
     return {
@@ -812,6 +871,7 @@ export default defineComponent({
       deleteOneList,
       moveTaskOrColumn,
       updateList,
+      updateCard,
       changeListName,
       removeExecutor,
       addExecutor,

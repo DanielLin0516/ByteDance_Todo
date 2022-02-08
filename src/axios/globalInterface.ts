@@ -86,3 +86,29 @@ export interface webLabel extends TagElement {
   show: boolean;
   isChoosed: boolean;
 }
+
+/**
+ * websocket 消息体
+ */
+export interface DetailElement {
+  id: number;
+  name: string;
+  productId: number;
+  listAfterId: number;
+  pos: number;
+  closed: boolean;
+  listBeforeId: number;
+  createdTime: string;
+  creator: UserElement;
+  background: string;
+  description: string;
+  listId: number;
+}
+
+export interface NotifyMessage {
+  typeName: string;
+  event: string;
+  tags: string[];
+  detail: DetailElement;
+  identification: string;
+}
