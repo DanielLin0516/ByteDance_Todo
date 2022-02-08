@@ -141,13 +141,13 @@ export default defineComponent({
     }
     .save {
         margin-top: 20px;
-        width: 200px;
+        width: 150px;
         height: 50px;
         border-radius: 5px;
         margin-bottom: 20px;
     }
     .delete {
-        width: 200px;
+        width: 150px;
         height: 50px;
         border-radius: 5px;
     }
