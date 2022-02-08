@@ -19,7 +19,9 @@
             @click.self="enterInto(product.id)"
           >
             {{ product.productName }}
-            <icon-delete class="delete" @click.stop="deleteItem(product.id)" />
+            <a-popconfirm content="Are you sure you want to delete?" @ok="deleteItem(product.id)">
+              <icon-delete class="delete" />
+            </a-popconfirm>
           </div>
           <!-- 创建看板 -->
           <div class="create" @click="create">创建新看板</div>
@@ -48,15 +50,8 @@
               color: rgb(103, 117, 139);
               margin-top: 1vw;
             "
-          >
-            看板标题
-          </div>
-          <input
-            type="text"
-            placeholder="输入看板标题（必填项）"
-            class="title"
-            v-model="title"
-          />
+          >看板标题</div>
+          <input type="text" placeholder="输入看板标题（必填项）" class="title" v-model="title" />
           <a-button
             type="primary"
             :disabled="build"
@@ -67,8 +62,7 @@
               height: 3vw;
             "
             @click="send"
-            >创建</a-button
-          >
+          >创建</a-button>
         </div>
       </div>
       <div class="join">
@@ -80,9 +74,7 @@
             v-for="join in shareProductList"
             :key="join.id"
             @click="enterInto(join.id)"
-          >
-            {{ join.productName }}
-          </div>
+          >{{ join.productName }}</div>
         </div>
       </div>
     </div>
@@ -150,51 +142,51 @@ export default defineComponent({
       {
         id: 7,
         color: "#00FF00",
-      },      
+      },
       {
         id: 8,
         color: "#61bd4f",
-      },      
+      },
       {
         id: 9,
         color: "#f5de33",
-      },      
+      },
       {
         id: 10,
         color: "#ff9f1a",
-      },      
+      },
       {
         id: 11,
         color: "#eb5a46",
-      },      
+      },
       {
         id: 12,
         color: "#c377e0",
-      },      
+      },
       {
         id: 13,
         color: "#0079bf",
-      },      
+      },
       {
         id: 14,
         color: "#00c2e0",
-      },      
+      },
       {
         id: 15,
         color: "#51e898",
-      },      
+      },
       {
         id: 16,
         color: "#ff78cb",
-      },      
+      },
       {
         id: 17,
         color: "#344563",
-      },      
+      },
       {
         id: 18,
         color: "#b3bac5",
-      },      
+      },
     ]);
     const title = ref("");
     let data = JSON.parse(localStorage.getItem("user"));

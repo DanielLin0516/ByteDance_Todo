@@ -51,18 +51,20 @@
         </a>
       </div>
     </div>
-    <div class="member_content" v-if="task.begintime">
-      <h3>日期</h3>
-      <div
-        style="
-          background-color: rgb(242, 212, 0);
-          padding: 5px;
-          border-radius: 5px;
-        "
-      >
-        {{ dayjs(task.begintime).format("YYYY-MM-DD") }} ~
-        {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
+
+    <div class="date" v-if="task.begintime">
+      <span>日期</span>
+      <div class="box">
+        <input type="checkbox" v-model="task.completed" @click="showsome(task)" />
+        <div class="time" :class="{ timedone: task.completed }">
+          {{ dayjs(task.begintime).format("YYYY-MM-DD") }} ~
+          {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
+          <div class="done" :class="{ undone: !task.completed }">{{ done }}</div>
+        </div>
+
       </div>
+
+      <!-- <div>wancheng</div> -->
     </div>
     <div class="des">
       <icon-align-left
@@ -137,6 +139,8 @@ import {
 import { CardElement } from "@/axios/globalInterface";
 import CardAction from "@/components/card/CardAction.vue";
 import CardDetailFuction from "@/components/card/CardDetailFuction.vue";
+import { taskComplete } from "@/axios/api";
+import { Message } from "@arco-design/web-vue";
 export default defineComponent({
   name: "NewCardButton",
   inheritAttrs: false,
@@ -164,30 +168,21 @@ export default defineComponent({
       begintime: "",
       deadline: "",
     });
-    // const task = reactive<CardElement>({
-    //   begintime: "",
-    //   cardId: NaN,
-    //   cardname: "",
-    //   closed: false,
-    //   deadline: "",
-    //   description: "",
-    //   executorList: [],
-    //   expired: false,
-    //   listId: NaN,
-    //   pos: NaN,
-    //   productId: NaN,
-    //   tagList: [],
-    //   createdTime: "",
-    //   creator: {
-    //     avatar: "",
-    //     fullname: "",
-    //     userId: 0,
-    //     username: "",
-    //   },
-    //   background: "",
-    //   completed: true,
-    //   action: [],
-    // });
+    let done = computed(() => {
+      if (task.completed) {
+        return "已完成"
+      } else {
+        return "未完成"
+      }
+    })
+    const showsome = async (task) => {
+      await taskComplete(props.id, !task.completed);
+      if (task.completed === true) {
+        Message.success({ content: "任务已经完成" })
+      } else {
+        Message.warning({ content: "任务未完成" })
+      }
+    }
 
     const dateTime = (e: any) => {
       task.begintime = e.beginTime;
@@ -212,6 +207,7 @@ export default defineComponent({
     const close = () => {
       context.emit("close");
     };
+
     //获取页面渲染数据与处理数据
     const {
       data,
@@ -241,7 +237,6 @@ export default defineComponent({
       listName,
       time,
       dayjs,
-
       close,
       updateTaskName,
       updateTaskDesc,
@@ -250,6 +245,8 @@ export default defineComponent({
       // addExecutor,
       // removeExecutor,
       change,
+      done,
+      showsome
     };
   },
 });
@@ -333,6 +330,7 @@ export default defineComponent({
 
     .member_items {
       display: flex;
+      margin-bottom: 10px;
 
       .member_item {
         margin-left: 10px;
@@ -384,15 +382,53 @@ export default defineComponent({
       color: rgba(@cardTextColorMain, 0.7);
       margin-bottom: 10px;
     }
-    div {
-      padding: 10px;
-      margin-left: 10px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-      color: white;
-    }
-    div:hover {
-      background-color: rgba(@cardTextColorMain, 0.1);
+    .box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 17px;
+      .time {
+        margin-top: 10px;
+        display: flex;
+        font-size: 12px;
+        width: fit-content;
+        align-items: center;
+        background-color: rgb(242, 214, 0);
+        justify-content: space-between;
+        padding: 5px;
+        border-radius: 10px;
+        color: rgba(@cardColorMain, 1);
+        margin-left: 20px;
+        margin-bottom: 10px;
+        padding: 10px;
+        .done {
+          background-color: white;
+          border-radius: 5px;
+          line-height: 35px;
+          text-align: center;
+          width: 80px;
+          margin-left: 10px;
+          color: black;
+        }
+        .undone {
+          background-color: red;
+          border-radius: 5px;
+          line-height: 35px;
+          text-align: center;
+          width: 80px;
+          margin-left: 10px;
+          color: white;
+        }
+      }
+      .time:hover {
+        background-color: rgb(217, 181, 28);
+      }
+      .timedone {
+        background-color: rgb(97, 189, 79);
+      }
+      .timedone:hover {
+        background-color: rgb(81, 152, 57);
+      }
     }
   }
   .des {

@@ -46,8 +46,7 @@
             v-for="(user, index) in cardInfo?.executorList"
             :key="user.userId + index"
             :title="user.fullname"
-          >
-          </a>
+          ></a>
         </div>
       </div>
     </div>
@@ -55,6 +54,7 @@
 </template>
 <script lang="ts">
 import dayjs from "dayjs";
+import "animate.css";
 import { IconSchedule } from "@arco-design/web-vue/es/icon";
 import { defineComponent, ref, PropType } from "vue";
 import { CardElement } from "@/axios/globalInterface";
@@ -157,6 +157,7 @@ export default defineComponent({
   font-size: 18px;
   border-bottom: 2px solid rgba(@cardTextColorSub, 0.45);
   .tag_content {
+    color: white;
     // display: grid;
     // grid-template-columns: repeat(5, 1fr);
     // grid-gap: 3px;
@@ -167,13 +168,16 @@ export default defineComponent({
     // justify-content: space-around;
 
     .tag_item {
+      display: inline-block;
+      // display: flex;
       position: relative;
       flex: 0 0 30%;
-      margin-left: 2%;
-      width: 20%;
+      margin-right: 5px;
+      width: fit-content;
       height: 10px;
       border-radius: 5px;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
+          transition: height ease-in-out 0.1s;
     }
     .hoverEffect {
       &::before {
@@ -187,13 +191,22 @@ export default defineComponent({
     }
   }
   .after_click_tags {
+    display: inline-block;
+    // display: flex;
+    position: relative;
+    flex: 0 0 30%;
+    margin-right: 5px;
+    width: fit-content;
+    height: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: height ease-in-out 0.5s;
     .tag_item {
       position: relative;
       height: 20px;
       min-width: 15%;
       line-height: 20px;
-      border-radius: 5px;
-      // flex: 0 0 20%;
+      border-radius: 7px;
       padding: 3px 5px;
     }
   }

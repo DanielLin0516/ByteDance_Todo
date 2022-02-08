@@ -105,6 +105,7 @@ export default defineComponent({
     background-color: rgba(@cardColorMain, 1);
     border-left: 1px solid rgba(@cardTextColorMain, 0.3);
     box-shadow: 0 8px 16px -4px rgb(9 30 66 / 25%), 0 0 0 1px rgb(9 30 66 / 8%);
+    z-index: 9999;
     .header {
         display: flex;
         height: 80px;
@@ -140,13 +141,13 @@ export default defineComponent({
     }
     .save {
         margin-top: 20px;
-        width: 200px;
+        width: 150px;
         height: 50px;
         border-radius: 5px;
         margin-bottom: 20px;
     }
     .delete {
-        width: 200px;
+        width: 150px;
         height: 50px;
         border-radius: 5px;
     }

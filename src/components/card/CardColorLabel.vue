@@ -462,6 +462,7 @@ export default defineComponent({
   .labels {
     max-height: 40vh;
     overflow-y: scroll;
+    
     p {
       width: 100px;
     }
