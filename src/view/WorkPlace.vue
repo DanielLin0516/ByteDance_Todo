@@ -191,7 +191,7 @@ export default defineComponent({
     const title = ref("");
     let data = JSON.parse(localStorage.getItem("user"));
     let url = localStorage.getItem("url");
-    onBeforeUpdate(() => {
+    onMounted(() => {
       if (url && data && data.userId === 0) {
         data.userId = store.state.currentUserInfo.userId;
         router.push({

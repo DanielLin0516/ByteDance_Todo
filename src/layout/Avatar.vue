@@ -2,7 +2,7 @@
   <a-space :size="32">
     <a-avatar-group>
       <a-avatar
-        :style="{ backgroundColor: '#7BC616' }"
+        :style="{ background: item.avatar }"
         v-for="item of member"
         :key="item.userId"
         v-show="member.length != 0"
@@ -18,7 +18,7 @@
                 </div>
                 <div class="center">
                   <a-avatar
-                    :style="{ backgroundColor: '#3370ff' }"
+                    :style="{ backgroundColor: item.avatar }"
                     class="info"
                   >
                     <IconUser />

@@ -13,7 +13,7 @@
                         name="fullname"
                         placeholder="输入你的全名"
                         class="fullname"
-                        v-model="form.fullname"
+                        v-model="form.fullName"
                     />
                     <div class="email">
                         <input
@@ -77,14 +77,90 @@ import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { reactive, ref, defineComponent, watch } from 'vue';
 import router from '@/router';
-import { sendEmail,registerUser } from '@/axios/api'
+import { sendEmail, registerUser } from '@/axios/api'
 export default defineComponent({
     components: {
         IconBytedanceColor
     },
     setup(props) {
+        let color = reactive([
+            {
+                id: 1,
+                color: "#0079BF",
+            },
+            {
+                id: 2,
+                color: "#D29034",
+            },
+            {
+                id: 3,
+                color: "#519839",
+            },
+            {
+                id: 4,
+                color: "#B04632",
+            },
+            {
+                id: 5,
+                color: "#755286",
+            },
+            {
+                id: 6,
+                color: "#FFFF00",
+            },
+            {
+                id: 7,
+                color: "#00FF00",
+            },
+            {
+                id: 8,
+                color: "#61bd4f",
+            },
+            {
+                id: 9,
+                color: "#f5de33",
+            },
+            {
+                id: 10,
+                color: "#ff9f1a",
+            },
+            {
+                id: 11,
+                color: "#eb5a46",
+            },
+            {
+                id: 12,
+                color: "#c377e0",
+            },
+            {
+                id: 13,
+                color: "#0079bf",
+            },
+            {
+                id: 14,
+                color: "#00c2e0",
+            },
+            {
+                id: 15,
+                color: "#51e898",
+            },
+            {
+                id: 16,
+                color: "#ff78cb",
+            },
+            {
+                id: 17,
+                color: "#344563",
+            },
+            {
+                id: 18,
+                color: "#b3bac5",
+            },
+        ]);
+        let number = ref(0);
         const form = reactive({
-            fullname: "",
+            avatar: "",
+            fullName: "",
             username: "",
             verifyCode: "",
             password: ""
@@ -126,7 +202,7 @@ export default defineComponent({
                 Message.error(`${error}`)
             }
         }
-        watch(() => [form.fullname, form.username, form.verifyCode, form.password], () => {
+        watch(() => [form.fullName, form.username, form.verifyCode, form.password], () => {
             const regEmail = /^([A-Za-z0-9_\-\.\u4e00-\u9fa5])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,8})$/;
             if (regEmail.test(form.username)) {
                 rule.value = "邮箱格式正确";
@@ -135,7 +211,7 @@ export default defineComponent({
                 rule.value = "请输入正确的邮箱地址！";
                 time.button_disabled = true;
             }
-            if (form.fullname && regEmail.test(form.username) && form.verifyCode && form.password) {
+            if (form.fullName && regEmail.test(form.username) && form.verifyCode && form.password) {
                 disabled.value = false;
             } else {
                 disabled.value = true;
@@ -143,10 +219,12 @@ export default defineComponent({
         })
         async function register() {
             try {
+                number.value = Math.floor(Math.random() * 19);
+                form.avatar = color[number.value].color.slice(1, 7);
                 const res = await registerUser(form);
                 Message.success({ content: "注册成功！" });
+                router.push("/Layout/WorkPlace");
                 localStorage.setItem('token', `${res}`);
-                router.push('/Layout/WorkPlace');
             } catch (error) {
                 Message.error({ content: `${error}` })
             }
