@@ -882,7 +882,7 @@ export default defineComponent({
   }
   .new-button {
     background-color: transparent;
-    color: rgba(@cardTextColorMain, 0.4);
+    color: rgba(@cardTextColorMain, 0.7);
     border: none;
     outline: 0;
     height: 30px;

@@ -16,6 +16,7 @@ export default createStore<StoreState>({
       userId: NaN,
       username: "",
     },
+    isDark: false,
     productList: [],
     currentProductName: "",
     memberList: [],
@@ -29,6 +30,9 @@ export default createStore<StoreState>({
   },
   getters: {},
   mutations: {
+    setIsDark(state, value: boolean) {
+      state.isDark = value;
+    },
     setCurrentUser(state, value: UserElement) {
       state.currentUserInfo = value;
     },

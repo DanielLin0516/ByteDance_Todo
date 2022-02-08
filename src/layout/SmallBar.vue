@@ -10,7 +10,7 @@
         <icon-user class="icon-user" />
         <div>邀请朋友</div>
       </div>
-      <div class="change" @click="changeTheme($event)">切换夜间模式</div>
+      <div class="change" @click="changeTheme($event)">{{ themeText }}</div>
       <a-popover position="bottom">
         <div class="changeColor">改变颜色</div>
         <template #content>
@@ -105,8 +105,12 @@ export default defineComponent({
     Avatar,
   },
   setup() {
-    const isDark = ref(false);
     const store = useStore();
+    const isDark = ref(false);
+    isDark.value = store.state.isDark
+    console.log('isDark.value', isDark.value);
+    
+    const themeText = isDark.value ? '切换默认模式' : '切换夜间模式';
     const inviteCard = ref(false);
     let upSquare = ref(String("#0079BF"));
     const route = useRoute();
@@ -136,6 +140,7 @@ export default defineComponent({
         setTheme("default");
       }
       isDark.value = !isDark.value;
+      store.commit('setIsDark', isDark.value)
       sendIsDarkToApp(isDark.value)
     };
     const sendIsDarkToApp:any = inject('sendIsDarkToApp')
@@ -265,6 +270,7 @@ export default defineComponent({
       yourChoice,
       upSquare,
       changeBGC,
+      themeText,
     };
   },
 });
