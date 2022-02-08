@@ -777,7 +777,7 @@ export default defineComponent({
     /**
      * 主页中cardItme添加成员
      */
-    const addExecutor = (executor) => {
+    const addExecutor = (executor:any) => {
       const task = getCurrentCard();
       console.log(task);
       task.executorList.push(executor);

@@ -160,18 +160,16 @@ export default defineComponent({
       task.deadline = e.deadline;
     };
     let id = parseInt(props.id as string) as number;
-    let CardName = ref("");
-    let CardDesc = ref("");
     let delStatue = false;
     const listName = computed(() => {
       return "listName---";
     });
     const updateTaskName = async () => {
-      await editCardName(id, CardName.value);
+      await editCardName(id, task.cardname);
       close();
     };
     const updateTaskDesc = async () => {
-      await editCardDesc(id, CardDesc.value);
+      await editCardDesc(id, task.description);
     };
     const deleteOneTask = async () => {
       delStatue = true;
@@ -180,13 +178,15 @@ export default defineComponent({
     };
 
     const close = () => {
-      console.log("关闭");
-      const param = {
-        taskId: id,
-        taskName: CardName,
-        del: delStatue,
-      };
-      context.emit("close", param);
+      // console.log("关闭");
+      // const param = {
+      //   taskId: id,
+      //   taskName: CardName,
+      //   del: delStatue,
+      // };
+      // context.emit("close", param);
+      context.emit("close");
+
     }
     // const addExecutor = (executor) => {
     //   task.executorList.push(executor);
@@ -196,34 +196,32 @@ export default defineComponent({
     //   task.executorList.splice(index, 1);
     // };
     //获取页面渲染数据与处理数据
-    // const {
-    //   data,
-    //   loading: productLoading,
-    //   error,
-    //   run,
-    // } = useRequest(getCardInfo, {
-    //   onError: () => {
-    //     console.trace(error);
-    //   },
-    // });
-    // const getTaskInfo = async () => {
-    //   await getCardInfo(id).then((res) => {
-    //     CardName.value = res.cardname;
-    //     CardDesc.value = res.description;
-    //     Object.assign(task, res);
-    //     // console.log(task);
-    //     // console.log(task.executorList);
-    //   });
-    // };
-    // getTaskInfo();
+    const {
+      data,
+      loading: productLoading,
+      error,
+      run,
+    } = useRequest(getCardInfo, {
+      onError: () => {
+        console.trace(error);
+      },
+    });
+    const getTaskInfo = async () => {
+      await getCardInfo(id).then((res) => {
+        task.cardname = res.cardname;
+        task.description = res.description;
+        Object.assign(task, res);
+        // console.log(task);
+        // console.log(task.executorList);
+      });
+    };
+    getTaskInfo();
     const change = (e) => {
       task.background = e.background;
     };
     return {
       task,
       listName,
-      CardName,
-      CardDesc,
       time,
       dayjs,
 
