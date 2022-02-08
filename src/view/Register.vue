@@ -296,10 +296,10 @@ export default defineComponent({
                     width: 100%;
                     border: 5px solid #dfe1e6;
                     background-color: rgb(232, 240, 254);
-                    height: 60px;
+                    height: 50px;
                     border-radius: 5px;
                     margin-bottom: 40px;
-                    font-size: 24px;
+                    font-size: 22px;
                 }
                 .email {
                     display: flex;
@@ -308,10 +308,10 @@ export default defineComponent({
                         width: 290px;
                         border: 5px solid #dfe1e6;
                         background-color: rgb(232, 240, 254);
-                        height: 60px;
+                        height: 50px;
                         border-radius: 5px;
                         // margin-bottom: 40px;
-                        font-size: 24px;
+                        font-size: 22px;
                     }
                     span {
                         width: 150px;
@@ -334,15 +334,15 @@ export default defineComponent({
                     width: 100%;
                     border: 5px solid #dfe1e6;
                     background-color: rgb(232, 240, 254);
-                    height: 60px;
+                    height: 50px;
                     border-radius: 5px;
-                    font-size: 24px;
+                    font-size: 22px;
                     margin-bottom: 30px;
                 }
                 .submit {
                     width: 100%;
                     background-color: rgb(90, 172, 68);
-                    height: 60px;
+                    height: 50px;
                     border-radius: 5px;
                     color: white;
                     text-align: center;

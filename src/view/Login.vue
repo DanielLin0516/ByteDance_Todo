@@ -128,18 +128,18 @@ export default defineComponent({
           width: 100%;
           border: 5px solid #dfe1e6;
           background-color: rgb(232, 240, 254);
-          height: 80px;
+          height: 50px;
           border-radius: 5px;
           margin-bottom: 40px;
-          font-size: 24px;
+          font-size: 22px;
         }
         .password {
           width: 100%;
           border: 5px solid #dfe1e6;
           background-color: rgb(232, 240, 254);
-          height: 80px;
+          height: 50px;
           border-radius: 5px;
-          font-size: 24px;
+          font-size: 22px;
           margin-bottom: 30px;
         }
         .submit {
