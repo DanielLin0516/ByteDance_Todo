@@ -359,8 +359,8 @@ export default defineComponent({
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 60px;
-        width: 60px;
+        height: 40px;
+        width: 40px;
         // margin-top: 10px;
         border-radius: 50%;
         user-select: none;
@@ -382,8 +382,9 @@ export default defineComponent({
         justify-content: center;
         align-items: center;
         margin-left: 10px;
-        padding: 0 3px;
+        padding: 0 5px;
         height: 40px;
+        line-height: 40px;
         min-width: 55px;
         border-radius: 10px;
         user-select: none;
@@ -450,7 +451,7 @@ export default defineComponent({
 
   h3 {
     color: rgba(0, 0, 0, 0.7);
-    font-size: smaller;
+    // font-size: 20px;
   }
 }
 </style>

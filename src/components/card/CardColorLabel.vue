@@ -26,7 +26,7 @@
             :style="{ backgroundColor: item.color }"
             class="label_color"
             :class="{ choosed: item.isChoosed }"
-            @click="clickLabel(item, index)"
+            @click="clickLabel(item)"
           >
             {{ item.tagName }}
           </div>
@@ -50,7 +50,7 @@
         :style="{ width: '100%' }"
         allow-clear
       />
-      <p>选择一个颜色</p>
+      <h3>选择一个颜色</h3>
       <div class="choose_color">
         <div
           class="color"
@@ -74,7 +74,7 @@
     <!-- 编辑 -->
     <div v-show="isShow.edit">
       <div class="header">
-        <h1>修改标签</h1>
+        <h2>修改标签</h2>
         <IconLeft @click.self="backToAll" class="icon_left" />
         <IconCloseCircle @click.self="close" class="icon-close" />
       </div>
@@ -84,7 +84,7 @@
         :style="{ width: '100%' }"
         allow-clear
       />
-      <p>选择一个颜色</p>
+      <h3>选择一个颜色</h3>
       <div class="choose_color">
         <div
           class="color"
@@ -208,7 +208,7 @@ export default defineComponent({
       clearNewLabelData();
     };
 
-    const clickLabel = async (tag: webLabel, index: number) => {
+    const clickLabel = async (tag: webLabel) => {
       const tagId: string = tag.id + "";
       const normalTag: TagElement = {
         color: tag.color,
@@ -218,16 +218,12 @@ export default defineComponent({
       };
 
       if (!tag.isChoosed) {
-        // el.dataset.choosed = "true";
-        // el.classList.add("choosed");
         tag.isChoosed = true;
         //抛出emit
         context.emit("addTag", normalTag);
         //加到数据库
         await setTagByCardId(cardId, tagId);
       } else {
-        // el.dataset.choosed = "false";
-        // el.classList.remove("choosed");
         tag.isChoosed = false;
         //抛出emit
         context.emit("removeTag", normalTag);
@@ -314,6 +310,10 @@ export default defineComponent({
         searchTag("");
         //清空选择的状态
         clearNewLabelData();
+        //新建的马上加到卡片中--抛出emit
+        context.emit("addTag", res);
+        //新建的马上加到state中中--抛出emit
+        store.commit("addNewLabel", res);
       }
     };
 
@@ -402,7 +402,7 @@ export default defineComponent({
   position: absolute;
   width: 350px;
   max-height: 100%;
-  padding: 20px;
+  padding: 10px 20px;
   top: 0px;
   right: -200px;
 
@@ -414,29 +414,32 @@ export default defineComponent({
   box-shadow: 0px 0px 6px gray;
   // border-left: 1px solid rgba(0, 0, 0, 0.3);
 
+  h3 {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: smaller;
+  }
   .header {
     position: relative;
-
-    height: 40px;
+    line-height: 15px;
     width: 100%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+    display: inline-grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 0.26042vw;
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    margin-bottom: 30px;
+    padding-bottom: 0.52083vw;
+    justify-items: center;
+    align-items: center;
+    align-content: stretch;
 
-    span {
-      font-size: 22px;
-      height: 100%;
+    h2 {
+      grid-column: 2 / 3;
+      color: rgba(0, 0, 0, 0.7);
     }
 
     .icon-close,
     .icon_left {
       position: absolute;
-      right: -12px;
-      top: -15px;
+      right: 0px;
       height: 40px;
       width: 40px;
       border-radius: 50%;
@@ -549,10 +552,10 @@ export default defineComponent({
       line-height: 100%;
       border-radius: 3px;
       color: white;
-    }
-    .color:hover {
-      cursor: pointer;
-      opacity: 0.8;
+      &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+      }
     }
     .choosed {
       transform: scale(0.9);

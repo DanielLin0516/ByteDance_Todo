@@ -1,27 +1,27 @@
 <template>
   <div class="sidebar">
     <span class="sidebar-tip">添加至卡片</span>
-    <a class="button-link" title="成员" @click="showMember">
+    <span class="button-link" title="成员" @click="showMember">
       <icon-user />
       <span class="sidebar-text">成员</span>
-    </a>
-    <a class="button-link" title="标签" @click="showColorLable">
+    </span>
+    <span class="button-link" title="标签" @click="showColorLable">
       <icon-tag />
       <span class="sidebar-text">标签</span>
-    </a>
-    <a
+    </span>
+    <span
       class="button-link"
       @mousedown="store.state.show = !store.state.show"
       title="日期"
     >
       <icon-schedule />
       <span class="sidebar-text">日期</span>
-    </a>
+    </span>
 
-    <a class="button-link" title="拉伸" @click="bgc = !bgc">
+    <span class="button-link" title="拉伸" @click="bgc = !bgc">
       <icon-layout />
       <span class="sidebar-text">拉伸</span>
-    </a>
+    </span>
     <card-bgc
       :id="id"
       :columnName="columnName"

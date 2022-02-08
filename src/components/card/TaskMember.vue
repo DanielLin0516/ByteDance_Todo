@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <div class="header">
-      <span>标签</span>
+      <h2>标签</h2>
       <IconCloseCircle @click.self="close" class="icon-close" />
     </div>
     <a-input
@@ -40,10 +40,6 @@
         >
           {{ user.fullname }}
         </div>
-        <div class="label">syhsyh</div>
-        <div class="label">syhsyh</div>
-        <div class="label">syhsyh</div>
-        <div class="label">syhsyh</div>
       </div>
     </div>
   </div>
@@ -192,7 +188,7 @@ export default defineComponent({
   position: absolute;
   width: 350px;
   max-height: 100%;
-  padding: 20px;
+  padding: 10px 20px;
   top: 0px;
   right: -200px;
 
@@ -206,36 +202,38 @@ export default defineComponent({
 
   .header {
     position: relative;
-
-    height: 40px;
+    line-height: 15px;
     width: 100%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+    display: inline-grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 0.26042vw;
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    margin-bottom: 30px;
+    padding-bottom: 0.52083vw;
+    justify-items: center;
+    align-items: center;
+    align-content: stretch;
 
-    span {
-      font-size: 22px;
-      height: 100%;
+    h2 {
+      grid-column: 2 / 3;
+      color: rgba(0, 0, 0, 0.7);
     }
+
     .icon-close {
       position: absolute;
-      right: -12px;
-      top: -15px;
+      right: 0;
+
       height: 40px;
       width: 40px;
+      right: 0;
       border-radius: 50%;
-      padding: 10px;
       color: rgba(@cardTextColorMain, 0.5);
       transition: all 0.2s;
-    }
-    .icon-close:hover {
-      cursor: pointer;
-      background-color: rgba(@cardTextColorMain, 0.1);
-      transition: all 0.2s;
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgba(@cardTextColorMain, 0.1);
+        transition: all 0.2s;
+      }
     }
   }
 
