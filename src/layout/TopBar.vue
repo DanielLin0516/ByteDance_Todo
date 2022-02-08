@@ -151,12 +151,14 @@ export default defineComponent({
       font-family: "PingFang-Regular";
       font-size: 24px;
       font-weight: 700;
-      color: rgba(@cardColorMain, 1);
+      // color: rgba(@cardColorMain, 1);
+      color: #fff;
       line-height: 25px;
       border-radius: 5px;
       padding: 10px 5px;
       cursor: pointer;
-      border: 1px solid rgba(@cardColorMain, 1);
+      // border: 1px solid rgba(@cardColorMain, 1);
+      border: 1px solid #fff;
       width: 100px;
       display: flex;
       align-items: center;

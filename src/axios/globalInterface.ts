@@ -13,6 +13,7 @@ export interface StoreState {
   isCardDetailShow: boolean;
   tagList: TagElement[];
   labelList: webLabel[];
+  isDark:boolean;
 }
 /**
  * 项目类型
