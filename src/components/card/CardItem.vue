@@ -6,6 +6,25 @@
         :style="{ background: cardInfo.background }"
         v-show="cardInfo?.background"
       ></div>
+      <div
+        v-show="cardInfo.tagList[0]"
+        class="tag_content"
+        :class="{ after_click_tags: isTagClick }"
+        @mouseover="tagMouseOver($event)"
+        @mouseout="tagMouseOut"
+        @click="clickTag($event)"
+      >
+        <span
+          class="tag_item"
+          :class="{ hoverEffect: isTagHover }"
+          v-for="(item, index) of cardInfo.tagList"
+          :key="index"
+          :style="{ backgroundColor: item.color }"
+          :title="item.tagName"
+        >
+          <span v-show="isTagClick">{{ item.tagName }}</span>
+        </span>
+      </div>
       {{ cardInfo.cardname }}
       <div class="des">{{ cardInfo?.description }}</div>
       <div
@@ -27,8 +46,7 @@
             v-for="(user, index) in cardInfo?.executorList"
             :key="user.userId + index"
             :title="user.fullname"
-          >
-          </a>
+          ></a>
         </div>
       </div>
     </div>
@@ -36,8 +54,9 @@
 </template>
 <script lang="ts">
 import dayjs from "dayjs";
+import "animate.css";
 import { IconSchedule } from "@arco-design/web-vue/es/icon";
-import { defineComponent, inject, computed, PropType } from "vue";
+import { defineComponent, ref, PropType } from "vue";
 import { CardElement } from "@/axios/globalInterface";
 import { taskComplete } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
@@ -55,29 +74,58 @@ export default defineComponent({
     lists: Array,
   },
   setup(props) {
+    const isTagHover = ref(false);
+    const isTagClick = ref(false);
     const done = async (Info: CardElement) => {
       try {
         await taskComplete(Info.cardId, !Info.completed);
-        if(!Info.completed === true) {
-          Message.success({content:"任务已经完成"})
-        }else {
-          Message.warning({content:"任务未完成"})
+        if (!Info.completed === true) {
+          Message.success({ content: "任务已经完成" });
+        } else {
+          Message.warning({ content: "任务未完成" });
         }
         Info.completed = !Info.completed;
       } catch (error) {
         console.trace(error);
       }
-      // props.lists.forEach((item) => {
-      //   item.items.forEach((item1) => {
-      //     if (Info.carId === item1.cardId) {
-      //       item1.completed = !Info.completed;
-      //     }
-      //   })
-      // })
     };
+
+    /**
+     * Over跟out可以作用于子元素，类似事件委托
+     */
+    const tagMouseOver = (e: MouseEvent) => {
+      const el: HTMLDivElement = e.target as HTMLDivElement;
+      //判断是否在父元素上
+      if (el.classList.contains("tag_content")) return;
+      //已经点击展开则不再显示hover效果
+      if (isTagClick.value) return;
+      isTagHover.value = true;
+    };
+    const tagMouseOut = () => (isTagHover.value = false);
+
+    const clickTag = (e: MouseEvent) => {
+      //事件委托，但是需要判断点击的是否为子元素
+      const el: HTMLDivElement = e.target as HTMLDivElement;
+
+      //判断点击的是否为子元素
+      if (el.classList.contains("tag_content")) return;
+
+      //阻止冒泡
+      e.stopPropagation();
+      console.log("点击了子元素----");
+      isTagHover.value = false;
+      isTagClick.value = !isTagClick.value;
+    };
+
     return {
       dayjs,
+      isTagHover,
+      isTagClick,
+
       done,
+      tagMouseOver,
+      tagMouseOut,
+      clickTag,
     };
   },
 });
@@ -108,6 +156,60 @@ export default defineComponent({
   cursor: pointer;
   font-size: 18px;
   border-bottom: 2px solid rgba(@cardTextColorSub, 0.45);
+  .tag_content {
+    color: white;
+    // display: grid;
+    // grid-template-columns: repeat(5, 1fr);
+    // grid-gap: 3px;
+    // grid-auto-rows: minmax(1px, auto);
+    // justify-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    // justify-content: space-around;
+
+    .tag_item {
+      display: inline-block;
+      // display: flex;
+      position: relative;
+      flex: 0 0 30%;
+      margin-right: 5px;
+      width: fit-content;
+      height: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+          transition: height ease-in-out 0.1s;
+    }
+    .hoverEffect {
+      &::before {
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+  .after_click_tags {
+    display: inline-block;
+    // display: flex;
+    position: relative;
+    flex: 0 0 30%;
+    margin-right: 5px;
+    width: fit-content;
+    height: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: height ease-in-out 0.5s;
+    .tag_item {
+      position: relative;
+      height: 20px;
+      min-width: 15%;
+      line-height: 20px;
+      border-radius: 7px;
+      padding: 3px 5px;
+    }
+  }
   .des {
     font-size: 12px;
     color: rgba(@cardTextColorMain, 0.5);

@@ -1,12 +1,6 @@
 import { createStore } from "vuex";
 import defaultBoard from "./defaultBoard";
-import {
-  ProductElement,
-  StoreState,
-  TagElement,
-  UserElement,
-  webLabel,
-} from "@/axios/globalInterface";
+import { ProductElement, StoreState, TagElement, UserElement, webLabel } from "@/axios/globalInterface";
 
 export default createStore<StoreState>({
   state: {
@@ -62,6 +56,9 @@ export default createStore<StoreState>({
     },
     changeCardShowState(state) {
       state.isCardDetailShow = !state.isCardDetailShow;
+    },
+    addNewLabel(state, newTag: TagElement) {
+      state.labelList.push(newTag);
     },
   },
 });
