@@ -14,12 +14,12 @@
     <div>
       <!-- <div ref="addSpan"> -->
       <div v-show="isSuggest">
-        <p>建议的成员</p>
+        <h3>建议的成员</h3>
         <p @click="suggestMember" class="new_label">
           {{ currentUser.fullname }}
         </p>
       </div>
-      <p>看板成员</p>
+      <h3>看板成员</h3>
       <div class="members">
         <!-- 原来的
         <div
@@ -28,7 +28,7 @@
           v-show="user.isShow"
           :data-choosed="user.isChoosed"
           :key="user.userId + index"
-          @click="chooseMember($event, user, index)"
+          @click="clickMember($event, user, index)"
         ></div> -->
         <div
           class="label"
@@ -36,7 +36,7 @@
           v-show="user.isShow"
           :class="{ choosed: user.isChoosed }"
           :key="user.userId + index"
-          @click="chooseMember(user, index)"
+          @click="clickMember(user, index)"
         >
           {{ user.fullname }}
         </div>
@@ -60,7 +60,7 @@ import {
   setExecutorApi,
   deleteExecutorApi,
 } from "@/axios/labelApi";
-import { UserElement } from "@/axios/globalInterface";
+import { CardElement, UserElement } from "@/axios/globalInterface";
 import { defineComponent, inject, ref, reactive, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -71,9 +71,9 @@ export default defineComponent({
   // inheritAttrs: false,
   emits: ["close", "addExecutor", "removeExecutor"],
   setup(props, context) {
-    console.log("taskMember--context.attrs", {
-      ...context.attrs,
-    });
+    // console.log("taskMember--context.attrs", {
+    //   ...context.attrs,
+    // });
 
     const route = useRoute();
     const store = useStore();
@@ -81,14 +81,16 @@ export default defineComponent({
     const isSuggest = ref(true);
     const currentUser = store.state.currentUserInfo;
     const productId = ref(Number(route.params.productId));
+    const task: CardElement = context.attrs.taskInfo as CardElement;
+    const currentMembers: UserElement[] = task.executorList;
     const searchValue = ref("");
     const cardId: number = inject("cardId") as number;
+
     interface webMember extends UserElement {
       isShow: boolean;
       isChoosed: boolean;
     }
     const mermberList: webMember[] = reactive([]);
-
     const close = () => context.emit("close");
 
     const searchMember = () => {
@@ -107,10 +109,10 @@ export default defineComponent({
       const index = mermberList.findIndex(
         (el) => el.userId == currentUser.userId
       );
-      chooseMember(currentUser, index);
+      clickMember(currentUser, index);
     };
 
-    const chooseMember = async (user: webMember, index: number) => {
+    const clickMember = async (user: webMember, index: number) => {
       const userId = user.userId;
       const flag = mermberList[index].isChoosed;
       if (!flag) {
@@ -128,7 +130,7 @@ export default defineComponent({
         //可能是搜索出来的
         searchValue.value = "";
         searchMember();
-        //c
+        //抛出emit
         context.emit("addExecutor", user);
         //后端接口
         await setExecutorApi(cardId, userId);
@@ -146,12 +148,25 @@ export default defineComponent({
     const getMemberList = async (productId: number) => {
       const res = await getMemberListApi(productId);
       res.forEach((el) => {
-        mermberList.push(
-          Object.assign(el, {
-            isShow: true,
-            isChoosed: false,
-          })
-        );
+        if (currentMembers.some((curEl) => curEl.userId === el.userId)) {
+          mermberList.push(
+            Object.assign(el, {
+              isShow: true,
+              isChoosed: true,
+            })
+          );
+          //判断是否是建议的成员
+          if (el.userId == currentUser.userId) {
+            isSuggest.value = false;
+          }
+        } else {
+          mermberList.push(
+            Object.assign(el, {
+              isShow: true,
+              isChoosed: false,
+            })
+          );
+        }
       });
     };
     getMemberList(productId.value);
@@ -166,7 +181,7 @@ export default defineComponent({
       searchMember,
       suggestMember,
       close,
-      chooseMember,
+      clickMember,
     };
   },
 });
@@ -287,5 +302,9 @@ export default defineComponent({
     background-color: rgba(0, 0, 0, 0.1);
     cursor: pointer;
   }
+}
+h3 {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: smaller;
 }
 </style>

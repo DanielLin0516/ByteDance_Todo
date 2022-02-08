@@ -12,7 +12,7 @@ export interface Store {
   userEvent: Array<any>;
   isCardDetailShow: boolean;
   tagList: TagElement[];
-  labelList: webLabel[];
+  labelList: TagElement[];
 }
 /**
  * 项目类型
@@ -81,14 +81,7 @@ export interface ProductShowElement {
   items: CardElement[];
 }
 
-export interface LabelElement {
-  color: string;
-  id: string;
-  productId: string;
-  tagName: string;
-}
-
-export interface webLabel extends LabelElement {
+export interface webLabel extends TagElement {
   show: boolean;
   isChoosed: boolean;
 }

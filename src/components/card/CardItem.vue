@@ -6,6 +6,15 @@
         :style="{ background: cardInfo.background }"
         v-show="cardInfo?.background"
       ></div>
+      <div v-show="cardInfo.tagList[0]" class="tag_content">
+        <a
+          class="tag_item"
+          v-for="(item, index) of cardInfo.tagList"
+          :key="index"
+          :style="{ backgroundColor: item.color }"
+          :title="item.tagName"
+        ></a>
+      </div>
       {{ cardInfo.cardname }}
       <div class="des">{{ cardInfo?.description }}</div>
       <div
@@ -58,10 +67,10 @@ export default defineComponent({
     const done = async (Info: CardElement) => {
       try {
         await taskComplete(Info.cardId, !Info.completed);
-        if(!Info.completed === true) {
-          Message.success({content:"任务已经完成"})
-        }else {
-          Message.warning({content:"任务未完成"})
+        if (!Info.completed === true) {
+          Message.success({ content: "任务已经完成" });
+        } else {
+          Message.warning({ content: "任务未完成" });
         }
         Info.completed = !Info.completed;
       } catch (error) {
@@ -108,6 +117,23 @@ export default defineComponent({
   cursor: pointer;
   font-size: 18px;
   border-bottom: 2px solid rgba(@cardTextColorSub, 0.45);
+  .tag_content {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 3px;
+    grid-auto-rows: minmax(1px, auto);
+    justify-items: center;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .tag_item {
+      width: 100%;
+      height: 10px;
+      background-color: red;
+      border-radius: 5px;
+    }
+  }
   .des {
     font-size: 12px;
     color: rgba(@cardTextColorMain, 0.5);

@@ -1,9 +1,17 @@
 <template>
   <div class="flex">
-    <div class="bgcColor" v-show="task.background" :style="{ background: task.background }"></div>
+    <div
+      class="bgcColor"
+      v-show="task.background"
+      :style="{ background: task.background }"
+    ></div>
     <icon-close-circle class="icon-close-circle" @click.stop="close" />
+
     <div class="header">
-      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
+      <icon-robot
+        :style="{ fontSize: '1.2em', margin: '0 10px' }"
+        class="robot"
+      />
       <input
         type="text"
         v-model="task.cardname"
@@ -13,11 +21,25 @@
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ columnName }}</span>中
+        <span class="listNameSpan">{{ columnName }}</span
+        >中
+      </div>
+    </div>
+    <div class="member_content" v-if="task.tagList[0]">
+      <h3>标签</h3>
+      <div class="member_items">
+        <div
+          class="tag_item"
+          v-for="(item, index) in task.tagList"
+          :key="index"
+          :style="{ backgroundColor: item.color }"
+        >
+          {{ item.tagName }}
+        </div>
       </div>
     </div>
     <div class="member_content" v-if="task.executorList[0]">
-      <span>标签</span>
+      <h3>成员</h3>
       <div class="member_items">
         <a
           class="member_item"
@@ -29,16 +51,25 @@
         </a>
       </div>
     </div>
-    <div class="date" v-if="task.begintime">
-      <span>日期</span>
-      <div style="background-color: rgb(242, 212, 0)">
+    <div class="member_content" v-if="task.begintime">
+      <h3>日期</h3>
+      <div
+        style="
+          background-color: rgb(242, 212, 0);
+          padding: 5px;
+          border-radius: 5px;
+        "
+      >
         {{ dayjs(task.begintime).format("YYYY-MM-DD") }} ~
         {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
       </div>
     </div>
     <div class="des">
-      <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
-      <span class="mySpan">描述</span>
+      <icon-align-left
+        class="icon-left"
+        :style="{ fontSize: '1.2em', margin: '0 10px' }"
+      />
+      <h3>描述</h3>
     </div>
     <a-textarea
       default-value="添加详细描述..."
@@ -57,13 +88,18 @@
       :id="id"
       :columnName="columnName"
     ></CardDetailFuction>
-    <a-popconfirm content="将此任务删除？" okText="确认" cancelText="取消" @ok="deleteOneTask()">
+    <a-popconfirm
+      content="将此任务删除？"
+      okText="确认"
+      cancelText="取消"
+      @ok="deleteOneTask()"
+    >
       <a-button status="danger" class="deleteButton" shape="round">
         <template #icon>
           <icon-delete />
         </template>
-        <template #default>删除任务</template>
-      </a-button>/>
+        <template #default>删除任务</template> </a-button
+      >/>
     </a-popconfirm>
   </div>
 </template>
@@ -116,14 +152,12 @@ export default defineComponent({
     id: String,
     columnName: String,
     lists: Object,
-    taskInfo: Object as PropType<CardElement>,
   },
   emits: ["close", "change"],
   setup(props, context) {
     provide("cardId", props.id as string);
     dayjs.extend(utc);
-    const task: CardElement = props.taskInfo as CardElement;
-    console.log(props.taskInfo?.cardname);
+    const task: CardElement = context.attrs.taskInfo as CardElement;
     const store = useStore();
     const route = useRoute();
     let time = reactive({
@@ -187,7 +221,7 @@ export default defineComponent({
         del: delStatue,
       };
       context.emit("close", param);
-    }
+    };
     // const addExecutor = (executor) => {
     //   task.executorList.push(executor);
     // };
@@ -259,7 +293,7 @@ export default defineComponent({
 
   border-radius: 10px;
   background-color: rgba(@cardColorMain, 1);
-  padding: 10px;
+  // padding: 10px;
 
   flex-direction: column;
   align-items: flex-start;
@@ -314,14 +348,8 @@ export default defineComponent({
     color: rgba(@cardTextColorMain, 0.8);
   }
   .member_content {
-    margin-left: 20px;
-    span {
-      display: inline-block;
-      font-size: 18px;
-      font-weight: 500;
-      color: rgba(@cardTextColorMain, 0.7);
-      margin-bottom: 10px;
-    }
+    margin: 0px 20px 0px 20px;
+
     .member_items {
       display: flex;
 
@@ -347,6 +375,21 @@ export default defineComponent({
           background-color: rgba(0, 0, 0, 0.2);
           cursor: pointer;
         }
+      }
+      .tag_item {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 10px;
+        padding: 0 3px;
+        height: 40px;
+        min-width: 55px;
+        border-radius: 10px;
+        user-select: none;
+        font-size: 22px;
+        font-weight: 1000;
+        color: white;
       }
     }
   }
@@ -403,6 +446,11 @@ export default defineComponent({
   }
   .arco-popconfirm-popup-content .arco-popconfirm-footer > button {
     font-size: 10px;
+  }
+
+  h3 {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: smaller;
   }
 }
 </style>

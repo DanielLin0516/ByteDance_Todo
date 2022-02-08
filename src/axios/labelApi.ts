@@ -1,5 +1,5 @@
 import instance from "./request";
-import { LabelElement, UserElement } from "./globalInterface";
+import { TagElement, UserElement } from "./globalInterface";
 
 /**
  * 获取项目内的label
@@ -7,7 +7,7 @@ import { LabelElement, UserElement } from "./globalInterface";
  * @returns
  */
 
-export const getTagsByProductId = (productId: string): Promise<LabelElement[]> => {
+export const getTagsByProductId = (productId: string): Promise<TagElement[]> => {
   return instance.get(`/tag/getTagsByProductId?productId=${productId}`);
 };
 
@@ -16,7 +16,7 @@ export const getTagsByProductId = (productId: string): Promise<LabelElement[]> =
  * @param newLabelData
  * @returns
  */
-export const createNewLabel = (newLabelData: { color: string; productId: number; tagName: string }): Promise<LabelElement> => {
+export const createNewLabel = (newLabelData: { color: string; productId: number; tagName: string }): Promise<TagElement> => {
   return instance.post(`/tag/create`, newLabelData);
 };
 

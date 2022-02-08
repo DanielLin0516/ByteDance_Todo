@@ -9,7 +9,11 @@
       <icon-tag />
       <span class="sidebar-text">标签</span>
     </a>
-    <a class="button-link" @mousedown="store.state.show = !store.state.show" title="日期">
+    <a
+      class="button-link"
+      @mousedown="store.state.show = !store.state.show"
+      title="日期"
+    >
       <icon-schedule />
       <span class="sidebar-text">日期</span>
     </a>
@@ -18,10 +22,22 @@
       <icon-layout />
       <span class="sidebar-text">拉伸</span>
     </a>
-    <card-bgc :id="id" :columnName="columnName" :lists="lists" v-show="bgc" :bgc="bgc" @bgcShow="bgcShow" @change="change"></card-bgc>
+    <card-bgc
+      :id="id"
+      :columnName="columnName"
+      :lists="lists"
+      v-show="bgc"
+      :bgc="bgc"
+      @bgcShow="bgcShow"
+      @change="change"
+    ></card-bgc>
   </div>
   <div style="z-index: 999">
-    <CardColorLabel v-if="isColorShow" @close="closeColor"></CardColorLabel>
+    <CardColorLabel
+      v-if="isColorShow"
+      @close="closeColor"
+      v-bind="$attrs"
+    ></CardColorLabel>
     <TaskMember
       v-if="isMemberShow"
       @close="closeMember"
@@ -39,7 +55,7 @@ import {
   IconUnorderedList,
   IconSchedule,
   IconFile,
-  IconLayout
+  IconLayout,
 } from "@arco-design/web-vue/es/icon";
 import { defineComponent, reactive, ref } from "vue";
 import { useStore } from "vuex";
@@ -58,20 +74,16 @@ export default defineComponent({
     CardColorLabel,
     TaskMember,
     IconLayout,
-    CardBgc
+    CardBgc,
   },
   props: {
     lists: Object,
     id: String,
     columnName: String,
   },
-  emits: ["timeDate","change"],
+  emits: ["timeDate", "change"],
   setup(props, context) {
-    console.log("context.attrs", {
-      ...context.attrs,
-    });
     const store = useStore();
-    console.log(props.id, 'detail')
     let show = store.state.show;
     const isColorShow = ref(false);
     const isMemberShow = ref(false);
@@ -94,14 +106,14 @@ export default defineComponent({
       timePeriod = e;
       context.emit("timeDate", timePeriod);
     };
-    const bgcShow =(e) => {
-      console.log('收到的值',e)
+    const bgcShow = (e) => {
+      console.log("收到的值", e);
       bgc.value = e;
-    }
+    };
     const change = (e) => {
-      console.log(e)
-     context.emit("change",e)
-    }
+      console.log(e);
+      context.emit("change", e);
+    };
 
     return {
       store,
@@ -114,7 +126,7 @@ export default defineComponent({
       recieveTime,
       bgcShow,
       bgc,
-      change
+      change,
     };
   },
 });
