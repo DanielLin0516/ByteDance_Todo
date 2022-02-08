@@ -77,7 +77,7 @@ export default defineComponent({
         }
       }, 3000);
     };
-    const wsOpenHanler = (event) => {
+    const wsOpenHanler = (event: Event) => {
       console.log("ws建立连接成功");
     };
     const wsMessageHanler = (e: MessageEvent) => {
@@ -96,14 +96,14 @@ export default defineComponent({
     /**
      * ws通信发生错误
      */
-    function wsErrorHanler(event) {
+    function wsErrorHanler(event: any) {
       console.log(event, "通信发生错误");
       wsInit();
     }
     /**
      * ws关闭
      */
-    function wsCloseHanler(event) {
+    function wsCloseHanler(event: any) {
       console.log(event, "ws关闭");
       wsDestroy();
     }

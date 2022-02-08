@@ -231,6 +231,8 @@ export default defineComponent({
     // 传给MainCard的列数组
     const lists = reactive<ProductShowElement[]>([]);
 
+    const labelList: TagElement[] = reactive([]);
+
     // 路由中的项目Id
     const productId: ComputedRef<string> = computed(() => {
       return route.params.productId as string;
@@ -251,7 +253,6 @@ export default defineComponent({
       try {
         const res = await run(productId.value);
         const showInvite = await owner(productId.value);
-        const bgcColor = res.background;
         Message.success({ content: "获取页面成功！" });
         store.commit("setCurrentProductName", res.productName);
         store.commit("setShowInviteButton", showInvite.isOwner);
@@ -287,6 +288,10 @@ export default defineComponent({
         // console.log(lists);
         // 告知父组件，加载完毕
         context.emit("loadingOver");
+        res.tagList.forEach((tagEl: TagElement) => {
+          labelList.push(tagEl);
+        });
+        store.commit("setLabelList", labelList);
       } catch (error) {
         console.trace(error);
       }
@@ -673,16 +678,6 @@ export default defineComponent({
       currentColumnId.value = column.listId;
     };
 
-    const labelList: TagElement[] = reactive([]);
-    const getProductLabels = async () => {
-      const res = await getTagsByProductId(productId.value as string);
-      res.forEach((el: TagElement) => {
-        // labelList.push(Object.assign(el, { show: true, isChoosed: false }));
-        labelList.push(el);
-      });
-      store.commit("setLabelList", labelList);
-    };
-
     //计算属性记录currentTask
     const currentTask: ComputedRef<CardElement> = computed(() => {
       const column = lists.filter(
@@ -891,7 +886,6 @@ export default defineComponent({
       }
     };
 
-    getProductLabels();
     getInfo();
     return {
       store,
