@@ -4,8 +4,8 @@ import qs from "qs";
 import router from "@/router";
 import store from "@/store";
 const instance = axios.create({
-  // baseURL: "http://101.201.143.127:8090/api",
-  baseURL: "http://localhost:8090",
+  baseURL: "http://101.201.143.127:8090/api",
+  // baseURL: "http://localhost:8090",
   timeout: 5000,
 });
 //post请求头
