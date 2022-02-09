@@ -1,28 +1,32 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import path from 'path'
-import pxtovw from 'postcss-px-to-viewport'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import path from "path";
+import pxtovw from "postcss-px-to-viewport";
+import viteCompression from "vite-plugin-compression";
+
 const loder_pxtovw = pxtovw({
   viewportWidth: 1920,
   viewportHeight: 1080,
-  viewportUnit: 'vw'
-})
+  viewportUnit: "vw",
+});
 
 // https://vitejs.dev/config/
 export default defineConfig({
   css: {
     postcss: {
-      plugins: [loder_pxtovw]
+      plugins: [loder_pxtovw],
     },
     preprocessorOptions: {
       // 配置全局less
       less: {
         modifyVars: {
-          hack: `true; @import (reference) "${path.resolve('src/theme/style.less')}";`,
+          hack: `true; @import (reference) "${path.resolve(
+            "src/theme/style.less"
+          )}";`,
         },
         javascriptEnabled: true,
-      }
-    }
+      },
+    },
   },
   resolve: {
     alias: {
@@ -36,7 +40,30 @@ export default defineConfig({
       // "layout": path.resolve(__dirname, "src/layout"),
     },
   },
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    viteCompression({
+      verbose: true,
+      disable: false,
+      threshold: 10240,
+      algorithm: "gzip",
+      ext: ".gz",
+    }),
+  ],
   base: "./",
-
-})
+  build: {
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    rollupOptions: {
+      output: {
+        chunkFileNames: "static/js/[name]-[hash].js",
+        entryFileNames: "static/js/[name]-[hash].js",
+        assetFileNames: "static/[ext]/[name]-[hash].[ext]",
+      },
+    },
+  },
+});
