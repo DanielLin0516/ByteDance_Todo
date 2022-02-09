@@ -117,7 +117,7 @@ import {
   IconLeft,
 } from "@arco-design/web-vue/es/icon";
 import { Message } from "@arco-design/web-vue";
-import { defineComponent, inject, ref, reactive, computed } from "vue";
+import { defineComponent, inject, ref, reactive, computed ,watch} from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import { TagElement, CardElement, webLabel } from "@/axios/globalInterface";
@@ -192,6 +192,9 @@ export default defineComponent({
       tagName: "",
       productId: parseInt(productId.value as string),
     });
+    watch((newLabelData.tagName),() => {
+      console.log(1)
+    },{deep:true})
 
     const close = () => {
       context.emit("close");
