@@ -10,17 +10,14 @@
         {{ item.fullname.slice(0, 1) }}
         <template #trigger-icon>
           <a-popover position="bottom">
-            <icon-user />
+            <icon-user :style="{ color: item.avatar }" />
             <template #content>
               <div class="userInfo">
                 <div class="info-header">
                   <span>账号</span>
                 </div>
                 <div class="center">
-                  <a-avatar
-                    :style="{ backgroundColor: item.avatar }"
-                    class="info"
-                  >
+                  <a-avatar :style="{ backgroundColor: item.avatar }" class="info">
                     <IconUser />
                   </a-avatar>
                   <div
@@ -37,9 +34,7 @@
                         font-size: 12px;
                         margin-top: 0.5vw;
                       "
-                    >
-                      {{ item.username }}
-                    </div>
+                    >{{ item.username }}</div>
                   </div>
                 </div>
               </div>
