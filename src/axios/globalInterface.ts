@@ -103,6 +103,7 @@ export interface DetailElement {
   background: string;
   description: string;
   listId: number;
+  newMember: UserElement;
 }
 
 export interface NotifyMessage {

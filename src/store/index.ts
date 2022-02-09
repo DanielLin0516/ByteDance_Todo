@@ -39,6 +39,9 @@ export default createStore<StoreState>({
     setMemberList(state, value: UserElement[]) {
       state.memberList = value;
     },
+    addMemberList(state,value:UserElement){
+      state.memberList.push(value);
+    },
     setProductList(state, value: ProductElement[]) {
       state.productList = value;
     },

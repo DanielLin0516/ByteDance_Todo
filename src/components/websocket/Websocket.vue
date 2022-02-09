@@ -48,9 +48,9 @@ export default defineComponent({
       }
     };
     const wsInit = () => {
-      // const wsuri = `ws://localhost:8090/websocket/${props.productId}/${userId.value}`;
+      const wsuri = `ws://localhost:8090/websocket/${props.productId}/${userId.value}`;
 
-      const wsuri = `ws://101.201.143.127:8090/api/websocket/${props.productId}/${userId.value}`;
+      // const wsuri = `ws://101.201.143.127:8090/api/websocket/${props.productId}/${userId.value}`;
       ws.value = wsuri;
       if (!wsIsRun.value) return;
       // 销毁ws
@@ -88,8 +88,21 @@ export default defineComponent({
           break;
         case "Card":
           context.emit("updateCard", res);
+          break;
+        case "Product":
+          updateProductInfo(res);
+          break;
         default:
           break;
+      }
+    };
+
+    const updateProductInfo = (message: NotifyMessage) => {
+      const detail = message.detail;
+      if (message.tags.includes("member")) {
+        store.commit("addMemberList", detail.newMember);
+      } else if (message.tags.includes("background")) {
+        store.commit("setColor", detail.background);
       }
     };
 
