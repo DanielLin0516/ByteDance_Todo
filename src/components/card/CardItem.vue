@@ -207,7 +207,7 @@ export default defineComponent({
       display: inline-block;
       // display: flex;
       position: relative;
-      flex: 0 0 30%;
+      flex: 0 0 18%;
       margin-right: 5px;
       width: fit-content;
       height: 10px;
@@ -227,13 +227,13 @@ export default defineComponent({
     }
   }
   .after_click_tags {
-    display: block;
+    display: inline-block;
     // display: flex;
     position: relative;
     flex: 0 0 30%;
     margin-right: 5px;
-    width: fit-content;
-    // height: 10px;
+    width: 100%;
+    height: 10px;
     border-radius: 5px;
     margin-bottom: 5px;
     transition: height ease-in-out 0.5s;

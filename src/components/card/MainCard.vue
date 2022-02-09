@@ -990,9 +990,9 @@ export default defineComponent({
     height: auto;
     .list-title {
       cursor: pointer;
-      // width: 100%;
+      width: 92%;
       font-size: 23px;
-      font-weight: 700;
+      font-weight: 400;
       height: 30px;
       opacity: 1;
       padding: 10px;
@@ -1001,8 +1001,13 @@ export default defineComponent({
       border: unset;
       color: rgba(@cardTextColorMain, 1);
     }
-    input:focus {
+    .list-title:focus {
       outline: none;
+      border-color: #9ecaed;
+      box-shadow: 0 0 10px #9ecaed;
+    }
+    input:focus {
+      // outline: none;
       border: transparent;
     }
     input:focus-visible {

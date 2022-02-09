@@ -242,10 +242,10 @@ export default defineComponent({
       
       const res = await run(userId.value);
       inviteCodeData.value = res;
-      link.value = `http://localhost:3000/#/Invite/${productId.value}/${inviteCodeData.value}`;
+      const base = window.location.host;
+      link.value = `${base}/#/Invite/${productId.value}/${inviteCodeData.value}`;
     };
     const copy = () => {
-      // console.log('复制id', link.value)
       let eInput = document.createElement("input");
       eInput.value = link.value;
       document.body.appendChild(eInput);
