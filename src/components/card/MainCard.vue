@@ -114,8 +114,6 @@
         @close="close"
         :lists="lists"
         :taskInfo="currentTask"
-        @addTag="addTag"
-        @removeTag="removeTag"
       ></Task>
     </div>
     <Websocket
@@ -693,15 +691,6 @@ export default defineComponent({
       return task;
     });
 
-    const addTag = (tag: TagElement) => {
-      currentTask.value.tagList.push(tag);
-    };
-    const removeTag = (tag: TagElement) => {
-      const tagList = currentTask.value.tagList;
-      const index = tagList.findIndex((el) => el.id === tag.id);
-      tagList.splice(index, 1);
-    };
-
     /**
      * websocket更改list
      */
@@ -974,8 +963,6 @@ export default defineComponent({
       updateCard,
       changeListName,
       currentTask,
-      addTag,
-      removeTag,
     };
   },
 });

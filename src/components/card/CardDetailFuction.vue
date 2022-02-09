@@ -105,7 +105,7 @@ export default defineComponent({
       timePeriod = e;
       context.emit("timeDate", timePeriod);
     };
-    const bgcShow = (e) => {
+    const bgcShow = (e: boolean) => {
       console.log("收到的值", e);
       bgc.value = e;
     };

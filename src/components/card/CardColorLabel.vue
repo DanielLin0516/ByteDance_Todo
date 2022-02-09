@@ -135,7 +135,7 @@ export default defineComponent({
     IconPenFill,
     IconLeft,
   },
-  emits: ["close", "addTag", "removeTag"],
+  emits: ["close"],
   setup(props, context) {
     const addSpan = ref(null);
     const cardId: string = inject("cardId") as string;
@@ -219,14 +219,10 @@ export default defineComponent({
 
       if (!tag.isChoosed) {
         tag.isChoosed = true;
-        //抛出emit
-        context.emit("addTag", normalTag);
         //加到数据库
         await setTagByCardId(cardId, tagId);
       } else {
         tag.isChoosed = false;
-        //抛出emit
-        context.emit("removeTag", normalTag);
         await deleteTagInCard(cardId, tagId);
       }
     };
@@ -288,7 +284,6 @@ export default defineComponent({
         return;
       }
       const res = await createNewLabel(newLabelData);
-      console.log(res);
       if (res.id) {
         const tempObj: webLabel = {
           color: "",
@@ -303,6 +298,7 @@ export default defineComponent({
         //清空之前选中的颜色和name
         newLabelData.color = "#61bd4f";
         newLabelData.tagName = "";
+        await setTagByCardId(cardId, res.id.toString());
         //返回
         backToAll();
         //可能是搜索时候创建的，此时需要清空
@@ -310,8 +306,6 @@ export default defineComponent({
         searchTag("");
         //清空选择的状态
         clearNewLabelData();
-        //新建的马上加到卡片中--抛出emit
-        context.emit("addTag", res);
         //新建的马上加到state中中--抛出emit
         store.commit("addNewLabel", res);
       }
