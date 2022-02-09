@@ -518,17 +518,19 @@ export default defineComponent({
     .join {
       display: flex;
       flex-direction: column;
-      // width: 90%;
+      width: 900px;
       .part {
         margin-top: 30px;
-        height: 200px;
+        height: 400px;
         display: flex;
-        width: 1250px ;
+        width: 1100px ;
+        flex-wrap: wrap;
         overflow:auto;
         .parttime {
           width: 230px;
           height: 150px;
           flex-shrink: 0;
+          margin-bottom: 30px;
           color: white;
           font-weight: 900;
           font-size: 24px;

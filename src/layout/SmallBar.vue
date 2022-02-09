@@ -2,9 +2,12 @@
   <div class="small-bar">
     <!-- 第二个菜单栏 -->
     <div class="second-bar">
-      <span class="product-name" style="margin-right: 1vw">{{
-        productName
-      }}</span>
+      <input
+        class="product-name"
+        style="margin-right: 1vw"
+        v-model="store.state.currentProductName"
+        @keyup.enter="changeItem"
+      />
       <Avatar />
       <div class="inviteUser" v-show="showInviteButton" @click="inviteShow">
         <icon-user class="icon-user" />
@@ -37,8 +40,7 @@
                   height: 3vw;
                 "
                 @click="changeBGC"
-                >更改</a-button
-              >
+              >更改</a-button>
             </div>
           </div>
         </template>
@@ -59,22 +61,11 @@
     </div>
     <div
       style="font-size: 1vw; color: rgb(rgb(131, 140, 145)); margin-bottom: 1vw"
-    >
-      具有该链接的任何人均可加入为看板成员
-    </div>
+    >具有该链接的任何人均可加入为看板成员</div>
     <a-spin :size="20" v-if="loading" />
-    <div
-      style="width: 100%; display: flex; flex-direction: column"
-      v-show="inviteCodeData"
-    >
-      <a-input
-        style="width: 100%; margin-bottom: 0.5vw"
-        allow-clear
-        :model-value="link"
-      />
-      <a-button type="primary" style="width: 6vw; height: 2vw" @click="copy"
-        >复制链接</a-button
-      >
+    <div style="width: 100%; display: flex; flex-direction: column" v-show="inviteCodeData">
+      <a-input style="width: 100%; margin-bottom: 0.5vw" allow-clear :model-value="link" />
+      <a-button type="primary" style="width: 6vw; height: 2vw" @click="copy">复制链接</a-button>
     </div>
   </div>
 </template>
@@ -94,7 +85,7 @@ import { setTheme } from "@/theme/theme";
 import { getInviteCode } from "@/axios/api";
 import { useRequest } from "@/hooks/useRequest";
 import { Message } from "@arco-design/web-vue";
-import { changeBackground } from "@/axios/api";
+import { changeBackground, itemName } from "@/axios/api";
 export default defineComponent({
   name: "SmallBar",
   components: {
@@ -109,14 +100,14 @@ export default defineComponent({
     const isDark = ref(false);
     isDark.value = store.state.isDark
     console.log('isDark.value', isDark.value);
-    
+    let name = ref(null);
     const themeText = isDark.value ? '切换默认模式' : '切换夜间模式';
     const inviteCard = ref(false);
     let upSquare = ref(String("#0079BF"));
     const route = useRoute();
     let inviteCodeData = ref(null);
     let link = ref(String(null));
-    const userId = computed(()=>{
+    const userId = computed(() => {
       return store.state.currentUserInfo.userId;
     })
     const productId: any = computed(() => {
@@ -128,7 +119,8 @@ export default defineComponent({
     const showInviteButton = computed(() => {
       return store.state.showInviteButton;
     });
-    const productName = computed(() => {
+    let productName = computed(() => {
+      name.value = store.state.currentProductName;
       return store.state.currentProductName;
     });
     const changeTheme = (e: any) => {
@@ -143,7 +135,16 @@ export default defineComponent({
       store.commit('setIsDark', isDark.value)
       sendIsDarkToApp(isDark.value)
     };
-    const sendIsDarkToApp:any = inject('sendIsDarkToApp')
+    const changeItem = async () => {
+      try {
+        let res = await itemName(productId.value, store.state.currentProductName);
+        Message.success({content:"修改成功"})
+      } catch {
+
+      }
+
+    }
+    const sendIsDarkToApp: any = inject('sendIsDarkToApp')
     const { data, loading, error, run } = useRequest(getInviteCode, {
       onError: () => {
         console.trace(error);
@@ -177,51 +178,51 @@ export default defineComponent({
       {
         id: 7,
         color: "#00FF00",
-      },      
+      },
       {
         id: 8,
         color: "#61bd4f",
-      },      
+      },
       {
         id: 9,
         color: "#f5de33",
-      },      
+      },
       {
         id: 10,
         color: "#ff9f1a",
-      },      
+      },
       {
         id: 11,
         color: "#eb5a46",
-      },      
+      },
       {
         id: 12,
         color: "#c377e0",
-      },      
+      },
       {
         id: 13,
         color: "#0079bf",
-      },      
+      },
       {
         id: 14,
         color: "#00c2e0",
-      },      
+      },
       {
         id: 15,
         color: "#51e898",
-      },      
+      },
       {
         id: 16,
         color: "#ff78cb",
-      },      
+      },
       {
         id: 17,
         color: "#344563",
-      },      
+      },
       {
         id: 18,
         color: "#b3bac5",
-      },      
+      },
     ]);
     const yourChoice = (c: string) => {
       upSquare.value = c;
@@ -239,7 +240,6 @@ export default defineComponent({
       }
     };
     const createLink = async () => {
-      
       const res = await run(userId.value);
       inviteCodeData.value = res;
       const base = window.location.host;
@@ -271,6 +271,8 @@ export default defineComponent({
       upSquare,
       changeBGC,
       themeText,
+      name,
+      changeItem
     };
   },
 });
@@ -295,11 +297,22 @@ export default defineComponent({
     align-items: center;
     padding-left: 15px;
     .product-name {
-      font-size: 24px;
-      margin-left: 20px;
-      font-family: PingFang-Regular;
-      color: #fff;
-      font-weight: 700;
+      cursor: pointer;
+      width: 200px;
+      font-size: 23px;
+      font-weight: 400;
+      height: 30px;
+      opacity: 1;
+      padding: 10px;
+      background-color: transparent;
+      font-family: PingFang-Bold-2;
+      border: unset;
+      color: rgba(@cardTextColorMain, 1);
+    }
+    .product-name:focus {
+      outline: none;
+      border-color: #9ecaed;
+      box-shadow: 0 0 10px #9ecaed;
     }
     .inviteUser {
       position: relative;
