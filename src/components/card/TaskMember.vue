@@ -2,7 +2,7 @@
   <div class="outer">
     <div class="header">
       <h2>标签</h2>
-      <IconCloseCircle @click.self="close" class="icon-close" />
+      <IconCloseCircle @click.prevent="close" class="icon-close" />
     </div>
     <a-input
       :style="{ width: '100%' }"
@@ -15,31 +15,19 @@
       <!-- <div ref="addSpan"> -->
       <div v-show="isSuggest">
         <h3>建议的成员</h3>
-        <p @click="suggestMember" class="new_label">
-          {{ currentUser.fullname }}
-        </p>
+        <p @click="suggestMember" class="new_label">{{ currentUser.fullname }}</p>
       </div>
       <h3>看板成员</h3>
       <div class="members">
-        <!-- 原来的
         <div
           class="label"
-          v-for="(user, index) in mermberList"
-          v-show="user.isShow"
-          :data-choosed="user.isChoosed"
-          :key="user.userId + index"
-          @click="clickMember($event, user, index)"
-        ></div> -->
-        <div
-          class="label"
+          :style="{ background: user.avatar }"
           v-for="(user, index) in mermberList"
           v-show="user.isShow"
           :class="{ choosed: user.isChoosed }"
           :key="user.userId + index"
           @click="clickMember(user, index)"
-        >
-          {{ user.fullname }}
-        </div>
+        >{{ user.fullname }}</div>
       </div>
     </div>
   </div>
@@ -249,19 +237,18 @@ export default defineComponent({
     }
     .label {
       position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 60px;
-      width: 60px;
-      // margin-top: 10px;
+      // display: flex;
+      line-height: 70px;
+      text-align: center;
+      width: 70px;
+      color: white;
       border-radius: 50%;
       user-select: none;
-
       font-weight: 1000;
-
-      background: url(https://joeschmoe.io/api/v1/random);
-      background-color: rgba(0, 0, 0, 0.1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      // background: url(https://joeschmoe.io/api/v1/random);
 
       &:hover {
         transform: scale(1.04);

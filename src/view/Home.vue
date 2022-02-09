@@ -3,7 +3,7 @@
         <div class="header">
             <div class="left">
                 <icon-bytedance-color class="icon-byte" />
-                <span>Todo</span>
+                <span>Byte-ToDo</span>
             </div>
             <div class="right">
                 <span class="login" @click="login">登录</span>
@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="text">
-            <h1>Todo 有助于团队推进工作。</h1>
+            <h1 style="width: auto;">ByteDance To Do 有助于团队推进工作。</h1>
             <p>协作、管理项目并实现新的效率峰值。从摩天大楼到家庭办公室，您的团队工作方式始终都是独一无二的，但都可借助 Todo 来完成工作。</p>
         </div>
     </div>
