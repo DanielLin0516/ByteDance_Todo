@@ -10,10 +10,10 @@
         <form class="form">
           <input
             type="text"
-            name="fullname"
+            name="fullName"
             placeholder="输入你的全名"
             class="fullname"
-            v-model="form.fullname"
+            v-model="form.fullName"
           />
           <div class="email">
             <input
@@ -168,7 +168,7 @@ export default defineComponent({
     let number = ref(0);
     const form = reactive({
       avatar: "",
-      fullname: "",
+      fullName: "",
       username: "",
       verifyCode: "",
       password: "",
@@ -216,7 +216,7 @@ export default defineComponent({
       }
     }
     watch(
-      () => [form.fullname, form.username, form.verifyCode, form.password],
+      () => [form.fullName, form.username, form.verifyCode, form.password],
       () => {
         const regEmail =
           /^([A-Za-z0-9_\-\.\u4e00-\u9fa5])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,8})$/;
@@ -228,7 +228,7 @@ export default defineComponent({
           time.button_disabled = true;
         }
         if (
-          form.fullname &&
+          form.fullName &&
           regEmail.test(form.username) &&
           form.verifyCode &&
           form.password

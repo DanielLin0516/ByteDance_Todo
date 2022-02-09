@@ -28,7 +28,7 @@ export function getUser(obj: {
  */
 export function registerUser(obj: {
   avatar: string;
-  fullname: String;
+  fullName: String;
   username: String;
   verifyCode: String;
   password: String;
