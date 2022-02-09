@@ -45,7 +45,7 @@ import {
   deleteExecutorApi,
 } from "@/axios/labelApi";
 import { CardElement, UserElement } from "@/axios/globalInterface";
-import { defineComponent, inject, ref, reactive, computed } from "vue";
+import { defineComponent, inject, ref, reactive, computed, ComputedRef } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 export default defineComponent({
@@ -53,7 +53,7 @@ export default defineComponent({
     IconCloseCircle,
   },
   // inheritAttrs: false,
-  emits: ["close", "addExecutor", "removeExecutor"],
+  emits: ["close"],
   setup(props, context) {
     // console.log("taskMember--context.attrs", {
     //   ...context.attrs,
@@ -65,8 +65,10 @@ export default defineComponent({
     const isSuggest = ref(true);
     const currentUser = store.state.currentUserInfo;
     const productId = ref(Number(route.params.productId));
-    const task: CardElement = context.attrs.taskInfo as CardElement;
-    const currentMembers: UserElement[] = task.executorList;
+    const task: ComputedRef<CardElement> =computed(()=>{
+      return context.attrs.taskInfo as CardElement
+    }) ;
+    const currentMembers: UserElement[] = task.value == null ? [] : task.value.executorList;
     const searchValue = ref("");
     const cardId: number = inject("cardId") as number;
 
@@ -114,8 +116,6 @@ export default defineComponent({
         //可能是搜索出来的
         searchValue.value = "";
         searchMember();
-        //抛出emit
-        context.emit("addExecutor", user);
         //后端接口
         await setExecutorApi(cardId, userId);
       } else {
@@ -123,7 +123,6 @@ export default defineComponent({
         if (userId == currentUser.userId) {
           isSuggest.value = true;
         }
-        context.emit("removeExecutor", user.userId);
         //后端接口
         await deleteExecutorApi(cardId, userId);
       }

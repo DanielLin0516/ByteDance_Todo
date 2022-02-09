@@ -9,8 +9,14 @@
         </div>
         <span>请选择任务开始和结束时间</span>
         <a-range-picker
+            size="large"
             show-time
-            :time-picker-props="{ defaultValue: [dayjs('00:00:00', 'HH:mm:ss'), dayjs('00:00:00', 'HH:mm:ss')] }"
+            :time-picker-props="{
+                defaultValue: [
+                    dayjs('00:00:00', 'HH:mm:ss'),
+                    dayjs('00:00:00', 'HH:mm:ss'),
+                ],
+            }"
             format="YYYY-MM-DD HH:mm"
             @ok="onOk"
             class="range"
@@ -20,63 +26,63 @@
     </div>
 </template>
 <script lang="ts">
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import { IconCloseCircle } from '@arco-design/web-vue/es/icon';
-import { defineComponent, computed, ref, inject, reactive, provide } from 'vue';
-import { useStore } from 'vuex';
-import { useRoute } from 'vue-router'
-import { setTime } from '@/axios/api'
-import { Message } from '@arco-design/web-vue';
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { IconCloseCircle } from "@arco-design/web-vue/es/icon";
+import { defineComponent, computed, ref, inject, reactive, provide } from "vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+import { setTime } from "@/axios/api";
+import { Message } from "@arco-design/web-vue";
 export default defineComponent({
     components: {
-        IconCloseCircle
+        IconCloseCircle,
     },
     props: {
-        lists: Object
+        lists: Object,
     },
     setup(props, context) {
         dayjs.extend(utc);
         const store = useStore();
         let time = ref(null);
-        let cardId: any = inject('cardId');
+        let cardId: any = inject("cardId");
         const route = useRoute();
         let lists = props.lists;
         let obj = reactive({
             beginTime: "",
             deadline: "",
-            dueReinder: 0
-        })
+            dueReinder: 0,
+        });
         function onOk(dateString: string, date: string) {
             obj.beginTime = dayjs(dateString[0]).utc().format();
             obj.deadline = dayjs(dateString[1]).utc().format();
         }
         async function save() {
-            context.emit('time', obj);
+            context.emit("time", obj);
             lists?.forEach((item: any) => {
                 item.items.forEach((item1: any) => {
                     if (cardId === item1.cardId) {
                         item1.begintime = obj.beginTime;
                         item1.deadline = obj.deadline;
                     }
-                })
-            })
+                });
+            });
             await setTime(cardId, obj);
-            Message.success({ content: "设置成功" })
+            Message.success({ content: "设置成功" });
             store.state.show = !store.state.show;
         }
         async function del() {
             obj.beginTime = "";
             obj.deadline = "";
-            context.emit('time', obj);
+            context.emit("time", obj);
             lists?.forEach((item: any) => {
                 item.items.forEach((item1: any) => {
                     if (cardId === item1.cardId) {
                         item1.begintime = "";
                         item1.deadline = "";
                     }
-                })
-            })
+                });
+            });
             await setTime(cardId, obj);
             store.state.show = !store.state.show;
         }
@@ -85,10 +91,10 @@ export default defineComponent({
             dayjs,
             store,
             save,
-            del
+            del,
         };
-    }
-})
+    },
+});
 </script>
 
 <style lang="less" scoped>
@@ -96,7 +102,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     width: 600px;
-    height: 400px;
+    height: 300px;
     padding: 20px;
     position: absolute;
     border-radius: 5px;
@@ -141,14 +147,14 @@ export default defineComponent({
     }
     .save {
         margin-top: 20px;
-        width: 150px;
-        height: 50px;
+        width: 130px;
+        height: 30px;
         border-radius: 5px;
         margin-bottom: 20px;
     }
     .delete {
-        width: 150px;
-        height: 50px;
+        width: 130px;
+        height: 30px;
         border-radius: 5px;
     }
     :deep(span.arco-panel-date-view-tab-pane-text) {

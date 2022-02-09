@@ -116,7 +116,7 @@ export default defineComponent({
     /**
      * ws关闭
      */
-    function wsCloseHanler(event: any) {
+    function wsCloseHanler(event: CloseEvent) {
       console.log(event, "ws关闭");
       wsDestroy();
     }

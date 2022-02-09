@@ -154,8 +154,8 @@ export default defineComponent({
     //afterHandleList预处理
     const afterHandleList: webLabel[] = reactive([]);
     const preHandle = () => {
-      const task: CardElement = context.attrs.taskInfo as CardElement;
-      const currentTags: TagElement[] = task.tagList;
+      const task: CardElement | null = context.attrs.taskInfo as CardElement;
+      const currentTags: TagElement[] = task == null ? [] : task.tagList;
 
       //
       labelList.forEach((el) => {
@@ -448,8 +448,8 @@ export default defineComponent({
     .icon_left {
       position: absolute;
       right: 0px;
-      height: 40px;
-      width: 40px;
+      height: 35px;
+      width: 35px;
       border-radius: 50%;
       padding: 10px;
       color: rgba(@cardTextColorMain, 0.5);
@@ -470,7 +470,7 @@ export default defineComponent({
   .labels {
     max-height: 40vh;
     overflow-y: scroll;
-    
+
     p {
       width: 100px;
     }

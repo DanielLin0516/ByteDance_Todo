@@ -528,7 +528,4 @@ export default defineComponent({
     }
   }
 }
-:::v-deep .arco-avatar-trigger-icon-button {
-  z-index: -1;
-}
 </style>

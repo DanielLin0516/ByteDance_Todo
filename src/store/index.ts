@@ -1,5 +1,4 @@
 import { createStore } from "vuex";
-import defaultBoard from "./defaultBoard";
 import { ProductElement, StoreState, TagElement, UserElement, webLabel } from "@/axios/globalInterface";
 
 export default createStore<StoreState>({

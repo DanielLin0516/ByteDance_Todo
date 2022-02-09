@@ -67,7 +67,6 @@ router.beforeEach((to, from, next) => {
   ) {
     next();
   } else {
-    Message.error({ content: "请先登录！" });
     next("/Login");
   }
 });

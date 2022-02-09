@@ -114,8 +114,6 @@
         @close="close"
         :lists="lists"
         :taskInfo="currentTask"
-        @addExecutor="addExecutor"
-        @removeExecutor="removeExecutor"
         @addTag="addTag"
         @removeTag="removeTag"
       ></Task>
@@ -231,7 +229,7 @@ export default defineComponent({
     const labelList: TagElement[] = reactive([]);
 
     // 请求失败进行重新拉取
-    const fetchTimer = ref<NodeJS.Timer>();
+    const fetchTimer = ref<NodeJS.Timeout>();
 
     // 路由中的项目Id
     const productId: ComputedRef<string> = computed(() => {
@@ -246,19 +244,15 @@ export default defineComponent({
       onError: () => {
         console.trace(error);
         clearInterval(Number(fetchTimer.value));
-        fetchTimer.value = setInterval(
-          (function fetchAgain() {
-            if (productLoading.value) {
-              console.log(productLoading.value);
-              clearInterval(Number(fetchTimer.value));
-            } else {
-              console.log("项目拉取数据失败");
-              getInfo();
-            }
-            return fetchAgain;
-          })(),
-          4000
-        );
+        fetchTimer.value = setTimeout(() => {
+          if (productLoading.value) {
+            console.log(productLoading.value);
+            clearInterval(Number(fetchTimer.value));
+          } else {
+            console.log("项目拉取数据失败");
+            getInfo();
+          }
+        }, 4000);
       },
     });
 
@@ -699,22 +693,6 @@ export default defineComponent({
       return task;
     });
 
-    /**
-     * 主页中cardItme添加成员
-     */
-    const addExecutor = (executor: UserElement) => {
-      currentTask.value.executorList.push(executor);
-    };
-    /**
-     * 主页中cardItme删除成员
-     */
-    const removeExecutor = (userId: number) => {
-      const index = currentTask.value.executorList.findIndex(
-        (el) => el.userId == userId
-      );
-      currentTask.value.executorList.splice(index, 1);
-    };
-
     const addTag = (tag: TagElement) => {
       currentTask.value.tagList.push(tag);
     };
@@ -904,6 +882,61 @@ export default defineComponent({
             }
           });
         }
+      } else if (tags.includes("member")) {
+        const consistListIndex = lists.findIndex(
+          (item) => item.listId == detail.listId
+        );
+        if (consistListIndex >= 0) {
+          const cardList = lists[consistListIndex].items;
+          cardList.forEach((item) => {
+            if (item.cardId == detail.id) {
+              item.executorList = detail.executorList;
+            }
+          });
+        }
+      } else if (tags.includes("tags")) {
+        const consistListIndex = lists.findIndex(
+          (item) => item.listId == detail.listAfterId
+        );
+        if (consistListIndex >= 0) {
+          const cardList = lists[consistListIndex].items;
+          cardList.forEach((item) => {
+            if (item.cardId == detail.id) {
+              const newTag = {
+                id: detail.tagId,
+                color: detail.background,
+                productId: Number(productId.value),
+                tagName: detail.name,
+              };
+              const tagList = item.tagList;
+              tags.includes("add")
+                ? tagList.push(newTag)
+                : tagList.forEach((tagItem, index) => {
+                    tagItem.id == detail.tagId && tagList.splice(index, 1);
+                  });
+            }
+          });
+        }
+      } else if (tags.includes("time")) {
+        const consistListIndex = lists.findIndex(
+          (item) => item.listId == detail.listId
+        );
+        if (consistListIndex >= 0) {
+          const cardList = lists[consistListIndex].items;
+          cardList.forEach((item) => {
+            if (item.cardId == detail.id) {
+              if (tags.includes("add")) {
+                item.begintime = detail.begintime;
+                item.deadline = detail.deadline;
+              } else if (tags.includes("remove")) {
+                item.begintime = "";
+                item.deadline = "";
+              } else {
+                item.completed = detail.completed;
+              }
+            }
+          });
+        }
       }
     };
 
@@ -940,8 +973,6 @@ export default defineComponent({
       updateList,
       updateCard,
       changeListName,
-      removeExecutor,
-      addExecutor,
       currentTask,
       addTag,
       removeTag,

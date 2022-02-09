@@ -33,8 +33,8 @@
         v-show="cardInfo?.begintime"
         @click.stop="done(cardInfo)"
       >
-        <div>
-          <div>{{ dayjs(cardInfo?.begintime).format("YYYY-MM-DD") }}</div>
+        <div style="display: flex; flex-direction: column;justify-content: space-between;">
+          <div style="margin-bottom: 5px;">{{ dayjs(cardInfo?.begintime).format("YYYY-MM-DD") }}</div>
           <div>{{ dayjs(cardInfo?.deadline).format("YYYY-MM-DD") }}</div>
         </div>
         <icon-schedule class="time2" />
@@ -121,7 +121,7 @@ export default defineComponent({
         } else {
           Message.warning({ content: "任务未完成" });
         }
-        Info.completed = !Info.completed;
+        // Info.completed = !Info.completed;
       } catch (error) {
         console.trace(error);
       }
@@ -261,17 +261,17 @@ export default defineComponent({
     background-color: rgb(242, 214, 0);
     justify-content: space-between;
     padding: 5px;
-    border-radius: 10px;
+    border-radius: 6px;
+    padding-left: 8px;
     color: rgba(@cardColorMain, 1);
     .time1 {
       display: flex;
       flex-direction: column;
     }
     .time2 {
-      height: 30px;
-      width: 30px;
+      height: 25px;
+      width: 25px;
       margin-left: 10px;
-      margin-right: 10px;
     }
   }
   .time:hover {

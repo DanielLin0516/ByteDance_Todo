@@ -557,7 +557,4 @@ export default defineComponent({
     }
   }
 }
-::deep(<.arco-skeleton-line-row >) {
-  background-color: red;
-}
 </style>
