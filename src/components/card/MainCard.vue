@@ -1046,6 +1046,7 @@ export default defineComponent({
     left: 0px;
     top: 0px;
     background-color: rgba(@cardTextColorMain, 0.45);
+    z-index: 5;
   }
 }
 </style>
