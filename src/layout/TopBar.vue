@@ -5,7 +5,7 @@
       <span class="link" @click="project">项目</span>
     </div>
     <div class="right-bar">
-      <a-input-search placeholder="Please enter something" class="input" />
+      <!-- <a-input-search placeholder="Please enter something" class="input" />
       <icon-notification class="notifacte" @click="show = !show" />
       <div class="changeEvent" v-if="show">
         <a-empty v-if="store.state.userEvent.length === 0" />
@@ -16,7 +16,7 @@
         >
           {{ event.content }}发生改变，请查收
         </div>
-      </div>
+      </div> -->
       <a-popover position="br">
         <a-avatar
           :style="{ backgroundColor: '#3370ff' }"

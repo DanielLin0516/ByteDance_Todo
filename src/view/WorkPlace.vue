@@ -1,5 +1,23 @@
 <template>
   <div class="back">
+    <!-- <div class="square">
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="circle">
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>-->
     <div class="left-bar">
       <div class="first">
         <icon-select-all class="icon" />
@@ -8,9 +26,9 @@
     </div>
 
     <div class="right">
-      <a-skeleton v-if="loading" :animation="true">
+      <a-skeleton v-if="loading" :animation="true" style="opacity: 0.6;">
         <a-space direction="vertical" :style="{ width: '80%' }" size="large">
-          <a-skeleton-line :rows="10" />
+          <a-skeleton-line :rows="8" class="row"/>
         </a-space>
       </a-skeleton>
       <div v-else>
@@ -24,9 +42,10 @@
               :key="product.id"
               @click.self="enterInto(product.id)"
             >
-              <div @click.self="enterInto(product.id)" class="product-name">
-                {{ product.productName }}
-              </div>
+              <div
+                @click.self="enterInto(product.id)"
+                class="product-name"
+              >{{ product.productName }}</div>
               <a-popconfirm content="删除此项目?" @ok="deleteItem(product.id)">
                 <icon-delete class="delete" />
               </a-popconfirm>
@@ -58,15 +77,8 @@
                 color: rgb(103, 117, 139);
                 margin-top: 1vw;
               "
-            >
-              看板标题
-            </div>
-            <input
-              type="text"
-              placeholder="输入看板标题（必填项）"
-              class="title"
-              v-model="title"
-            />
+            >看板标题</div>
+            <input type="text" placeholder="输入看板标题（必填项）" class="title" v-model="title" />
             <a-button
               type="primary"
               :disabled="build"
@@ -77,8 +89,7 @@
                 height: 3vw;
               "
               @click="send"
-              >创建</a-button
-            >
+            >创建</a-button>
           </div>
         </div>
         <div class="join">
@@ -90,9 +101,7 @@
               v-for="join in shareProductList"
               :key="join.id"
               @click="enterInto(join.id)"
-            >
-              {{ join.productName }}
-            </div>
+            >{{ join.productName }}</div>
           </div>
         </div>
       </div>
@@ -295,7 +304,7 @@ export default defineComponent({
     const { loading, error, run } = useRequest(getProduct, {
       onError: () => {
         console.trace(error);
-        
+
       },
     });
     run().then((res) => {
@@ -333,8 +342,7 @@ export default defineComponent({
   height: calc(100vh - 80px);
   width: 100vw;
   display: flex;
-  // color: rgba(@cardTextColorMain, 1);
-  background-color: rgb(250, 251, 252);
+  background: -webkit-linear-gradient(bottom, #ffffff, #a9c1ed);
   .left-bar {
     display: inline-block;
     margin-left: 120px;
@@ -365,9 +373,13 @@ export default defineComponent({
   }
   .work-title {
     font-size: 26px;
-    color: rgb(94, 108, 132);
+    color: rgb(62, 66, 73);
   }
   .right {
+    :deep(<.row>) {
+      background-color: red !important;
+      opacity: 0.4;
+    }
     padding-top: 60px;
     padding-left: 80px;
     // width: 100%;
@@ -490,7 +502,7 @@ export default defineComponent({
             width: 72px;
             height: 30px;
             margin-right: 10px;
-            border-radius: 10px;
+            border-radius: 5px;
             margin-bottom: 10px;
             cursor: pointer;
           }
@@ -544,5 +556,8 @@ export default defineComponent({
       }
     }
   }
+}
+::deep(<.arco-skeleton-line-row >) {
+  background-color: red;
 }
 </style>

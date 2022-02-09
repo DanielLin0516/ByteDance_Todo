@@ -192,8 +192,10 @@ export default defineComponent({
       tagName: "",
       productId: parseInt(productId.value as string),
     });
-    watch((newLabelData.tagName),() => {
-      console.log(1)
+    watch(() => [newLabelData.tagName],() => {
+      if(newLabelData.tagName.length >= 14){
+        Message.error({content:"标签名字最大长度不能超过15！"})
+      }
     },{deep:true})
 
     const close = () => {
@@ -288,6 +290,9 @@ export default defineComponent({
     const addNewLabel = async () => {
       if (!newLabelData.color || !newLabelData.tagName) {
         Message.error("请确定颜色与标签名是否完整");
+        return;
+      }else if(newLabelData.tagName.length >=14) {
+        Message.error("标签名不能超过15个字符！");
         return;
       }
       const res = await createNewLabel(newLabelData);

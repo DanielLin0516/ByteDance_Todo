@@ -3,7 +3,7 @@
     <div class="center">
       <header>
         <icon-bytedance-color class="icon-byte" />
-        <span>Todo</span>
+        <span style="color: white;">Todo</span>
       </header>
       <div class="login">
         <span class="title">登录到Todo</span>
@@ -15,15 +15,8 @@
             class="username"
             v-model="form.username"
           />
-          <input
-            type="password"
-            name="password"
-            class="password"
-            v-model="form.password"
-          />
-          <a-button class="submit" :loading="loading" @click="login"
-            >登录</a-button
-          >
+          <input type="password" name="password" class="password" v-model="form.password" />
+          <a-button class="submit" :loading="loading" @click="login">登录</a-button>
         </form>
         <router-link to="Register" class="rebuilt">注册新账号</router-link>
         <router-link to="Forget" class="rebuilt">忘记密码</router-link>
@@ -75,9 +68,26 @@ export default defineComponent({
 
 <style scoped lang="less">
 .bgc {
-  background-color: rgb(249, 250, 252);
+  // background-color: rgb(249, 250, 252);
+  // background: -webkit-linear-gradient(left, #7579ff, #b224ef);
+  background: linear-gradient(
+    -30deg,
+    #03a9f4 0%,
+    #3a78b7 50%,
+    #262626 30%,
+    #607d8b 100%
+  );
+  animation: animate 10s linear infinite;
   display: flex;
   justify-content: center;
+  @keyframes animate {
+    0% {
+      filter: hue-rotate(0deg);
+    }
+    100% {
+      filter: hue-rotate(360deg);
+    }
+  }
   .center {
     padding: 40px;
     height: calc(100vh - 80px);
@@ -103,10 +113,11 @@ export default defineComponent({
       width: 100%;
       height: 700px;
       background-color: white;
-      box-shadow: rgb(0 0 0 / 10%) 0 0 10px;
+      box-shadow: 0 8px 16px 10px rgb(9 30 66 / 25%);
       display: flex;
       flex-direction: column;
       align-items: center;
+      border-radius: 10px;
       span.title {
         display: inline-block;
         color: rgb(94, 108, 132);
