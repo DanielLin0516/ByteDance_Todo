@@ -269,7 +269,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .flex {
   z-index: 99999;
-  overflow-y: scroll;
+  // overflow-y: scroll;
   // max-height: 600px;
   .bgcColor {
     height: 100px;
