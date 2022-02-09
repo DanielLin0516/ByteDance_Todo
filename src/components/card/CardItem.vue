@@ -41,12 +41,48 @@
       </div>
       <div class="member_content" v-if="cardInfo?.executorList[0]">
         <div class="member_items">
-          <a
-            class="member_item"
-            v-for="(user, index) in cardInfo?.executorList"
-            :key="user.userId + index"
-            :title="user.fullname"
-          ></a>
+          <a-space :size="32">
+            <a-avatar-group>
+              <a-avatar
+                :style="{ background: user.avatar }"
+                v-for="(user, index) in cardInfo?.executorList"
+                :key="user.userId + index"
+                :title="user.fullname"
+              >
+                {{ user.fullname.slice(0, 1) }}
+                <template #trigger-icon>
+                  <a-popover position="bottom">
+                    <icon-user :style="{ color: user.avatar }" />
+                    <template #content>
+                      <div class="userInfo">
+                        <div class="info-header">
+                          <span>账号</span>
+                        </div>
+                        <div class="center">
+                          <a-avatar :style="{ backgroundColor: user.avatar }" class="info">
+                            <IconUser />
+                          </a-avatar>
+                          <div
+                            style="
+                    "
+                          >
+                            <div>{{ user.fullname }}</div>
+                            <div
+                              style="
+                        color: rgb(197, 202, 210);
+                        font-size: 12px;
+                        margin-top: 0.5vw;
+                      "
+                            >{{ user.username }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+                  </a-popover>
+                </template>
+              </a-avatar>
+            </a-avatar-group>
+          </a-space>
         </div>
       </div>
     </div>
@@ -55,7 +91,7 @@
 <script lang="ts">
 import dayjs from "dayjs";
 import "animate.css";
-import { IconSchedule } from "@arco-design/web-vue/es/icon";
+import { IconSchedule, IconUser } from "@arco-design/web-vue/es/icon";
 import { defineComponent, ref, PropType } from "vue";
 import { CardElement } from "@/axios/globalInterface";
 import { taskComplete } from "@/axios/api";
@@ -64,6 +100,7 @@ export default defineComponent({
   name: "CardItem",
   components: {
     IconSchedule,
+    IconUser
   },
   props: {
     cardInfo: {
@@ -121,7 +158,6 @@ export default defineComponent({
       dayjs,
       isTagHover,
       isTagClick,
-
       done,
       tagMouseOver,
       tagMouseOut,
@@ -177,7 +213,7 @@ export default defineComponent({
       height: 10px;
       border-radius: 5px;
       margin-bottom: 10px;
-          transition: height ease-in-out 0.1s;
+      transition: height ease-in-out 0.1s;
     }
     .hoverEffect {
       &::before {
@@ -255,6 +291,28 @@ export default defineComponent({
     justify-content: flex-end;
     .member_items {
       display: flex;
+      .userInfo {
+        display: flex;
+        flex-direction: column;
+        .info-header {
+          height: 30px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          color: rgb(94, 108, 132);
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+        .center {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          .info {
+            height: 50px;
+            width: 50px;
+          }
+        }
+      }
       .member_item {
         position: relative;
         display: flex;

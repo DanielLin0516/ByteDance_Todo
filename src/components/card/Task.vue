@@ -1,17 +1,9 @@
 <template>
   <div class="flex">
-    <div
-      class="bgcColor"
-      v-show="task.background"
-      :style="{ background: task.background }"
-    ></div>
+    <div class="bgcColor" v-show="task.background" :style="{ background: task.background }"></div>
     <icon-close-circle class="icon-close-circle" @click.stop="close" />
-
     <div class="header">
-      <icon-robot
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-        class="robot"
-      />
+      <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
       <input
         type="text"
         v-model="task.cardname"
@@ -21,8 +13,7 @@
       />
       <div class="listName">
         在列表
-        <span class="listNameSpan">{{ columnName }}</span
-        >中
+        <span class="listNameSpan">{{ columnName }}</span>中
       </div>
     </div>
     <div class="member_content" v-if="task.tagList[0]">
@@ -33,22 +24,52 @@
           v-for="(item, index) in task.tagList"
           :key="index"
           :style="{ backgroundColor: item.color }"
-        >
-          {{ item.tagName }}
-        </div>
+        >{{ item.tagName }}</div>
       </div>
     </div>
     <div class="member_content" v-if="task.executorList[0]">
       <h3>成员</h3>
       <div class="member_items">
-        <a
-          class="member_item"
-          v-for="(user, index) in task.executorList"
-          :key="user.userId + index"
-          :title="user.fullname"
-        >
-          <!-- {{ user.fullname }} -->
-        </a>
+        <a-space :size="32">
+          <a-avatar-group>
+            <a-avatar
+              :style="{ background: user.avatar }"
+              v-for="(user, index) in task.executorList"
+              :key="user.userId + index"
+              :title="user.fullname"
+            >
+              {{ user.fullname.slice(0, 1) }}
+              <template #trigger-icon>
+                <a-popover position="bottom">
+                  <icon-user :style="{ color: user.avatar }" />
+                  <template #content>
+                    <div class="userInfo">
+                      <div class="info-header">
+                        <span>账号</span>
+                      </div>
+                      <div class="center">
+                        <a-avatar :style="{ backgroundColor: user.avatar }" class="info">
+                          <IconUser />
+                        </a-avatar>
+                        <div style="
+                          ">
+                          <div>{{ user.fullname }}</div>
+                          <div
+                            style="
+                        color: rgb(197, 202, 210);
+                        font-size: 12px;
+                        margin-top: 0.5vw;
+                      "
+                          >{{ user.username }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </a-popover>
+              </template>
+            </a-avatar>
+          </a-avatar-group>
+        </a-space>
       </div>
     </div>
 
@@ -61,16 +82,12 @@
           {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
           <div class="done" :class="{ undone: !task.completed }">{{ done }}</div>
         </div>
-
       </div>
 
       <!-- <div>wancheng</div> -->
     </div>
     <div class="des">
-      <icon-align-left
-        class="icon-left"
-        :style="{ fontSize: '1.2em', margin: '0 10px' }"
-      />
+      <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
       <h3>描述</h3>
     </div>
     <a-textarea
@@ -90,18 +107,13 @@
       :id="id"
       :columnName="columnName"
     ></CardDetailFuction>
-    <a-popconfirm
-      content="将此任务删除？"
-      okText="确认"
-      cancelText="取消"
-      @ok="deleteOneTask()"
-    >
+    <a-popconfirm content="将此任务删除？" okText="确认" cancelText="取消" @ok="deleteOneTask()">
       <a-button status="danger" class="deleteButton" shape="round">
         <template #icon>
           <icon-delete />
         </template>
-        <template #default>删除任务</template> </a-button
-      >/>
+        <template #default>删除任务</template>
+      </a-button>/>
     </a-popconfirm>
   </div>
 </template>
@@ -111,6 +123,7 @@ import {
   IconRobot,
   IconAlignLeft,
   IconDelete,
+  IconUser
 } from "@arco-design/web-vue/es/icon";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -151,6 +164,7 @@ export default defineComponent({
     IconDelete,
     CardAction,
     CardDetailFuction,
+    IconUser
   },
   props: {
     id: String,
@@ -254,11 +268,16 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .flex {
+  z-index: 99999;
+  overflow-y: scroll;
+  // max-height: 600px;
   .bgcColor {
     height: 100px;
     width: 100%;
     border-radius: 10px;
     position: relative;
+    // flex-grow: 1;
+    flex-shrink: 0;
   }
   position: relative;
   display: flex;
@@ -331,6 +350,28 @@ export default defineComponent({
     .member_items {
       display: flex;
       margin-bottom: 10px;
+      .userInfo {
+        display: flex;
+        flex-direction: column;
+        .info-header {
+          height: 30px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          color: rgb(94, 108, 132);
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+        .center {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          .info {
+            height: 50px;
+            width: 50px;
+          }
+        }
+      }
 
       .member_item {
         margin-left: 10px;
@@ -348,6 +389,28 @@ export default defineComponent({
 
         background: url(https://joeschmoe.io/api/v1/random);
         background-color: rgba(0, 0, 0, 0.1);
+        .userInfo {
+          display: flex;
+          flex-direction: column;
+          .info-header {
+            height: 30px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            color: rgb(94, 108, 132);
+            font-size: 18px;
+            margin-bottom: 10px;
+          }
+          .center {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            .info {
+              height: 50px;
+              width: 50px;
+            }
+          }
+        }
 
         &:hover {
           transform: scale(1.04);
@@ -470,5 +533,8 @@ export default defineComponent({
     color: rgba(0, 0, 0, 0.7);
     // font-size: 20px;
   }
+}
+:::v-deep .arco-avatar-trigger-icon-button {
+  z-index: -1;
 }
 </style>
