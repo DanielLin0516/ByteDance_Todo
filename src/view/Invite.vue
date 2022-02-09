@@ -106,7 +106,7 @@ export default defineComponent({
         width: 1400px;
         padding: 20px;
         box-shadow: 0 8px 16px -4px #091e4240, 0 0 0 1px #091e4214;
-        background-color: rgb(255, 255, 255);
+        background-color: rgb(245, 227, 227);
         span {
             font-size: 3vw;
             font-weight: 800;
@@ -116,13 +116,13 @@ export default defineComponent({
             margin-top: 300px;
             // width: 800px;
             .login {
-                width: 180px;
+                width: 200px;
                 height: 100px;
                 border-radius: 10px;
                 font-size: 24px;
             }
             .reg {
-                width: 180px;
+                width: 200px;
                 height: 100px;
                 border-radius: 10px;
                 margin-left: 100px;
