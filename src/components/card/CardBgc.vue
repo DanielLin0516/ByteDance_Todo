@@ -196,8 +196,8 @@ export default defineComponent({
     border-bottom: 1px solid rgb(0, 121, 191);
   }
   .icon-close {
-    height: 40px;
-    width: 40px;
+    height: 35px;
+    width: 35px;
     border-radius: 50%;
     padding: 10px;
     color: rgba(@cardTextColorMain, 0.5);
@@ -205,6 +205,12 @@ export default defineComponent({
     position: absolute;
     right: 0px;
     top: 0px;
+    transition: all 0.4s;
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(@cardTextColorMain, 0.1);
+      transition: all 0.4s;
+    }
   }
   .square {
     height: 100px;

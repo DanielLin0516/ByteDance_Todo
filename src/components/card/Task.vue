@@ -74,7 +74,7 @@
     </div>
 
     <div class="date" v-if="task.begintime">
-      <span>日期</span>
+      <h3>日期</h3>
       <div class="box">
         <input type="checkbox" v-model="task.completed" @click="showsome(task)" />
         <div class="time" :class="{ timedone: task.completed }">
@@ -418,18 +418,19 @@ export default defineComponent({
         align-items: center;
         margin-left: 10px;
         padding: 0 5px;
-        height: 40px;
-        line-height: 40px;
+        height: 26px;
+        line-height: 26px;
         min-width: 55px;
-        border-radius: 10px;
+        border-radius: 5px;
         user-select: none;
-        font-size: 22px;
-        font-weight: 1000;
+        font-size: 16px;
+        font-weight: 700;
         color: white;
       }
     }
   }
   .date {
+    margin: 0px 20px 0px 20px;
     span {
       display: inline-block;
       margin-left: 20px;
@@ -446,17 +447,17 @@ export default defineComponent({
       .time {
         margin-top: 10px;
         display: flex;
-        font-size: 12px;
+        font-size: 16px;
         width: fit-content;
         align-items: center;
         background-color: rgb(242, 214, 0);
         justify-content: space-between;
         padding: 5px;
-        border-radius: 10px;
+        border-radius: 5px;
         color: rgba(@cardColorMain, 1);
         margin-left: 20px;
         margin-bottom: 10px;
-        padding: 10px;
+        padding-left: 10px;
         .done {
           background-color: white;
           border-radius: 5px;

@@ -440,8 +440,8 @@ export default defineComponent({
     .icon_left {
       position: absolute;
       right: 0px;
-      height: 40px;
-      width: 40px;
+      height: 35px;
+      width: 35px;
       border-radius: 50%;
       padding: 10px;
       color: rgba(@cardTextColorMain, 0.5);
