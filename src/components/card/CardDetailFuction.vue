@@ -29,7 +29,6 @@
       v-show="bgc"
       :bgc="bgc"
       @bgcShow="bgcShow"
-      @change="change"
     ></card-bgc>
   </div>
   <div style="z-index: 999">
@@ -81,7 +80,7 @@ export default defineComponent({
     id: String,
     columnName: String,
   },
-  emits: ["timeDate", "change"],
+  emits: ["timeDate"],
   setup(props, context) {
     const store = useStore();
     let show = store.state.show;
@@ -110,10 +109,6 @@ export default defineComponent({
       console.log("收到的值", e);
       bgc.value = e;
     };
-    const change = (e) => {
-      console.log(e);
-      context.emit("change", e);
-    };
 
     return {
       store,
@@ -126,7 +121,6 @@ export default defineComponent({
       recieveTime,
       bgcShow,
       bgc,
-      change,
     };
   },
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="creat-project">
-      <span>改变标签颜色</span>
+      <span>改变卡片背景颜色</span>
       <icon-close-circle class="icon-close" @click="closeBgc" />
       <div class="square" :style="{ background: upSquare }"></div>
       <div class="back-ground">
@@ -54,7 +54,7 @@ export default defineComponent({
     columnName: String,
     bgc: Boolean,
   },
-  emits: ["bgcShow", "change"],
+  emits: ["bgcShow"],
   setup(props, context) {
     let upSquare = ref(String("#0079BF"));
     let color = reactive([
@@ -144,8 +144,7 @@ export default defineComponent({
           cardId: props.id,
           background: upSquare.value,
         });
-        await setCardColor(props.id, upSquare.value.slice(1, 7));
-        context.emit("change", obj);
+        await setCardColor(Number(props.id), upSquare.value.slice(1, 7));
         props.lists?.forEach((item: any) => {
           item.items.forEach((item1: any) => {
             if (props.id === item1.cardId) {

@@ -778,7 +778,6 @@ export default defineComponent({
      */
     const updateCard = (message: NotifyMessage) => {
       const detail = message.detail;
-      console.log(detail);
       switch (message.event) {
         case "updateModels":
           updateCardByActionTags(detail, message.tags);
@@ -890,6 +889,18 @@ export default defineComponent({
           cardList.forEach((item) => {
             if (item.cardId == detail.id) {
               item.cardname = detail.name;
+            }
+          });
+        }
+      } else if (tags.includes("background")) {
+        const consistListIndex = lists.findIndex(
+          (item) => item.listId == detail.listId
+        );
+        if (consistListIndex >= 0) {
+          const cardList = lists[consistListIndex].items;
+          cardList.forEach((item) => {
+            if (item.cardId == detail.id) {
+              item.background = detail.background;
             }
           });
         }
@@ -1035,6 +1046,7 @@ export default defineComponent({
     left: 0px;
     top: 0px;
     background-color: rgba(@cardTextColorMain, 0.45);
+    z-index: 5;
   }
 }
 </style>

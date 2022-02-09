@@ -103,7 +103,6 @@
       @timeDate="dateTime"
       :lists="lists"
       v-bind="$attrs"
-      @change="change"
       :id="id"
       :columnName="columnName"
     ></CardDetailFuction>
@@ -171,7 +170,7 @@ export default defineComponent({
     columnName: String,
     lists: Object,
   },
-  emits: ["close", "change"],
+  emits: ["close"],
   setup(props, context) {
     provide("cardId", props.id as string);
     dayjs.extend(utc);
@@ -243,9 +242,6 @@ export default defineComponent({
       });
     };
     getTaskInfo();
-    const change = (e) => {
-      task.background = e.background;
-    };
     return {
       task,
       listName,
@@ -256,9 +252,6 @@ export default defineComponent({
       updateTaskDesc,
       deleteOneTask,
       dateTime,
-      // addExecutor,
-      // removeExecutor,
-      change,
       done,
       showsome
     };
@@ -268,7 +261,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .flex {
-  z-index: 99999;
+  z-index: 100;
   // overflow-y: scroll;
   // max-height: 600px;
   .bgcColor {

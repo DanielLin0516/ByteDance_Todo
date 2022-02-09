@@ -8,73 +8,92 @@
     </div>
 
     <div class="right">
-      <div class="work">
-        <span class="work-title">您创建的项目</span>
-        <div class="project">
-          <div
-            class="item"
-            :style="{ background: product.background }"
-            v-for="product in productList"
-            :key="product.id"
-            @click.self="enterInto(product.id)"
-          >
-            {{ product.productName }}
-            <a-popconfirm content="删除此项目?" @ok="deleteItem(product.id)">
-              <icon-delete class="delete" />
-            </a-popconfirm>
-          </div>
-          <!-- 创建看板 -->
-          <div class="create" @click="create">创建新看板</div>
-        </div>
-      </div>
-      <div v-if="show" class="creat-project">
-        <span>
-          创建看板
-          <icon-close-circle class="close" @click="show = !show" />
-        </span>
-        <div class="square" :style="{ background: upSquare }"></div>
-        <div class="back-ground">
-          <div class="content">背景</div>
-          <div class="color-choose">
+      <a-skeleton v-if="loading" :animation="true">
+        <a-space direction="vertical" :style="{ width: '80%' }" size="large">
+          <a-skeleton-line :rows="10" />
+        </a-space>
+      </a-skeleton>
+      <div v-else>
+        <div class="work">
+          <span class="work-title">您创建的项目</span>
+          <div class="project">
             <div
-              class="choose"
-              :style="{ background: choose.color }"
-              v-for="choose in color"
-              :key="choose.id"
-              @click="yourChoice(choose.color)"
-            ></div>
+              class="item"
+              :style="{ background: product.background }"
+              v-for="product in productList"
+              :key="product.id"
+              @click.self="enterInto(product.id)"
+            >
+              <div @click.self="enterInto(product.id)" class="product-name">
+                {{ product.productName }}
+              </div>
+              <a-popconfirm content="删除此项目?" @ok="deleteItem(product.id)">
+                <icon-delete class="delete" />
+              </a-popconfirm>
+            </div>
+            <!-- 创建看板 -->
+            <div class="create" @click="create">创建新看板</div>
           </div>
-          <div
-            style="
-              font-size: 0.833vw;
-              color: rgb(103, 117, 139);
-              margin-top: 1vw;
-            "
-          >看板标题</div>
-          <input type="text" placeholder="输入看板标题（必填项）" class="title" v-model="title" />
-          <a-button
-            type="primary"
-            :disabled="build"
-            style="
-              margin-top: 2vw;
-              width: 100%;
-              border-radius: 1vw;
-              height: 3vw;
-            "
-            @click="send"
-          >创建</a-button>
         </div>
-      </div>
-      <div class="join">
-        <span class="work-title">参与的项目</span>
-        <div class="part">
-          <div
-            class="parttime"
-            :style="{ background: join.background }"
-            v-for="join in shareProductList"
-            :key="join.id"
-            @click="enterInto(join.id)"
-          >{{ join.productName }}</div>
+        <div v-if="show" class="creat-project">
+          <span>
+            创建看板
+            <icon-close-circle class="close" @click="show = !show" />
+          </span>
+          <div class="square" :style="{ background: upSquare }"></div>
+          <div class="back-ground">
+            <div class="content">背景</div>
+            <div class="color-choose">
+              <div
+                class="choose"
+                :style="{ background: choose.color }"
+                v-for="choose in color"
+                :key="choose.id"
+                @click="yourChoice(choose.color)"
+              ></div>
+            </div>
+            <div
+              style="
+                font-size: 0.833vw;
+                color: rgb(103, 117, 139);
+                margin-top: 1vw;
+              "
+            >
+              看板标题
+            </div>
+            <input
+              type="text"
+              placeholder="输入看板标题（必填项）"
+              class="title"
+              v-model="title"
+            />
+            <a-button
+              type="primary"
+              :disabled="build"
+              style="
+                margin-top: 2vw;
+                width: 100%;
+                border-radius: 1vw;
+                height: 3vw;
+              "
+              @click="send"
+              >创建</a-button
+            >
+          </div>
+        </div>
+        <div class="join">
+          <span class="work-title">参与的项目</span>
+          <div class="part">
+            <div
+              class="parttime"
+              :style="{ background: join.background }"
+              v-for="join in shareProductList"
+              :key="join.id"
+              @click="enterInto(join.id)"
+            >
+              {{ join.productName }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -101,6 +120,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { getProduct, createProduct, deleteProject } from "@/axios/api";
 import { ProductElement } from "@/axios/globalInterface";
+import { useRequest } from "@/hooks/useRequest";
 export default defineComponent({
   name: "App",
   components: {
@@ -272,8 +292,13 @@ export default defineComponent({
         console.trace(error);
       }
     }
-    getProduct().then((res) => {
-      console.log("work");
+    const { loading, error, run } = useRequest(getProduct, {
+      onError: () => {
+        console.trace(error);
+        
+      },
+    });
+    run().then((res) => {
       res.productList.forEach((item) => {
         productList.push(item);
       });
@@ -297,6 +322,7 @@ export default defineComponent({
       send,
       deleteItem,
       enterInto,
+      loading,
     };
   },
 });
@@ -366,7 +392,6 @@ export default defineComponent({
         .item {
           width: 230px;
           height: 150px;
-          color: white;
           font-weight: 900;
           font-size: 24px;
           border-radius: 10px;
@@ -377,15 +402,23 @@ export default defineComponent({
           cursor: pointer;
           margin-bottom: 20px;
           position: relative;
+          transition: box-shadow, 500, cubic-bezier(0, 0, 1, 1);
+          .product-name {
+            color: white;
+          }
           .delete {
             position: absolute;
             right: 10px;
             bottom: 10px;
             padding: 5px;
+            color: white;
           }
           .delete:hover {
             color: black;
           }
+        }
+        .item:hover {
+          box-shadow: 0 4px 10px #cccccc;
         }
         .create {
           width: 230px;
