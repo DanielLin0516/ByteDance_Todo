@@ -304,10 +304,11 @@ export default defineComponent({
       height: 30px;
       opacity: 1;
       padding: 10px;
-      background-color: transparent;
+      background-color: rgba(@cardColorMain, 0.4);;
       font-family: PingFang-Bold-2;
       border: unset;
       color: rgba(@cardTextColorMain, 1);
+      border-radius: 20px;
     }
     .product-name:focus {
       outline: none;
