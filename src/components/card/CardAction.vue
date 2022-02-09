@@ -2,7 +2,7 @@
     <div class="addFile-container">
         <header class="addFile-header">
             <div>
-                <icon-link :style="{ fontSize: '1em', margin: '0 10px 0 0' }" />
+                <icon-link :style="{ fontSize: '1em', margin: '0 10px 0 0' }" class="icon-link" />
                 <span class="mySpan">活动</span>
             </div>
             <div class="header-button">
@@ -83,6 +83,9 @@ export default defineComponent({
     font-weight: 700;
     display: flex;
     justify-content: space-between;
+    .icon-link {
+        color: rgba(@cardTextColorMain, 0.8);
+    }
 }
 .header-button {
     margin-right: 10px;

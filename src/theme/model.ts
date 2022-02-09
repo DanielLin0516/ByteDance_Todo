@@ -1,5 +1,3 @@
-// 一套默认主题以及一套暗黑主题
-// 一套默认主题以及一套暗黑主题
 export const themes:any = {
     default: {
       primaryColor: `${74}, ${144},${226}`,
@@ -7,7 +5,6 @@ export const themes:any = {
       cardColorMain: `${255}, ${255},${255}`,
       cardTextColorMain:`${0}, ${0},${0}`,
       cardTextColorSub:`${128}, ${128},${128}`,
-
       primaryTextColor: `${242}, ${214},${0}`,
     },
     dark: {
