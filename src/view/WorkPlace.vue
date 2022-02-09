@@ -320,6 +320,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@import "@/components/card/scrollCss/scroll.scss";
 .back {
   height: calc(100vh - 80px);
   width: 100vw;
@@ -517,14 +518,17 @@ export default defineComponent({
     .join {
       display: flex;
       flex-direction: column;
-      width: 90%;
+      // width: 90%;
       .part {
         margin-top: 30px;
         height: 200px;
         display: flex;
+        width: 1250px ;
+        overflow:auto;
         .parttime {
           width: 230px;
           height: 150px;
+          flex-shrink: 0;
           color: white;
           font-weight: 900;
           font-size: 24px;

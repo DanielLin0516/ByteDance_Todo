@@ -21,7 +21,7 @@
 import { useStore } from 'vuex'
 import { useRoute,useRouter } from 'vue-router'
 import { IconBytedanceColor } from '@arco-design/web-vue/es/icon';
-import { reactive, ref, defineComponent } from 'vue';
+import { reactive, ref, defineComponent ,onMounted} from 'vue';
 export default defineComponent({
     components: {
         IconBytedanceColor
@@ -35,6 +35,11 @@ export default defineComponent({
         const register = () => {
             router.push({name:'Register'})
         }
+        onMounted(() => {
+            if(localStorage.getItem("token")) {
+                router.push("/Layout/WorkPlace")
+            }
+        })
         return {
             login,
             register
