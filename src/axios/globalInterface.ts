@@ -104,6 +104,11 @@ export interface DetailElement {
   description: string;
   listId: number;
   newMember: UserElement;
+  executorList: UserElement[];
+  tagId: number;
+  begintime: string;
+  deadline: string;
+  completed: boolean;
 }
 
 export interface NotifyMessage {

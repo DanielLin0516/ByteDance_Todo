@@ -121,7 +121,7 @@ export default defineComponent({
         } else {
           Message.warning({ content: "任务未完成" });
         }
-        Info.completed = !Info.completed;
+        // Info.completed = !Info.completed;
       } catch (error) {
         console.trace(error);
       }
@@ -261,7 +261,8 @@ export default defineComponent({
     background-color: rgb(242, 214, 0);
     justify-content: space-between;
     padding: 5px;
-    border-radius: 10px;
+    border-radius: 6px;
+    padding-left: 8px;
     color: rgba(@cardColorMain, 1);
     .time1 {
       display: flex;
