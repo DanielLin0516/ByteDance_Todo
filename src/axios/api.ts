@@ -381,3 +381,11 @@ export function setCardColor(cardId: number,color:string) {
 export function taskComplete(cardId: number,complete:boolean) {
   return instance.post(`/cards/changeCardCompleteStatus/${cardId}?completed=${complete}`);
 }
+/**
+ * 根据ID删除卡片
+ * @param productId
+ * @returns
+ */
+export function itemName(productId:number,productName:string) {
+  return instance.post(`/product/changeProductName/${productId}?productName=${productName}`);
+}
