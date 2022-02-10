@@ -147,8 +147,8 @@ export default defineComponent({
   width: 30px;
   height: calc(100% - 80px);
   position: relative;
-  background-color: rgba(@cardColorMain, 0.6);
-  border-right: 1px solid rgba(@cardColorWrapper, 0.5);
+  background-color: rgba(@cardColorMain, 0.3);
+  border-right: 1px solid rgba(@cardColorWrapper, 0.4);
   display: flex;
   float: left;
   transition: width ease-in-out 0.1s;
@@ -169,7 +169,7 @@ export default defineComponent({
   overflow-y: auto;
 }
 .left-drawer-sitck:hover {
-  background-color: rgba(@cardColorWrapper, 0.8);
+  background-color: rgba(@cardColorWrapper, 0.4);
 }
 
 .left-drawer-stick-open {
