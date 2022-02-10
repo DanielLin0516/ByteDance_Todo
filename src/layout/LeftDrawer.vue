@@ -112,6 +112,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+
 .left-drawer-sitck {
   width: 30px;
   height: calc(100% - 80px);
@@ -164,6 +165,7 @@ export default defineComponent({
 }
 ::v-deep .drawer {
   background-color: rgba(@cardTextColorMain, 0.16);
+  opacity: 0.6;
 }
 ::v-deep .arco-drawer-body {
   color: rgba(@cardTextColorSub, 1);
@@ -178,5 +180,11 @@ export default defineComponent({
 ::v-deep .arco-drawer-footer {
   background-color: rgba(@cardColorWrapper, 1);
   color: rgba(@cardTextColorMain, 1);
+}
+::v-deep .arco-list-item-meta-title {
+  color: rgba(@cardTextColorMain, 1);
+}
+::v-deep .arco-list-item-meta-description {
+  color: rgba(@cardTextColorSub, 1);
 }
 </style>
