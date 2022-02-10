@@ -252,20 +252,36 @@ export default defineComponent({
         driver.preventMove();
         newColumnName.value = 'Test';
         async function createTestColumn() {
-          return createColumn()
-        }
-        const res = createTestColumn()
-        
-        async function createTestCard() {
-          createNewCard({
-            cardname: 'test-card',
+          const res = await createColumn()
+          await createNewCard({
+            cardname: 'testard123',
             listId: (await res).id,
             pos: 12002,
             productId: (await res).productId
           })
-        } 
-        createTestCard()
-        // openTask(listID, list) 
+          const listid = 151;
+          // await openTask(listid, lists[0])sa
+        }
+        createTestColumn()
+        // async function createTestCard() {
+          
+        // } 
+        // async function openTsk(listid:any) {
+        //   openTask(listid, lists[0])
+        // }
+        // const res = createTestColumn()
+        // res.then((resolve)=> {
+        //   const listid = resolve.id
+        //   const res1 = createTestCard()
+        //   console.log(12);
+          
+        //   res1.then(() => {
+        //     console.log(23);
+            
+        //       openTsk(listid)
+        //   })
+        // })
+        
         setTimeout(() => {
           driver.moveNext();
         }, 500);
@@ -280,8 +296,14 @@ export default defineComponent({
         },
         
       },
-    
    ]
+  //   ProductShowElement {
+  // listName: string;
+  // listId: number;
+  // productId: number;
+  // closed: boolean;
+  // pos: number;
+  // items: CardElement[];
     // 新手指南-start
     const driver = new Driver({
       opacity: 0.5,
@@ -742,7 +764,7 @@ export default defineComponent({
       taskClickId.value = cardId;
       columnName.value = column.listName;
       isTaskOpen.value = true;
-      console.log(column);
+      console.log('column', column);
       
     };
 

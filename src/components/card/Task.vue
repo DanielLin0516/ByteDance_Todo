@@ -235,6 +235,7 @@ export default defineComponent({
     });
     const getTaskInfo = async () => {
       await getCardInfo(id).then((res) => {
+        console.log('res', res);
         task.cardname = res.cardname;
         task.description = res.description;
         Object.assign(task, res);
