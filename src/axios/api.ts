@@ -382,10 +382,18 @@ export function taskComplete(cardId: number,complete:boolean) {
   return instance.post(`/cards/changeCardCompleteStatus/${cardId}?completed=${complete}`);
 }
 /**
- * 根据ID删除卡片
+ * 更改名字
  * @param productId
  * @returns
  */
 export function itemName(productId:number,productName:string) {
   return instance.post(`/product/changeProductName/${productId}?productName=${productName}`);
+}
+/**
+ * 踢出人员
+ * @param productId
+ * @returns
+ */
+export function kickMember(productId:number,userId:number) {
+  return instance.post(`/product/kickOutMember/${productId}/${userId}`);
 }

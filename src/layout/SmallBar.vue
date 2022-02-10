@@ -45,6 +45,37 @@
           </div>
         </template>
       </a-popover>
+      <a-popover position="bottom">
+        <div class="changeColor">{{ kick }}</div>
+        <template #content>
+          <div class="creat-project">
+            <span>调整颜色</span>
+            <div class="square" :style="{ background: upSquare }"></div>
+            <div class="back-ground">
+              <div class="content">背景</div>
+              <div class="color-choose">
+                <div
+                  class="choose"
+                  :style="{ background: choose.color }"
+                  v-for="choose in color"
+                  :key="choose.id"
+                  @click="yourChoice(choose.color)"
+                ></div>
+              </div>
+              <a-button
+                type="primary"
+                style="
+                  margin-top: 2vw;
+                  width: 100%;
+                  border-radius: 1vw;
+                  height: 3vw;
+                "
+                @click="changeBGC"
+              >更改</a-button>
+            </div>
+          </div>
+        </template>
+      </a-popover>
     </div>
   </div>
   <div class="invite-code" v-show="inviteCard">
@@ -101,6 +132,7 @@ export default defineComponent({
     isDark.value = store.state.isDark
     console.log('isDark.value', isDark.value);
     let name = ref(null);
+    let kick = ref(null);
     const themeText = isDark.value ? '切换默认模式' : '切换夜间模式';
     const inviteCard = ref(false);
     let upSquare = ref(String("#0079BF"));
@@ -117,6 +149,11 @@ export default defineComponent({
       inviteCard.value = !inviteCard.value;
     };
     const showInviteButton = computed(() => {
+      if (store.state.showInviteButton) {
+        kick.value = "踢人";
+      } else {
+        kick.value = "退出项目"
+      }
       return store.state.showInviteButton;
     });
     let productName = computed(() => {
@@ -138,7 +175,7 @@ export default defineComponent({
     const changeItem = async () => {
       try {
         let res = await itemName(productId.value, store.state.currentProductName);
-        Message.success({content:"修改成功"})
+        Message.success({ content: "修改成功" })
       } catch {
 
       }
@@ -272,7 +309,8 @@ export default defineComponent({
       changeBGC,
       themeText,
       name,
-      changeItem
+      changeItem,
+      kick
     };
   },
 });
