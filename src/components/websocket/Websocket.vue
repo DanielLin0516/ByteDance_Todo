@@ -1,7 +1,5 @@
 <template>
-  <!-- <div>
-    <a-button type="primary" @click="sendDataToServer">向后台发送消息</a-button>
-  </div>-->
+
 </template>
 
 <script lang="ts">
@@ -103,6 +101,8 @@ export default defineComponent({
         store.commit("addMemberList", detail.newMember);
       } else if (message.tags.includes("background")) {
         store.commit("setColor", detail.background);
+      } else if (message.tags.includes("name")) {
+        store.commit("setCurrentProductName", detail.name);
       }
     };
 

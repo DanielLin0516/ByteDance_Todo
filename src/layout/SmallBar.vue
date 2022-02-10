@@ -5,8 +5,8 @@
       <input
         class="product-name"
         style="margin-right: 1vw"
-        v-model="store.state.currentProductName"
-        @keyup.enter="changeItem"
+        v-model="productName"
+        @change="changeItem"
       />
       <Avatar />
       <div class="inviteUser" v-show="showInviteButton" @click="inviteShow">
@@ -156,8 +156,7 @@ export default defineComponent({
       }
       return store.state.showInviteButton;
     });
-    let productName = computed(() => {
-      name.value = store.state.currentProductName;
+    const productName = computed(() => {
       return store.state.currentProductName;
     });
     const changeTheme = (e: any) => {
@@ -336,16 +335,17 @@ export default defineComponent({
     padding-left: 15px;
     .product-name {
       cursor: pointer;
-      width: 200px;
+      width: 160px;
       font-size: 23px;
       font-weight: 400;
       height: 30px;
       opacity: 1;
       padding: 10px;
-      background-color: transparent;
+      background-color: rgba(@cardColorMain, 0.4);;
       font-family: PingFang-Bold-2;
       border: unset;
       color: rgba(@cardTextColorMain, 1);
+      border-radius: 20px;
     }
     .product-name:focus {
       outline: none;
