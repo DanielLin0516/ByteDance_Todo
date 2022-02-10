@@ -176,6 +176,14 @@ import { Message } from "@arco-design/web-vue";
 import CardItem from "@/components/card/CardItem.vue";
 import Task from "@/components/card/Task.vue";
 import Websocket from "@/components/websocket/Websocket.vue";
+import Driver from 'driver.js' // import driver.js
+import 'driver.js/dist/driver.min.css' // import driver.js css
+import {
+  onMounted,
+} from "vue";
+import steps from "@/utils/driver"
+import LoginVue from "@/view/Login.vue";
+import { log } from "console";
 
 export default defineComponent({
   name: "MainCard",
@@ -197,8 +205,7 @@ export default defineComponent({
   setup(props, context) {
     const store: Store<StoreState> = useStore();
     const route = useRoute();
-    const router = useRouter();
-    const newColumnName = ref("");
+    let newColumnName = ref("");
     const taskClickId = ref(NaN);
     const columnName = ref("");
     const isTaskOpen = ref(false);
@@ -233,6 +240,67 @@ export default defineComponent({
     const productId: ComputedRef<string> = computed(() => {
       return route.params.productId as string;
     });
+    const steps = [
+    {
+       element: '#new1',
+       popover: {
+         title: '邀请朋友',
+         description: '在此处邀请朋友一起使用项目',
+         position: 'bottom'
+      },
+      onNext: () => {
+        driver.preventMove();
+        newColumnName.value = 'Test';
+        async function createTestColumn() {
+          return createColumn()
+        }
+        const res = createTestColumn()
+        
+        async function createTestCard() {
+          createNewCard({
+            cardname: 'test-card',
+            listId: (await res).id,
+            pos: 12002,
+            productId: (await res).productId
+          })
+        } 
+        createTestCard()
+        // openTask(listID, list) 
+        setTimeout(() => {
+          driver.moveNext();
+        }, 500);
+      }
+    },
+    {
+        element: '#second-element-introduction',
+        popover: {
+          title: 'Title on Popover',
+          description: 'Body of the popover',
+          position: 'top'
+        },
+        
+      },
+    
+   ]
+    // 新手指南-start
+    const driver = new Driver({
+      opacity: 0.5,
+      animate: true,
+      doneBtnText: '我知道了',
+      closeBtnText: '跳过', //  关闭按钮文
+      nextBtnText: '下一步', // 下一步的按钮文案
+      prevBtnText: '上一步', // 上一步的按钮文
+    })
+    const guide = () => {
+      driver.defineSteps(steps)
+      driver.start()
+    }
+    onMounted(() => {
+      console.log(123123);
+      guide()
+    })
+    // 新手指南-end
+
     // useRequest钩子
     const {
       loading: productLoading,
@@ -336,8 +404,10 @@ export default defineComponent({
     const createTask = async (
       e: KeyboardEvent,
       tasks: CardElement[],
-      listId: number
+      listId: number,
     ) => {
+      console.log(e);
+      
       const el = e.target as HTMLInputElement;
       if (!el.value) {
         Message.error("请输入卡片名~");
@@ -370,6 +440,7 @@ export default defineComponent({
         pos: maxPos + 60000,
       });
       newColumnName.value = "";
+      return res
     };
 
     /**
@@ -671,6 +742,8 @@ export default defineComponent({
       taskClickId.value = cardId;
       columnName.value = column.listName;
       isTaskOpen.value = true;
+      console.log(column);
+      
     };
 
     //计算属性记录currentTask
