@@ -90,7 +90,7 @@
       </div>
       <div class="des">
         <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
-        <h3>描述</h3>
+        <h3 class="desc">描述</h3>
       </div>
       <a-textarea
         default-value="添加详细描述..."
@@ -310,6 +310,7 @@ export default defineComponent({
       align-items: center;
       margin-bottom: 30px;
       .robot {
+        color: rgba(@cardTextColorMain, 0.8);
         height: 30px;
         width: 30px;
       }
@@ -497,11 +498,15 @@ export default defineComponent({
       align-items: center;
       margin-bottom: 20px;
       font-weight: 700;
+      h3 {
+        color: rgba(@cardTextColorMain, 0.8);
+      }
       span {
         font-size: 30px;
         text-align: left;
       }
       .icon-left {
+        color: rgba(@cardTextColorMain, 0.8);
         width: 30px;
         height: 30px;
       }

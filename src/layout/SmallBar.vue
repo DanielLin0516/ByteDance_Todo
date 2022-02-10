@@ -337,7 +337,7 @@ export default defineComponent({
       font-family: PingFang-Bold-2;
       border: unset;
       color: rgba(@cardTextColorMain, 1);
-      border-radius: 20px;
+      border-radius: 8px;
     }
     .product-name:focus {
       outline: none;
