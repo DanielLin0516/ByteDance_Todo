@@ -9,7 +9,12 @@
         @change="changeItem($event)"
       />
       <Avatar />
-      <div class="inviteUser" id="new1" v-show="showInviteButton" @click="inviteShow">
+      <div
+        class="inviteUser"
+        id="new1"
+        v-show="showInviteButton"
+        @click="inviteShow"
+      >
         <icon-user class="icon-user" />
         <div>邀请朋友</div>
       </div>
@@ -108,8 +113,8 @@ import {
   onMounted,
 } from "vue";
 import Avatar from "@/layout/Avatar.vue";
-import Driver from 'driver.js' // import driver.js
-import 'driver.js/dist/driver.min.css' // import driver.js css
+import Driver from "driver.js"; // import driver.js
+import "driver.js/dist/driver.min.css"; // import driver.js css
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { setTheme } from "@/theme/theme";
@@ -117,7 +122,7 @@ import { getInviteCode } from "@/axios/api";
 import { useRequest } from "@/hooks/useRequest";
 import { Message } from "@arco-design/web-vue";
 import { changeBackground, itemName, quitMember } from "@/axios/api";
-import steps from "@/utils/driver"
+import steps from "@/utils/driver";
 import { log } from "console";
 export default defineComponent({
   name: "SmallBar",
@@ -131,11 +136,11 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const isDark = ref(false);
-    isDark.value = store.state.isDark
-    console.log('isDark.value', isDark.value);
+    isDark.value = store.state.isDark;
+    console.log("isDark.value", isDark.value);
     let name = ref(null);
     let kick = ref("");
-    const themeText = isDark.value ? '切换默认模式' : '切换夜间模式';
+    const themeText = isDark.value ? "切换默认模式" : "切换夜间模式";
     const inviteCard = ref(false);
     let upSquare = ref(String("#0079BF"));
     const route = useRoute();
@@ -146,19 +151,19 @@ export default defineComponent({
     const driver = new Driver({
       opacity: 0.1,
       animate: true,
-      doneBtnText: '我知道了',
-      closeBtnText: '跳过', //  关闭按钮文案
-      nextBtnText: '下一步', // 下一步的按钮文案
-      prevBtnText: '上一步', // 上一步的按钮文案
-    })
+      doneBtnText: "我知道了",
+      closeBtnText: "跳过", //  关闭按钮文案
+      nextBtnText: "下一步", // 下一步的按钮文案
+      prevBtnText: "上一步", // 上一步的按钮文案
+    });
     const guide = () => {
-      driver.defineSteps(steps)
-      driver.start()
-    }
+      driver.defineSteps(steps);
+      driver.start();
+    };
     onMounted(() => {
       console.log(123);
-      guide()
-    })
+      guide();
+    });
     // 新手指南-end
     const userId = computed(() => {
       return store.state.currentUserInfo.userId;
@@ -173,7 +178,7 @@ export default defineComponent({
       if (store.state.showInviteButton) {
         kick.value = "踢人";
       } else {
-        kick.value = "退出项目"
+        kick.value = "退出项目";
       }
       return store.state.showInviteButton;
     });
@@ -313,13 +318,10 @@ export default defineComponent({
       try {
         await quitMember(productId.value, userId.value);
         Message.success({ content: "你已经退出该项目" });
-        router.push("/Layout/WorkPlace")
-      } catch {
-
-      }
-
-    }
-    let memberList = inject('Member');
+        router.push("/Layout/WorkPlace");
+      } catch {}
+    };
+    let memberList = inject("Member");
     return {
       changeTheme,
       store,
@@ -341,7 +343,7 @@ export default defineComponent({
       changeItem,
       kick,
       quit,
-      memberList
+      memberList,
     };
   },
 });

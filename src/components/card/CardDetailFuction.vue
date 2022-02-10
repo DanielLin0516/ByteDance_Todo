@@ -31,7 +31,7 @@
       @bgcShow="bgcShow"
     ></card-bgc>
   </div>
-  <div style="z-index: 999">
+  <div>
     <CardColorLabel
       v-if="isColorShow"
       @close="closeColor"

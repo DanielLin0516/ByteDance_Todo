@@ -30,7 +30,10 @@
               }}</a-avatar>
             </template>
           </a-list-item-meta>
-          <a-popconfirm content="确定踢踢出该人?" @ok="kick(item.userId,index)">
+          <a-popconfirm
+            content="确定踢踢出该人?"
+            @ok="kick(item.userId, index)"
+          >
             <a-button
               type="primary"
               v-show="store.state.showInviteButton && item.userId != mySelfId"
@@ -88,7 +91,8 @@ export default defineComponent({
     });
 
     const background: ComputedRef<string> = computed(() => {
-      return store.state.background;
+      const isD = store.state.isDark;
+      return isD ? "#323232" : store.state.background;
     });
 
     const mySelfId = computed(() => {
@@ -100,11 +104,11 @@ export default defineComponent({
         console.trace(error);
       },
     });
-    const kick = async (userId: number,index:number) => {
+    const kick = async (userId: number, index: number) => {
       try {
         await kickMember(Number(productId.value), userId);
         Message.success({ content: "成功踢除！" });
-        data.value?.splice(index,1);
+        data.value?.splice(index, 1);
         store.commit("setMemberList", data.value);
       } catch (error) {
         Message.error({ content: `${error}` });
@@ -143,12 +147,11 @@ export default defineComponent({
   width: 30px;
   height: calc(100% - 80px);
   position: relative;
-  background-color: rgba(@cardColorMain, 0.16);
+  background-color: rgba(@cardColorMain, 0.6);
   border-right: 1px solid rgba(@cardColorWrapper, 0.5);
   display: flex;
   float: left;
   transition: width ease-in-out 0.1s;
-  // z-index: 999;
   cursor: pointer;
   .icon-right-circle {
     width: 50px;
@@ -161,19 +164,19 @@ export default defineComponent({
     z-index: 999;
   }
 }
-.memberList{
+.memberList {
   max-height: 72vh;
   overflow-y: auto;
 }
 .left-drawer-sitck:hover {
-  background-color: rgba(@cardColorWrapper, 0.552);
+  background-color: rgba(@cardColorWrapper, 0.8);
 }
 
 .left-drawer-stick-open {
   width: 350px !important;
   height: calc(100% - 80px);
   position: relative;
-  background-color: rgba(@cardColorMain, 0.16);
+  background-color: rgba(@cardColorMain, 0.1);
   border-right: 1px solid rgba(@cardColorWrapper, 0.5);
   display: flex;
   cursor: pointer;
@@ -196,27 +199,40 @@ export default defineComponent({
   width: 350px !important;
 }
 ::v-deep .drawer {
-  background-color: rgba(@cardTextColorMain, 0.16);
-  opacity: 0.6;
+  background-color: rgba(@cardTextColorMain, 0.1);
+  // opacity: 0.6;
 }
 ::v-deep .arco-drawer-body {
   color: rgba(@cardTextColorSub, 1);
-  background-color: rgba(@cardColorWrapper, 1);
+  background-color: rgba(@cardColorWrapper, 0.1);
 }
 ::v-deep .arco-drawer-header {
-  background-color: rgba(@cardColorWrapper, 1);
+  background-color: rgba(@cardColorWrapper, 0.1);
+  border-bottom: 1px solid rgba(@drawerBorder, 0.5);
   .arco-drawer-title {
     color: rgba(@cardTextColorMain, 1);
   }
 }
 ::v-deep .arco-drawer-footer {
-  background-color: rgba(@cardColorWrapper, 1);
+  background-color: rgba(@cardColorWrapper, 0.1);
   color: rgba(@cardTextColorMain, 1);
 }
 ::v-deep .arco-list-item-meta-title {
   color: rgba(@cardTextColorMain, 1);
 }
 ::v-deep .arco-list-item-meta-description {
-  color: rgba(@cardTextColorSub, 1);
+  color: rgba(@cardTextColorMain, 0.7);
+}
+
+::v-deep .arco-list-bordered {
+  border: 0px;
+}
+
+::v-deep .arco-list-split .arco-list-item:not(:last-child) {
+  border-bottom: 1px solid rgba(@drawerBorder, 0.5);
+}
+
+::v-deep .arco-drawer-footer {
+  border-top: 0px;
 }
 </style>
