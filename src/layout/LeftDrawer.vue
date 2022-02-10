@@ -1,6 +1,10 @@
 <template>
-  <div :class="leftDraw" id="parentNode" @mousedown="handleClick">
-    <IconRightCircle class="icon-right-circle" v-show="!visible" />
+  <div :class="leftDraw" id="parentNode">
+    <IconRightCircle
+      class="icon-right-circle"
+      v-show="!visible"
+      @click.self="handleClick"
+    />
   </div>
   <a-drawer
     popup-container="#parentNode"
@@ -10,29 +14,55 @@
     placement="left"
     :mask="false"
     class="drawer"
+    :unmount-on-close="true"
+    :drawer-style="{ background: background }"
   >
-    <template #title>组员分工:</template>
+    <template #title>
+      <h3>项目成员</h3>
+    </template>
     <div>
-      <span>lyt</span>
-      <span>lyt</span>
-      <span>lyt</span>
-      <span>lyt</span>
-      <span>lyt</span>
-      <span>lyt……</span>
+      <a-list v-if="!loading">
+        <a-list-item v-for="(item, index) in data" :key="item.userId">
+          <a-list-item-meta :title="item.fullname" :description="item.username">
+            <template #avatar>
+              <a-avatar :style="{ background: item.avatar }">
+                {{ item.fullname.slice(0, 1) }}
+              </a-avatar>
+            </template>
+          </a-list-item-meta>
+        </a-list-item>
+      </a-list>
     </div>
+    <template #footer>
+      <div></div>
+    </template>
   </a-drawer>
 </template>
 
 <script lang="ts">
-import { IconRightCircle } from "@arco-design/web-vue/es/icon";
-import { defineComponent, ref, reactive, watch } from "vue";
+import { getMemberListByProductId } from "@/axios/api";
+import { useRequest } from "@/hooks/useRequest";
+import { IconRightCircle, IconUser } from "@arco-design/web-vue/es/icon";
+import {
+  defineComponent,
+  ref,
+  reactive,
+  watch,
+  computed,
+  ComputedRef,
+} from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "LeftDrawer",
   components: {
     IconRightCircle,
+    IconUser,
   },
   setup(props) {
     let visible = ref(false);
+    const route = useRoute();
+    const store = useStore();
     let leftDraw = reactive({
       "left-drawer-sitck": !visible.value,
       "left-drawer-stick-open": visible.value,
@@ -42,8 +72,24 @@ export default defineComponent({
       leftDraw["left-drawer-stick-open"] = val;
       console.log(val);
     });
+
+    // 路由中的项目Id
+    const productId: ComputedRef<string> = computed(() => {
+      return route.params.productId as string;
+    });
+
+    const background: ComputedRef<string> = computed(() => {
+      return store.state.background;
+    });
+
+    const { data, loading, error, run } = useRequest(getMemberListByProductId, {
+      onError: () => {
+        console.trace(error);
+      },
+    });
     function handleClick() {
       visible.value = true;
+      run(productId.value);
     }
     function handleOk() {
       visible.value = false;
@@ -57,6 +103,9 @@ export default defineComponent({
       handleOk,
       handleCancel,
       leftDraw,
+      data,
+      loading,
+      background,
     };
   },
 });
@@ -89,7 +138,7 @@ export default defineComponent({
 }
 
 .left-drawer-stick-open {
-  width: 250px !important;
+  width: 300px !important;
   height: calc(100% - 80px);
   position: relative;
   background-color: rgba(@cardColorMain, 0.16);
@@ -111,7 +160,7 @@ export default defineComponent({
   background: #fff;
 }
 ::v-deep .arco-drawer {
-  width: 250px !important;
+  width: 300px !important;
 }
 ::v-deep .drawer {
   background-color: rgba(@cardTextColorMain, 0.16);

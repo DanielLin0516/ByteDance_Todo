@@ -5,8 +5,8 @@
       <input
         class="product-name"
         style="margin-right: 1vw"
-        v-model="store.state.currentProductName"
-        @keyup.enter="changeItem"
+        v-model="productName"
+        @change="changeItem"
       />
       <Avatar />
       <div class="inviteUser" v-show="showInviteButton" @click="inviteShow">
@@ -100,7 +100,6 @@ export default defineComponent({
     const isDark = ref(false);
     isDark.value = store.state.isDark
     console.log('isDark.value', isDark.value);
-    let name = ref(null);
     const themeText = isDark.value ? '切换默认模式' : '切换夜间模式';
     const inviteCard = ref(false);
     let upSquare = ref(String("#0079BF"));
@@ -119,8 +118,7 @@ export default defineComponent({
     const showInviteButton = computed(() => {
       return store.state.showInviteButton;
     });
-    let productName = computed(() => {
-      name.value = store.state.currentProductName;
+    const productName = computed(() => {
       return store.state.currentProductName;
     });
     const changeTheme = (e: any) => {
@@ -298,7 +296,7 @@ export default defineComponent({
     padding-left: 15px;
     .product-name {
       cursor: pointer;
-      width: 200px;
+      width: 160px;
       font-size: 23px;
       font-weight: 400;
       height: 30px;

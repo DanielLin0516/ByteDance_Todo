@@ -38,7 +38,9 @@
               <div
                 style="display: flex; flex-direction: column; margin-left: 1vw"
               >
-                <div>{{ fullname }}</div>
+                <div style="font-size: 16px;">
+                  {{ fullname }}
+                </div>
                 <div
                   style="
                     color: rgb(197, 202, 210);
@@ -209,7 +211,6 @@ export default defineComponent({
 }
 .userInfo {
   width: 400px;
-  height: 300px;
   // position: absolute;
   background-color: white;
   top: 85px;
