@@ -8,11 +8,15 @@
     </div>
 
     <div class="right">
-      <a-skeleton v-if="loading" :animation="true" style="opacity: 0.6;">
+      <!-- <a-skeleton v-if="loading" :animation="true" style="opacity: 0.6">
         <a-space direction="vertical" :style="{ width: '80%' }" size="large">
-          <a-skeleton-line :rows="8" class="row"/>
+          <a-skeleton-line :rows="8" class="row" />
         </a-space>
-      </a-skeleton>
+      </a-skeleton> -->
+      <div class="loading" v-if="loading">
+        <a-spin dot :loading="loading" :size="30" />
+      </div>
+
       <div v-else>
         <div class="work">
           <span class="work-title">您创建的项目</span>
@@ -24,10 +28,9 @@
               :key="product.id"
               @click.self="enterInto(product.id)"
             >
-              <div
-                @click.self="enterInto(product.id)"
-                class="product-name"
-              >{{ product.productName }}</div>
+              <div @click.self="enterInto(product.id)" class="product-name">
+                {{ product.productName }}
+              </div>
               <a-popconfirm content="删除此项目?" @ok="deleteItem(product.id)">
                 <icon-delete class="delete" />
               </a-popconfirm>
@@ -59,8 +62,15 @@
                 color: rgb(103, 117, 139);
                 margin-top: 1vw;
               "
-            >看板标题</div>
-            <input type="text" placeholder="输入看板标题（必填项）" class="title" v-model="title" />
+            >
+              看板标题
+            </div>
+            <input
+              type="text"
+              placeholder="输入看板标题（必填项）"
+              class="title"
+              v-model="title"
+            />
             <a-button
               type="primary"
               :disabled="build"
@@ -71,7 +81,8 @@
                 height: 3vw;
               "
               @click="send"
-            >创建</a-button>
+              >创建</a-button
+            >
           </div>
         </div>
         <div class="join">
@@ -83,7 +94,9 @@
               v-for="join in shareProductList"
               :key="join.id"
               @click="enterInto(join.id)"
-            >{{ join.productName }}</div>
+            >
+              {{ join.productName }}
+            </div>
           </div>
         </div>
       </div>
@@ -286,7 +299,6 @@ export default defineComponent({
     const { loading, error, run } = useRequest(getProduct, {
       onError: () => {
         console.trace(error);
-
       },
     });
     run().then((res) => {
@@ -359,23 +371,26 @@ export default defineComponent({
     color: rgb(62, 66, 73);
   }
   .right {
-    :deep(<.row>) {
-      background-color: red !important;
-      opacity: 0.4;
-    }
-    padding-top: 60px;
-    padding-left: 80px;
     // width: 100%;
     flex: 6;
     display: flex;
     flex-direction: column;
     overflow-y: visible;
     // background-color:red;
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 78vh;
+      transform: translateX(-80px);
+    }
     .work {
       display: flex;
       flex-direction: column;
       width: 90%;
       height: auto;
+      padding-top: 60px;
+      padding-left: 80px;
       .project {
         margin-top: 30px;
         // width:700px;
@@ -519,13 +534,15 @@ export default defineComponent({
       display: flex;
       flex-direction: column;
       width: 900px;
+      padding-top: 30px;
+      padding-left: 80px;
       .part {
         margin-top: 30px;
         height: 400px;
         display: flex;
-        width: 1100px ;
+        width: 1100px;
         flex-wrap: wrap;
-        overflow:auto;
+        overflow: auto;
         .parttime {
           width: 230px;
           height: 150px;
