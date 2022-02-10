@@ -46,6 +46,15 @@
           </div>
         </template>
       </a-popover>
+
+      <div class="kick">
+        <!-- 退出项目 -->
+        <div v-show="!showInviteButton">
+          <a-popconfirm content="退出此项目?" @ok="quit">
+            <div class="changeColor">退出</div>
+          </a-popconfirm>
+        </div>
+      </div>
     </div>
   </div>
   <div class="invite-code" v-show="inviteCard">
@@ -98,13 +107,13 @@ import {
   inject,
 } from "vue";
 import Avatar from "@/layout/Avatar.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { setTheme } from "@/theme/theme";
 import { getInviteCode } from "@/axios/api";
 import { useRequest } from "@/hooks/useRequest";
 import { Message } from "@arco-design/web-vue";
-import { changeBackground, itemName } from "@/axios/api";
+import { changeBackground, itemName, quitMember } from "@/axios/api";
 export default defineComponent({
   name: "SmallBar",
   components: {
@@ -117,12 +126,15 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const isDark = ref(false);
-    isDark.value = store.state.isDark;
-    console.log("isDark.value", isDark.value);
-    const themeText = isDark.value ? "切换默认模式" : "切换夜间模式";
+    isDark.value = store.state.isDark
+    console.log('isDark.value', isDark.value);
+    let name = ref(null);
+    let kick = ref("");
+    const themeText = isDark.value ? '切换默认模式' : '切换夜间模式';
     const inviteCard = ref(false);
     let upSquare = ref(String("#0079BF"));
     const route = useRoute();
+    const router = useRouter();
     let inviteCodeData = ref(null);
     let link = ref(String(null));
     const userId = computed(() => {
@@ -135,6 +147,11 @@ export default defineComponent({
       inviteCard.value = !inviteCard.value;
     };
     const showInviteButton = computed(() => {
+      if (store.state.showInviteButton) {
+        kick.value = "踢人";
+      } else {
+        kick.value = "退出项目"
+      }
       return store.state.showInviteButton;
     });
     const productName = computed(() => {
@@ -269,6 +286,17 @@ export default defineComponent({
       eInput.style.display = "none";
       if (copyText) Message.success({ content: "复制成功" });
     };
+    const quit = async () => {
+      try {
+        await quitMember(productId.value, userId.value);
+        Message.success({ content: "你已经退出该项目" });
+        router.push("/Layout/WorkPlace")
+      } catch {
+
+      }
+
+    }
+    let memberList = inject('Member');
     return {
       changeTheme,
       store,
@@ -288,6 +316,9 @@ export default defineComponent({
       themeText,
       name,
       changeItem,
+      kick,
+      quit,
+      memberList
     };
   },
 });

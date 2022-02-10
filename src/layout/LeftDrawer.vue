@@ -3,7 +3,7 @@
     <IconRightCircle
       class="icon-right-circle"
       v-show="!visible"
-      @click.self="handleClick"
+      @click.prevent="handleClick"
     />
   </div>
   <a-drawer
@@ -25,11 +25,18 @@
         <a-list-item v-for="(item, index) in data" :key="item.userId">
           <a-list-item-meta :title="item.fullname" :description="item.username">
             <template #avatar>
-              <a-avatar :style="{ background: item.avatar }">
-                {{ item.fullname.slice(0, 1) }}
-              </a-avatar>
+              <a-avatar :style="{ background: item.avatar }">{{
+                item.fullname.slice(0, 1)
+              }}</a-avatar>
             </template>
           </a-list-item-meta>
+          <a-popconfirm content="确定踢踢出该人?" @ok="kick(item.userId,index)">
+            <a-button
+              type="primary"
+              v-show="store.state.showInviteButton && item.userId != mySelfId"
+              >踢出</a-button
+            >
+          </a-popconfirm>
         </a-list-item>
       </a-list>
     </div>
@@ -40,8 +47,9 @@
 </template>
 
 <script lang="ts">
-import { getMemberListByProductId } from "@/axios/api";
+import { getMemberListByProductId, kickMember } from "@/axios/api";
 import { useRequest } from "@/hooks/useRequest";
+import { Message } from "@arco-design/web-vue";
 import { IconRightCircle, IconUser } from "@arco-design/web-vue/es/icon";
 import {
   defineComponent,
@@ -50,6 +58,7 @@ import {
   watch,
   computed,
   ComputedRef,
+  provide,
 } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -82,11 +91,26 @@ export default defineComponent({
       return store.state.background;
     });
 
+    const mySelfId = computed(() => {
+      return store.state.currentUserInfo.userId;
+    });
+
     const { data, loading, error, run } = useRequest(getMemberListByProductId, {
       onError: () => {
         console.trace(error);
       },
     });
+    const kick = async (userId: number,index:number) => {
+      try {
+        await kickMember(Number(productId.value), userId);
+        Message.success({ content: "成功踢除！" });
+        data.value?.splice(index,1);
+        store.commit("setMemberList", data.value);
+      } catch (error) {
+        Message.error({ content: `${error}` });
+      }
+    };
+
     function handleClick() {
       visible.value = true;
       run(productId.value);
@@ -106,13 +130,15 @@ export default defineComponent({
       data,
       loading,
       background,
+      kick,
+      store,
+      mySelfId,
     };
   },
 });
 </script>
 
 <style lang="less" scoped>
-
 .left-drawer-sitck {
   width: 30px;
   height: calc(100% - 80px);
@@ -121,6 +147,7 @@ export default defineComponent({
   border-right: 1px solid rgba(@cardColorWrapper, 0.5);
   display: flex;
   float: left;
+  transition: width ease-in-out 0.1s;
   // z-index: 999;
   cursor: pointer;
   .icon-right-circle {
@@ -139,7 +166,7 @@ export default defineComponent({
 }
 
 .left-drawer-stick-open {
-  width: 300px !important;
+  width: 400px !important;
   height: calc(100% - 80px);
   position: relative;
   background-color: rgba(@cardColorMain, 0.16);
@@ -147,6 +174,7 @@ export default defineComponent({
   display: flex;
   cursor: pointer;
   float: left;
+  transition: width ease-in-out 0.3s;
   .icon-right-circle {
     width: 50px;
     height: 50px;
@@ -161,7 +189,7 @@ export default defineComponent({
   background: #fff;
 }
 ::v-deep .arco-drawer {
-  width: 300px !important;
+  width: 400px !important;
 }
 ::v-deep .drawer {
   background-color: rgba(@cardTextColorMain, 0.16);

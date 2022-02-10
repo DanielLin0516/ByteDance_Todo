@@ -386,7 +386,7 @@ export function taskComplete(cardId: number, complete: boolean) {
   );
 }
 /**
- * 根据ID删除卡片
+ * 更改名字
  * @param productId
  * @returns
  */
@@ -403,4 +403,22 @@ export function itemName(productId: number, productName: string) {
  */
 export function getMemberListByProductId(productId: string):Promise<UserElement[]> {
   return instance.get(`/product/getMemberList/${productId}`);
+}
+/**
+ * 退出人员
+ * @param productId
+ * @param userId
+ * @returns
+ */
+export function quitMember(productId:number,userId:number) {
+  return instance.post(`/product/quitProduct/${productId}/${userId}`);
+}
+/**
+ * 踢掉人
+ * @param productId
+ *  @param userId
+ * @returns
+ */
+export function kickMember(productId:number,userId:number) {
+  return instance.post(`/product/kickOutMember/${productId}/${userId}`);
 }
