@@ -9,7 +9,8 @@ const instance = axios.create({
   timeout: 5000,
 });
 //post请求头
-instance.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8";
+instance.defaults.headers.post["Content-Type"] =
+  "application/x-www-form-urlencoded;charset=UTF-8";
 
 // 添加请求拦截器
 
@@ -41,6 +42,10 @@ instance.interceptors.response.use(
       });
       localStorage.removeItem("token");
       router.push("/login");
+      return Promise.reject("error");
+    } else if (code === 70000) {
+      Message.warning({ content: `${message}` });
+      router.push("/Layout/WorkPlace");
       return Promise.reject("error");
     }
     if (!success) {
