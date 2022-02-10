@@ -342,7 +342,9 @@ export default defineComponent({
     }
     .member_content {
       margin: 0px 20px 0px 20px;
-
+      h3 {
+        color: rgba(@cardTextColorMain, 0.8);
+      }
       .member_items {
         display: flex;
         margin-bottom: 10px;
@@ -434,6 +436,9 @@ export default defineComponent({
     }
     .date {
       margin: 0px 20px 0px 20px;
+      h3 {
+        color: rgba(@cardTextColorMain, 0.8);
+      }
       span {
         display: inline-block;
         margin-left: 20px;
