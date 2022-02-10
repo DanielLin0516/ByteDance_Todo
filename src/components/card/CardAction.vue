@@ -57,8 +57,13 @@ export default defineComponent({
     setup(props) {
         let isShowActionList = ref(true)
         let curComment = ref('')
-        const actions = props.task ? props.task.actions : {}
-        console.log(props.task);
+        const actions = []
+        const createAction = {
+            username:props.task.creator.fullname,
+            actionTime:props.task.createdTime,
+            action:'创建了该任务'
+        }
+        actions.push(createAction)
         
         const changeActionListIsShow = (e: any) => {
             if (e.target.innerHTML == '<!--v-if-->隐藏详情') {
@@ -114,6 +119,7 @@ main {
         margin-bottom: 3px;
     }
     .action-username {
+        margin: 0 5px;
         font-weight: 700;
         display: block;
     }
