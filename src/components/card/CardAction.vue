@@ -27,8 +27,8 @@
         <div class="actionList" v-if="isShowActionList">
             <div v-for=" (action, $actionIndex) of actions" :key="$actionIndex">
                 <div class="actionItem">
-                    <a-avatar :style="{ backgroundColor: '#3370ff', float: 'left' }">
-                        <IconUser />
+                    <a-avatar :style="{background: '#3370FF'}">
+                        {{ action.username.slice(0, 1) }}
                     </a-avatar>
                     <div class="action">
                         <div class="action-header">
@@ -44,12 +44,14 @@
 </template>
 
 <script lang="ts">
+import Avatar from '@/layout/Avatar.vue';
 import { IconLink, IconUser } from '@arco-design/web-vue/es/icon';
 import { log } from 'console';
 import { reactive, ref, defineComponent } from 'vue';
 export default defineComponent({
     components: {
-        IconLink, IconUser
+        IconLink, IconUser,
+        Avatar
     },
     props: {
         task: Object
@@ -115,6 +117,7 @@ main {
     height: 40px;
     margin: 15px;
     .action-header {
+        color: rgba(@cardTextColorMain, 1);
         display: flex;
         margin-bottom: 3px;
     }
