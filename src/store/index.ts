@@ -8,6 +8,7 @@ export default createStore<StoreState>({
       fullname: "",
       userId: NaN,
       username: "",
+      isNews: true,
     },
     isDark: false,
     productList: [],

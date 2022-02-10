@@ -7,8 +7,8 @@
     <!-- 要渲染的列表 -->
     <transition-group
       name="animate__list"
-      enter-active-class="animate__animated animate__fadeIn animate__fast"
-      leave-active-class="animate__animated animate__zoomOut animate__fast"
+      enter-active-class="animate__animated animate__fadeIn animate__faster"
+      leave-active-class="animate__animated animate__zoomOut animate__faster"
     >
       <div
         class="list-item"
@@ -47,8 +47,8 @@
           <!-- 列表卡片栏也要渲染 -->
           <transition-group
             name="animate__card"
-            enter-active-class="animate__animated animate__bounceIn animate__fast"
-            leave-active-class="animate__animated animate__zoomOut animate__fast"
+            enter-active-class="animate__animated animate__bounceIn animate__faster"
+            leave-active-class="animate__animated animate__zoomOut animate__faster"
           >
             <div v-for="(task, taskIndex) of column.items" :key="task.cardId">
               <div

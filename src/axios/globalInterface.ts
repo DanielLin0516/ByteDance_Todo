@@ -40,6 +40,7 @@ export interface UserElement {
   fullname: string;
   userId: number;
   username: string;
+  isNews: boolean;
 }
 
 export interface CardElement {

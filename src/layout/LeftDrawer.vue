@@ -21,7 +21,7 @@
       <h3>项目成员</h3>
     </template>
     <div>
-      <a-list v-if="!loading">
+      <a-list class="memberList" v-if="!loading">
         <a-list-item v-for="(item, index) in data" :key="item.userId">
           <a-list-item-meta :title="item.fullname" :description="item.username">
             <template #avatar>
@@ -161,12 +161,16 @@ export default defineComponent({
     z-index: 999;
   }
 }
+.memberList{
+  max-height: 72vh;
+  overflow-y: auto;
+}
 .left-drawer-sitck:hover {
   background-color: rgba(@cardColorWrapper, 0.552);
 }
 
 .left-drawer-stick-open {
-  width: 400px !important;
+  width: 350px !important;
   height: calc(100% - 80px);
   position: relative;
   background-color: rgba(@cardColorMain, 0.16);
@@ -189,7 +193,7 @@ export default defineComponent({
   background: #fff;
 }
 ::v-deep .arco-drawer {
-  width: 400px !important;
+  width: 350px !important;
 }
 ::v-deep .drawer {
   background-color: rgba(@cardTextColorMain, 0.16);
