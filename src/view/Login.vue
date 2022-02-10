@@ -101,6 +101,15 @@ export default defineComponent({
         height: 60px;
         width: 60px;
         margin-right: 20px;
+        animation: animate 2s linear infinite;
+        @keyframes animate {
+          0% {
+            filter: hue-rotate(0deg);
+          }
+          100% {
+            filter: hue-rotate(360deg);
+          }
+        }
       }
       span {
         font-weight: 900;
