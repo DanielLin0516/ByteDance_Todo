@@ -344,7 +344,8 @@ export default defineComponent({
     padding-left: 15px;
     .product-name {
       cursor: pointer;
-      width: 160px;
+      min-width: 160px;
+      max-width: 200px;
       font-size: 23px;
       font-weight: 400;
       height: 30px;
