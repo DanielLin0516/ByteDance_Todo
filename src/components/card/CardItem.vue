@@ -115,8 +115,9 @@ export default defineComponent({
     const isTagClick = ref(false);
     const done = async (Info: CardElement) => {
       try {
-        await taskComplete(Info.cardId, !Info.completed);
-        if (!Info.completed === true) {
+        const status = !Info.completed;
+        await taskComplete(Info.cardId, status);
+        if (status === true) {
           Message.success({ content: "任务已经完成" });
         } else {
           Message.warning({ content: "任务未完成" });

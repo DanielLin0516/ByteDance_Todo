@@ -27,8 +27,7 @@
               type="text"
               v-model="column.listName"
               class="list-title"
-              @change="changeListName(index, $event)"
-              @keyup.enter="editListNameById(column.listId, index, $event)"
+              @change="changeListName(column.listId, index, $event)"
             />
           </a-col>
           <a-col :span="3" style="display: flex; justify-content: flex-end">
@@ -312,8 +311,22 @@ export default defineComponent({
       isTaskOpen.value = false;
     };
 
-    const changeListName = (index: number, e: any) => {
-      lists[index].listName = e.target.value;
+    /**
+     * 更改列名
+     * @param listId 
+     * @param index 
+     * @param e 
+     */
+    const changeListName = async (listId: number, index: number, e: any) => {
+      const inputEvent = e.target as HTMLInputElement;
+      try {
+        lists[index].listName = inputEvent.value;
+        await editListName(listId, inputEvent.value);
+      } catch (e) {
+        console.trace(e);
+      } finally {
+        inputEvent.blur();
+      }
     };
 
     /**
@@ -358,27 +371,6 @@ export default defineComponent({
       newColumnName.value = "";
     };
 
-    /**
-     * 修改列的名称
-     * @param listId
-     * @param index
-     * @param e
-     */
-    const editListNameById = async (
-      listId: number,
-      index: number,
-      e: KeyboardEvent
-    ) => {
-      const inputEvent = e.target as HTMLInputElement;
-      try {
-        lists[index].listName = inputEvent.value;
-        await editListName(listId, inputEvent.value);
-      } catch (e) {
-        console.trace(e);
-      } finally {
-        inputEvent.blur();
-      }
-    };
     /**
      * 删除列表
      * @param listId
@@ -953,7 +945,6 @@ export default defineComponent({
       lists,
       getInfo,
       productLoading,
-      editListNameById,
       openTask,
       taskClickId,
       columnName,

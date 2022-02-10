@@ -6,7 +6,7 @@
         class="product-name"
         style="margin-right: 1vw"
         v-model="productName"
-        @change="changeItem"
+        @change="changeItem($event)"
       />
       <Avatar />
       <div class="inviteUser" v-show="showInviteButton" @click="inviteShow">
@@ -40,7 +40,8 @@
                   height: 3vw;
                 "
                 @click="changeBGC"
-              >更改</a-button>
+                >更改</a-button
+              >
             </div>
           </div>
         </template>
@@ -61,11 +62,22 @@
     </div>
     <div
       style="font-size: 1vw; color: rgb(rgb(131, 140, 145)); margin-bottom: 1vw"
-    >具有该链接的任何人均可加入为看板成员</div>
+    >
+      具有该链接的任何人均可加入为看板成员
+    </div>
     <a-spin :size="20" v-if="loading" />
-    <div style="width: 100%; display: flex; flex-direction: column" v-show="inviteCodeData">
-      <a-input style="width: 100%; margin-bottom: 0.5vw" allow-clear :model-value="link" />
-      <a-button type="primary" style="width: 6vw; height: 2vw" @click="copy">复制链接</a-button>
+    <div
+      style="width: 100%; display: flex; flex-direction: column"
+      v-show="inviteCodeData"
+    >
+      <a-input
+        style="width: 100%; margin-bottom: 0.5vw"
+        allow-clear
+        :model-value="link"
+      />
+      <a-button type="primary" style="width: 6vw; height: 2vw" @click="copy"
+        >复制链接</a-button
+      >
     </div>
   </div>
 </template>
@@ -77,7 +89,14 @@ import {
   IconClose,
   IconLink,
 } from "@arco-design/web-vue/es/icon";
-import { computed, defineComponent, ref, onBeforeUpdate, reactive, inject } from "vue";
+import {
+  computed,
+  defineComponent,
+  ref,
+  onBeforeUpdate,
+  reactive,
+  inject,
+} from "vue";
 import Avatar from "@/layout/Avatar.vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -98,9 +117,9 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const isDark = ref(false);
-    isDark.value = store.state.isDark
-    console.log('isDark.value', isDark.value);
-    const themeText = isDark.value ? '切换默认模式' : '切换夜间模式';
+    isDark.value = store.state.isDark;
+    console.log("isDark.value", isDark.value);
+    const themeText = isDark.value ? "切换默认模式" : "切换夜间模式";
     const inviteCard = ref(false);
     let upSquare = ref(String("#0079BF"));
     const route = useRoute();
@@ -108,7 +127,7 @@ export default defineComponent({
     let link = ref(String(null));
     const userId = computed(() => {
       return store.state.currentUserInfo.userId;
-    })
+    });
     const productId: any = computed(() => {
       return route.params.productId;
     });
@@ -130,19 +149,17 @@ export default defineComponent({
         setTheme("default");
       }
       isDark.value = !isDark.value;
-      store.commit('setIsDark', isDark.value)
-      sendIsDarkToApp(isDark.value)
+      store.commit("setIsDark", isDark.value);
+      sendIsDarkToApp(isDark.value);
     };
-    const changeItem = async () => {
-      try {
-        let res = await itemName(productId.value, store.state.currentProductName);
-        Message.success({content:"修改成功"})
-      } catch {
-
-      }
-
-    }
-    const sendIsDarkToApp: any = inject('sendIsDarkToApp')
+    const changeItem = async (e: any) => {
+      const inputEvent = e.target as HTMLInputElement;
+      await itemName(productId.value, inputEvent.value);
+      store.commit("setCurrentProductName", inputEvent.value);
+      Message.success({ content: "修改成功" });
+      inputEvent.blur();
+    };
+    const sendIsDarkToApp: any = inject("sendIsDarkToApp");
     const { data, loading, error, run } = useRequest(getInviteCode, {
       onError: () => {
         console.trace(error);
@@ -270,7 +287,7 @@ export default defineComponent({
       changeBGC,
       themeText,
       name,
-      changeItem
+      changeItem,
     };
   },
 });
@@ -302,7 +319,7 @@ export default defineComponent({
       height: 30px;
       opacity: 1;
       padding: 10px;
-      background-color: rgba(@cardColorMain, 0.4);;
+      background-color: rgba(@cardColorMain, 0.4);
       font-family: PingFang-Bold-2;
       border: unset;
       color: rgba(@cardTextColorMain, 1);

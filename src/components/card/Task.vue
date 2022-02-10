@@ -14,7 +14,6 @@
           v-model="task.cardname"
           class="content"
           @change="updateTaskName()"
-          @keyup.enter="updateTaskName()"
         />
         <div class="listName">
           在列表
@@ -210,7 +209,6 @@ export default defineComponent({
     });
     const updateTaskName = async () => {
       await editCardName(id, task.cardname);
-      close();
     };
     const updateTaskDesc = async () => {
       await editCardDesc(id, task.description);

@@ -1,7 +1,7 @@
 <template>
   <div class="top-bar">
     <div class="left-bar">
-      <icon-bytedance-color class="icon-byte" />
+      <icon-bytedance-color class="icon-byte" @click="goToHome" />
       <span class="link" @click="project">项目</span>
     </div>
     <div class="right-bar">
@@ -38,7 +38,7 @@
               <div
                 style="display: flex; flex-direction: column; margin-left: 1vw"
               >
-                <div style="font-size: 16px;">
+                <div style="font-size: 16px">
                   {{ fullname }}
                 </div>
                 <div
@@ -92,6 +92,9 @@ export default defineComponent({
     const project = () => {
       router.push("/Layout/WorkPlace");
     };
+    const goToHome = () => {
+      router.push("/");
+    };
     const fullname = computed(() => {
       return store.state.currentUserInfo.fullname;
     });
@@ -107,6 +110,7 @@ export default defineComponent({
       toboard,
       project,
       inviteCard,
+      goToHome
     };
   },
 });
