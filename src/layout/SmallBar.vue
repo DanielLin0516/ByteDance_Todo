@@ -9,7 +9,7 @@
         @change="changeItem($event)"
       />
       <Avatar />
-      <div class="inviteUser" v-show="showInviteButton" @click="inviteShow">
+      <div class="inviteUser" id="new1" v-show="showInviteButton" @click="inviteShow">
         <icon-user class="icon-user" />
         <div>邀请朋友</div>
       </div>
@@ -105,8 +105,11 @@ import {
   onBeforeUpdate,
   reactive,
   inject,
+  onMounted,
 } from "vue";
 import Avatar from "@/layout/Avatar.vue";
+import Driver from 'driver.js' // import driver.js
+import 'driver.js/dist/driver.min.css' // import driver.js css
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { setTheme } from "@/theme/theme";
@@ -114,6 +117,8 @@ import { getInviteCode } from "@/axios/api";
 import { useRequest } from "@/hooks/useRequest";
 import { Message } from "@arco-design/web-vue";
 import { changeBackground, itemName, quitMember } from "@/axios/api";
+import steps from "@/utils/driver"
+import { log } from "console";
 export default defineComponent({
   name: "SmallBar",
   components: {
@@ -137,6 +142,24 @@ export default defineComponent({
     const router = useRouter();
     let inviteCodeData = ref(null);
     let link = ref(String(null));
+    // 新手指南-start
+    const driver = new Driver({
+      opacity: 0.1,
+      animate: true,
+      doneBtnText: '我知道了',
+      closeBtnText: '跳过', //  关闭按钮文案
+      nextBtnText: '下一步', // 下一步的按钮文案
+      prevBtnText: '上一步', // 上一步的按钮文案
+    })
+    const guide = () => {
+      driver.defineSteps(steps)
+      driver.start()
+    }
+    onMounted(() => {
+      console.log(123);
+      guide()
+    })
+    // 新手指南-end
     const userId = computed(() => {
       return store.state.currentUserInfo.userId;
     });

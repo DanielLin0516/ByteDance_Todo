@@ -125,6 +125,7 @@
 </template>
 
 <script lang="ts">
+
 import "animate.css";
 import {
   PosType,
