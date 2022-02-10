@@ -369,8 +369,10 @@ export function removeCard(cardId: number) {
  * @param color
  * @returns
  */
-export function setCardColor(cardId: number,color:string) {
-  return instance.post(`/cards/setCardBackground/${cardId}?background=${color}`);
+export function setCardColor(cardId: number, color: string) {
+  return instance.post(
+    `/cards/setCardBackground/${cardId}?background=${color}`
+  );
 }
 /**
  * 根据ID删除卡片
@@ -378,14 +380,27 @@ export function setCardColor(cardId: number,color:string) {
  * @param complete
  * @returns
  */
-export function taskComplete(cardId: number,complete:boolean) {
-  return instance.post(`/cards/changeCardCompleteStatus/${cardId}?completed=${complete}`);
+export function taskComplete(cardId: number, complete: boolean) {
+  return instance.post(
+    `/cards/changeCardCompleteStatus/${cardId}?completed=${complete}`
+  );
 }
 /**
  * 根据ID删除卡片
  * @param productId
  * @returns
  */
-export function itemName(productId:number,productName:string) {
-  return instance.post(`/product/changeProductName/${productId}?productName=${productName}`);
+export function itemName(productId: number, productName: string) {
+  return instance.post(
+    `/product/changeProductName/${productId}?productName=${productName}`
+  );
+}
+
+/**
+ * 获取项目成员列表
+ * @param productId
+ * @returns
+ */
+export function getMemberListByProductId(productId: string):Promise<UserElement[]> {
+  return instance.get(`/product/getMemberList/${productId}`);
 }
