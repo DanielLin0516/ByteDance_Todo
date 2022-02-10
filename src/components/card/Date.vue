@@ -1,13 +1,13 @@
 <template>
     <div class="date">
         <div class="header">
-            <span>日期</span>
+            <span style="color:rgba(0, 0, 0, 0.7);">日期</span>
             <icon-close-circle
                 class="icon-close"
                 @click.self="store.state.show = !store.state.show"
             />
         </div>
-        <span>请选择任务开始和结束时间</span>
+        <span style="color:rgba(0, 0, 0, 0.7);">请选择任务开始和结束时间</span>
         <a-range-picker
             size="large"
             show-time
@@ -101,7 +101,7 @@ export default defineComponent({
 .date {
     display: flex;
     flex-direction: column;
-    width: 600px;
+    width: 400px;
     height: 300px;
     padding: 20px;
     position: absolute;
