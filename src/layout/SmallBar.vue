@@ -45,37 +45,15 @@
           </div>
         </template>
       </a-popover>
-      <a-popover position="bottom">
-        <div class="changeColor">{{ kick }}</div>
-        <template #content>
-          <div class="creat-project">
-            <span>调整颜色</span>
-            <div class="square" :style="{ background: upSquare }"></div>
-            <div class="back-ground">
-              <div class="content">背景</div>
-              <div class="color-choose">
-                <div
-                  class="choose"
-                  :style="{ background: choose.color }"
-                  v-for="choose in color"
-                  :key="choose.id"
-                  @click="yourChoice(choose.color)"
-                ></div>
-              </div>
-              <a-button
-                type="primary"
-                style="
-                  margin-top: 2vw;
-                  width: 100%;
-                  border-radius: 1vw;
-                  height: 3vw;
-                "
-                @click="changeBGC"
-              >更改</a-button>
-            </div>
-          </div>
-        </template>
-      </a-popover>
+
+      <div class="kick">
+        <!-- 退出项目 -->
+        <div v-show="!showInviteButton">
+          <a-popconfirm content="退出此项目?" @ok="quit">
+            <div class="changeColor">退出</div>
+          </a-popconfirm>
+        </div>
+      </div>
     </div>
   </div>
   <div class="invite-code" v-show="inviteCard">
@@ -110,13 +88,13 @@ import {
 } from "@arco-design/web-vue/es/icon";
 import { computed, defineComponent, ref, onBeforeUpdate, reactive, inject } from "vue";
 import Avatar from "@/layout/Avatar.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { setTheme } from "@/theme/theme";
 import { getInviteCode } from "@/axios/api";
 import { useRequest } from "@/hooks/useRequest";
 import { Message } from "@arco-design/web-vue";
-import { changeBackground, itemName } from "@/axios/api";
+import { changeBackground, itemName, quitMember } from "@/axios/api";
 export default defineComponent({
   name: "SmallBar",
   components: {
@@ -137,6 +115,7 @@ export default defineComponent({
     const inviteCard = ref(false);
     let upSquare = ref(String("#0079BF"));
     const route = useRoute();
+    const router = useRouter();
     let inviteCodeData = ref(null);
     let link = ref(String(null));
     const userId = computed(() => {
@@ -290,6 +269,17 @@ export default defineComponent({
       eInput.style.display = "none";
       if (copyText) Message.success({ content: "复制成功" });
     };
+    const quit = async () => {
+      try {
+        await quitMember(productId.value, userId.value);
+        Message.success({ content: "你已经退出该项目" });
+        router.push("/Layout/WorkPlace")
+      } catch {
+
+      }
+
+    }
+    let memberList = inject('Member');
     return {
       changeTheme,
       store,
@@ -309,7 +299,9 @@ export default defineComponent({
       themeText,
       name,
       changeItem,
-      kick
+      kick,
+      quit,
+      memberList
     };
   },
 });
@@ -341,7 +333,7 @@ export default defineComponent({
       height: 30px;
       opacity: 1;
       padding: 10px;
-      background-color: rgba(@cardColorMain, 0.4);;
+      background-color: rgba(@cardColorMain, 0.4);
       font-family: PingFang-Bold-2;
       border: unset;
       color: rgba(@cardTextColorMain, 1);

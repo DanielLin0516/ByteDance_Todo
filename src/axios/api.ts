@@ -405,8 +405,18 @@ export function getMemberListByProductId(productId: string):Promise<UserElement[
   return instance.get(`/product/getMemberList/${productId}`);
 }
 /**
- * 踢出人员
+ * 退出人员
  * @param productId
+ * @param userId
+ * @returns
+ */
+export function quitMember(productId:number,userId:number) {
+  return instance.post(`/product/quitProduct/${productId}/${userId}`);
+}
+/**
+ * 踢掉人
+ * @param productId
+ *  @param userId
  * @returns
  */
 export function kickMember(productId:number,userId:number) {
