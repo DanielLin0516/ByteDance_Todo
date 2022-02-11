@@ -5,8 +5,6 @@
     @wheel="columnsMouseWheel"
   >
     <!-- 要渲染的列表 -->
-    <button @click="change111">123123</button>
-    <button @click="change222">aaaaaa</button>
     <transition-group
       name="animate__list"
       enter-active-class="animate__animated animate__fadeIn animate__faster"
@@ -192,14 +190,6 @@ import Task from "@/components/card/Task.vue";
 import Websocket from "@/components/websocket/Websocket.vue";
 import Driver from 'driver.js' // import driver.js
 import 'driver.js/dist/driver.min.css' // import driver.js css
-import {
-  onMounted,
-  nextTick
-} from "vue";
-import steps from "@/utils/driver"
-import LoginVue from "@/view/Login.vue";
-import { log } from "console";
-// import {nextTick} from "process"
 
 export default defineComponent({
   name: "MainCard",
@@ -260,13 +250,7 @@ export default defineComponent({
     const curisNew: ComputedRef<boolean> = computed(() => {
       return store.state.currentUserInfo.isNews;
     });
-    console.log('curisNew.value',curisNew.value);
-    
-    // 获取当前用户信息
-    // if(curisNew.value) {
-    //   isNew.value = true
-    // }
-    // steps
+    // 新手指南：steps
     const steps = [
     {
        element: '#new1',
@@ -275,6 +259,7 @@ export default defineComponent({
          description: '在此导航栏，您可以邀请朋友一起使用项目，修改项目名称，项目颜色',
          position: 'bottom'
       },
+      padding:0,
       onNext: () => {
         driver.preventMove();
         newColumnName.value = 'Test';
@@ -285,7 +270,7 @@ export default defineComponent({
             listId: (await res).id,
             pos: 12002,
             productId: (await res).productId
-          })//
+          })
         }
         createTestColumn()
         setTimeout(() => {
@@ -308,17 +293,18 @@ export default defineComponent({
          description: '在此块开始创建您的项目，我们已为您创建一个示例',
          position: 'right'
       },
+      padding:0,
     },
    ]
-    // 新手指南-start
+    // 新手指南
     const driver = new Driver({
       stageBackground:'rgba(100,100,100,0.3',
       opacity: 0.7,
       animate: true,
       doneBtnText: '我知道了',
-      closeBtnText: '跳过', //  关闭按钮文啊ssaas
-      nextBtnText: '下一步', // 下一步的按钮文案
-      prevBtnText: '上一步', // 上一步的按钮文
+      closeBtnText: '跳过', 
+      nextBtnText: '下一步', 
+      prevBtnText: '上一步', 
     })
     async function guide () {
       await changeUserState(false)
@@ -326,19 +312,10 @@ export default defineComponent({
       driver.defineSteps(steps)
       driver.start()
     }
-    async function change111() {
-      await changeUserState(true)
-      store.commit('setIsNew', true)
-    }
-    async function change222() {
-      await changeUserState(false)
-      store.commit('setIsNew', false)
-    }
     async function changeOldUser() {
       await changeUserState(false)
       console.log('changeOldUser');
       store.commit('setIsNew', false)
-      // isNew.value = false;
     }
 
     // useRequest钩子
@@ -1068,13 +1045,9 @@ export default defineComponent({
       updateCard,
       changeListName,
       currentTask,
-      // isNew,
-      // closeNew,
       curisNew,
       guide,
       changeOldUser,
-      change111,
-      change222
     };
   },
 });

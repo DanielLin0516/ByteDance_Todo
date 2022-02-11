@@ -1,7 +1,7 @@
 <template>
-  <div class="small-bar" id="new1">
+  <div class="small-bar">
     <!-- 第二个菜单栏 -->
-    <div class="second-bar">
+    <div class="second-bar"  id="new1">
       <input
         class="product-name"
         style="margin-right: 1vw"
