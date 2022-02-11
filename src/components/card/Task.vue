@@ -58,14 +58,27 @@
                         <div class="info-header">
                           <span>账号</span>
                         </div>
-                        <div class="center">
+                        <div
+                          class="center"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            flex-direction: row;
+                          "
+                        >
                           <a-avatar
                             :style="{ backgroundColor: user.avatar }"
                             class="info"
                           >
                             <IconUser />
                           </a-avatar>
-                          <div style="">
+                          <div
+                            style="
+                              display: flex;
+                              flex-direction: column;
+                              margin-left: 1vw;
+                            "
+                          >
                             <div>{{ user.fullname }}</div>
                             <div
                               style="
@@ -389,7 +402,7 @@ export default defineComponent({
           }
           .center {
             display: flex;
-            justify-content: flex-start;
+            flex-direction: row;
             align-items: center;
             .info {
               height: 50px;
@@ -429,6 +442,7 @@ export default defineComponent({
             }
             .center {
               display: flex;
+              flex-direction: row;
               justify-content: flex-start;
               align-items: center;
               .info {

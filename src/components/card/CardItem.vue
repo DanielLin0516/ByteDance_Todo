@@ -33,8 +33,16 @@
         v-show="cardInfo?.begintime"
         @click.stop="done(cardInfo)"
       >
-        <div style="display: flex; flex-direction: column;justify-content: space-between;">
-          <div style="margin-bottom: 5px;">{{ dayjs(cardInfo?.begintime).format("YYYY-MM-DD") }}</div>
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          "
+        >
+          <div style="margin-bottom: 5px">
+            {{ dayjs(cardInfo?.begintime).format("YYYY-MM-DD") }}
+          </div>
           <div>{{ dayjs(cardInfo?.deadline).format("YYYY-MM-DD") }}</div>
         </div>
         <icon-schedule class="time2" />
@@ -58,22 +66,34 @@
                         <div class="info-header">
                           <span>账号</span>
                         </div>
-                        <div class="center">
-                          <a-avatar :style="{ backgroundColor: user.avatar }" class="info">
+                        <div
+                          class="center"
+                          style="
+                            display: flex;
+                            align-items: center;
+                            flex-direction: row;
+                          "
+                        >
+                          <a-avatar :style="{ backgroundColor: user.avatar }">
                             <IconUser />
                           </a-avatar>
                           <div
                             style="
-                    "
+                              display: flex;
+                              flex-direction: column;
+                              margin-left: 1vw;
+                            "
                           >
                             <div>{{ user.fullname }}</div>
                             <div
                               style="
-                        color: rgb(197, 202, 210);
-                        font-size: 12px;
-                        margin-top: 0.5vw;
-                      "
-                            >{{ user.username }}</div>
+                                color: rgb(197, 202, 210);
+                                font-size: 12px;
+                                margin-top: 0.5vw;
+                              "
+                            >
+                              {{ user.username }}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -100,7 +120,7 @@ export default defineComponent({
   name: "CardItem",
   components: {
     IconSchedule,
-    IconUser
+    IconUser,
   },
   props: {
     cardInfo: {
@@ -298,20 +318,9 @@ export default defineComponent({
         .info-header {
           height: 30px;
           width: 100%;
-          display: flex;
-          align-items: center;
           color: rgb(94, 108, 132);
           font-size: 18px;
           margin-bottom: 10px;
-        }
-        .center {
-          display: flex;
-          justify-content: flex-start;
-          align-items: center;
-          .info {
-            height: 50px;
-            width: 50px;
-          }
         }
       }
       .member_item {
