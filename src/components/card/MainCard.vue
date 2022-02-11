@@ -5,6 +5,8 @@
     @wheel="columnsMouseWheel"
   >
     <!-- 要渲染的列表 -->
+    <button @click="change111">123123</button>
+    <button @click="change222">aaaaaa</button>
     <transition-group
       name="animate__list"
       enter-active-class="animate__animated animate__fadeIn animate__faster"
@@ -116,7 +118,7 @@
         :taskInfo="currentTask"
       ></Task>
     </div>
-    <div class="task-bg" v-if="isNew" @click.self="closeNew">
+    <div class="task-bg" v-if="curisNew" @click.self="closeNew">
       <div class="cardNew">
         <a-card :style="{ width: '360px' }" title="新手指南">
           <div class="cardButtons">
@@ -222,7 +224,7 @@ export default defineComponent({
     const taskClickId = ref(NaN);
     const columnName = ref("");
     const isTaskOpen = ref(false);
-    const isNew = ref(false);
+    // const isNew = ref(false);
     const currentCardId = ref(0);
     const currentColumnId = ref(0);
 
@@ -260,9 +262,9 @@ export default defineComponent({
     console.log('curisNew.value',curisNew.value);
     
     // 获取当前用户信息
-    if(curisNew) {
-      isNew.value = true
-    }
+    // if(curisNew.value) {
+    //   isNew.value = true
+    // }
     // steps
     const steps = [
     {
@@ -319,17 +321,25 @@ export default defineComponent({
     })
     const guide = () => {
       nextTick(()=> {
-          isNew.value = false;
+          // isNew.value = false;
           console.log(123);
           driver.defineSteps(steps)
           driver.start()
         })
     }
-    async function changeOldUser() {
+    async function change111() {
+      await changeUserState(true)
+      store.commit('setIsNew', true)
+    }
+    async function change222() {
       await changeUserState(false)
       store.commit('setIsNew', false)
-      console.log(store.state.currentUserInfo.isNews);
-      isNew.value = false;
+    }
+    async function changeOldUser() {
+      await changeUserState(false)
+      console.log('changeOldUser');
+      store.commit('setIsNew', false)
+      // isNew.value = false;
     }
 
     // useRequest钩子
@@ -410,9 +420,9 @@ export default defineComponent({
     const close = () => {
       isTaskOpen.value = false;
     };
-    const closeNew = () => {
-      isNew.value = false;
-    };
+    // const closeNew = () => {
+    //   isNew.value = false;
+    // };
 
     /**
      * 更改列名
@@ -1059,10 +1069,13 @@ export default defineComponent({
       updateCard,
       changeListName,
       currentTask,
-      isNew,
-      closeNew,
+      // isNew,
+      // closeNew,
+      curisNew,
       guide,
-      changeOldUser
+      changeOldUser,
+      change111,
+      change222
     };
   },
 });
