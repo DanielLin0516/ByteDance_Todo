@@ -424,3 +424,7 @@ export function quitMember(productId:number,userId:number) {
 export function kickMember(productId:number,userId:number) {
   return instance.post(`/product/kickOutMember/${productId}/${userId}`);
 }
+
+export function changeUserState(isNews:boolean) {
+  return instance.post(`/users/setNewUserStatus/?isNews=${isNews}`);
+}

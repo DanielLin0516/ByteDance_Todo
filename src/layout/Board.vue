@@ -1,5 +1,5 @@
 <template>
-  <LeftDrawer></LeftDrawer>
+  <LeftDrawer id="new2"></LeftDrawer>
   <div class="main-area">
     <div class="right">
       <div class="loading" v-show="loading">
@@ -9,7 +9,7 @@
         <SmallBar></SmallBar>
       </div>
       <div class="right_down" v-show="!loading">
-        <MainCard @loadingOver="loadingOver"></MainCard>
+        <MainCard id="new3" @loadingOver="loadingOver"></MainCard>
       </div>
     </div>
   </div>

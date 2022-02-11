@@ -1,5 +1,5 @@
 <template>
-  <div class="small-bar">
+  <div class="small-bar" id="new1">
     <!-- 第二个菜单栏 -->
     <div class="second-bar">
       <input
@@ -11,7 +11,6 @@
       <Avatar />
       <div
         class="inviteUser"
-        id="new1"
         v-show="showInviteButton"
         @click="inviteShow"
       >
