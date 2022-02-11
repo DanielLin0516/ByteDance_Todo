@@ -116,12 +116,12 @@
         :taskInfo="currentTask"
       ></Task>
     </div>
-    <div class="task-bg" v-if="curisNew">
+    <div class="task-bg" v-if="true">
       <div class="cardNew">
-        <a-card :style="{ width: '360px' }" title="新手指南">
+        <a-card :style="{ width: '360px', background:'rgb(233, 237, 236)'}" title="新手指南">
           <div class="cardButtons">
-            <a-button @click="changeOldUser">不再提示</a-button>
-            <a-button @click="guide">开启新手指南</a-button>
+            <a-button type="primary" @click="changeOldUser">不再提示</a-button>
+            <a-button type="outline" @click="guide">开启新手指南</a-button>
           </div>
         </a-card>
       </div>

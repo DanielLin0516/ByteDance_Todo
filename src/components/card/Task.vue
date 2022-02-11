@@ -425,6 +425,7 @@ export default defineComponent({
               color: rgb(94, 108, 132);
               font-size: 18px;
               margin-bottom: 10px;
+              color: rgb(233, 237, 236);
             }
             .center {
               display: flex;
