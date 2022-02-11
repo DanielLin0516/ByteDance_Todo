@@ -138,7 +138,6 @@ export default defineComponent({
     }
     .link {
       margin-left: 50px;
-      font-family: "PingFang-Regular";
       font-size: 24px;
       font-weight: 700;
       // color: rgba(@cardColorMain, 1);

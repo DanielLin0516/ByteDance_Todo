@@ -1092,7 +1092,6 @@ export default defineComponent({
       opacity: 1;
       padding: 10px;
       background-color: transparent;
-      font-family: PingFang-Bold-2;
       border: unset;
       color: rgba(@cardTextColorMain, 1);
     }

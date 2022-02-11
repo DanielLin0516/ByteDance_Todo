@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import path from "path";
 import pxtovw from "postcss-px-to-viewport";
 import viteCompression from "vite-plugin-compression";
+import { visualizer } from "rollup-plugin-visualizer";
 
 const loder_pxtovw = pxtovw({
   viewportWidth: 1920,
@@ -49,6 +50,7 @@ export default defineConfig({
       algorithm: "gzip",
       ext: ".gz",
     }),
+    visualizer(),
   ],
   base: "./",
   build: {
@@ -63,6 +65,16 @@ export default defineConfig({
         chunkFileNames: "static/js/[name]-[hash].js",
         entryFileNames: "static/js/[name]-[hash].js",
         assetFileNames: "static/[ext]/[name]-[hash].[ext]",
+        manualChunks(id) {
+          //静态资源分拆打包
+          if (id.includes("node_modules")) {
+            return id
+              .toString()
+              .split("node_modules/")[1]
+              .split("/")[0]
+              .toString();
+          }
+        },
       },
     },
   },
