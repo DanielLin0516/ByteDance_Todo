@@ -194,11 +194,12 @@ import Driver from 'driver.js' // import driver.js
 import 'driver.js/dist/driver.min.css' // import driver.js css
 import {
   onMounted,
+  nextTick
 } from "vue";
 import steps from "@/utils/driver"
 import LoginVue from "@/view/Login.vue";
 import { log } from "console";
-import { nextTick } from "process";
+// import {nextTick} from "process"
 
 export default defineComponent({
   name: "MainCard",
@@ -319,13 +320,11 @@ export default defineComponent({
       nextBtnText: '下一步', // 下一步的按钮文案
       prevBtnText: '上一步', // 上一步的按钮文
     })
-    const guide = () => {
-      nextTick(()=> {
-          // isNew.value = false;
-          console.log(123);
-          driver.defineSteps(steps)
-          driver.start()
-        })
+    async function guide () {
+      await changeUserState(false)
+      store.commit('setIsNew', false)
+      driver.defineSteps(steps)
+      driver.start()
     }
     async function change111() {
       await changeUserState(true)
