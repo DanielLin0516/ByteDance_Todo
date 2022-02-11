@@ -19,6 +19,7 @@
       </div> -->
       <a-popover position="br">
         <a-avatar
+          id="new2"
           :style="{ backgroundColor: '#3370ff' }"
           class="avatar"
           @click="inviteCard = !inviteCard"

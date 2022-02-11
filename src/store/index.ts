@@ -27,6 +27,9 @@ export default createStore<StoreState>({
     setIsDark(state, value: boolean) {
       state.isDark = value;
     },
+    setIsNew(state, value:boolean) {
+      state.currentUserInfo.isNews = value
+    },
     setCurrentUser(state, value: UserElement) {
       state.currentUserInfo = value;
     },

@@ -12,6 +12,7 @@
     >
       <div
         class="list-item"
+        id="new2"
         v-for="(column, index) of lists"
         :key="column.listId"
         draggable="true"
@@ -115,6 +116,16 @@
         :taskInfo="currentTask"
       ></Task>
     </div>
+    <div class="task-bg" v-if="isNew" @click.self="closeNew">
+      <div class="cardNew">
+        <a-card :style="{ width: '360px' }" title="新手指南">
+          <div class="cardButtons">
+            <a-button @click="changeOldUser">老玩家你懂吗？</a-button>
+            <a-button @click="guide">开启新手指南</a-button>
+          </div>
+        </a-card>
+      </div>
+    </div>
     <Websocket
       v-if="!productLoading"
       :productId="productId"
@@ -171,6 +182,7 @@ import {
   createNewCard,
   moveList,
   moveCard,
+  changeUserState
 } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
 import CardItem from "@/components/card/CardItem.vue";
@@ -184,6 +196,7 @@ import {
 import steps from "@/utils/driver"
 import LoginVue from "@/view/Login.vue";
 import { log } from "console";
+import { nextTick } from "process";
 
 export default defineComponent({
   name: "MainCard",
@@ -209,6 +222,7 @@ export default defineComponent({
     const taskClickId = ref(NaN);
     const columnName = ref("");
     const isTaskOpen = ref(false);
+    const isNew = ref(false);
     const currentCardId = ref(0);
     const currentColumnId = ref(0);
 
@@ -240,12 +254,24 @@ export default defineComponent({
     const productId: ComputedRef<string> = computed(() => {
       return route.params.productId as string;
     });
+    console.log('productId',productId);
+    const curisNew: ComputedRef<boolean> = computed(() => {
+
+      return store.state.currentUserInfo.isNews;
+    });
+    console.log('curisNew',curisNew);
+    
+    // 获取当前用户信息
+    if(curisNew.value) {
+      isNew.value = true
+    }
+    // steps
     const steps = [
     {
        element: '#new1',
        popover: {
-         title: '邀请朋友',
-         description: '在此处邀请朋友一起使用项目',
+         title: '编辑项目',
+         description: '在此导航栏，您可以邀请朋友一起使用项目，修改项目名称，项目颜色',
          position: 'bottom'
       },
       onNext: () => {
@@ -254,74 +280,59 @@ export default defineComponent({
         async function createTestColumn() {
           const res = await createColumn()
           await createNewCard({
-            cardname: 'testard123',
+            cardname: 'test-card',
             listId: (await res).id,
             pos: 12002,
             productId: (await res).productId
-          })
-          const listid = 151;
-          // await openTask(listid, lists[0])sa
+          })//
         }
         createTestColumn()
-        // async function createTestCard() {
-          
-        // } 
-        // async function openTsk(listid:any) {
-        //   openTask(listid, lists[0])
-        // }
-        // const res = createTestColumn()
-        // res.then((resolve)=> {
-        //   const listid = resolve.id
-        //   const res1 = createTestCard()
-        //   console.log(12);
-          
-        //   res1.then(() => {
-        //     console.log(23);
-            
-        //       openTsk(listid)
-        //   })
-        // })
-        
         setTimeout(() => {
           driver.moveNext();
-        }, 500);
+        }, 0);
       }
     },
     {
-        element: '#second-element-introduction',
-        popover: {
-          title: 'Title on Popover',
-          description: 'Body of the popover',
-          position: 'top'
-        },
-        
+       element: '#new2',
+       popover: {
+         title: '用户信息',
+         description: '在此处查看当前用户信息',//o
+         position: 'left'
       },
+    },
+    {
+        element: '#new3',
+       popover: {
+         title: '工作区',
+         description: '在此块开始创建您的项目，我们已为您创建一个示例',
+         position: 'right'
+      },
+    },
    ]
-  //   ProductShowElement {
-  // listName: string;
-  // listId: number;
-  // productId: number;
-  // closed: boolean;
-  // pos: number;
-  // items: CardElement[];
     // 新手指南-start
     const driver = new Driver({
-      opacity: 0.5,
+      stageBackground:'rgba(100,100,100,0.3',
+      opacity: 0.7,
       animate: true,
       doneBtnText: '我知道了',
-      closeBtnText: '跳过', //  关闭按钮文
+      closeBtnText: '跳过', //  关闭按钮文啊ssaas
       nextBtnText: '下一步', // 下一步的按钮文案
       prevBtnText: '上一步', // 上一步的按钮文
     })
     const guide = () => {
-      driver.defineSteps(steps)
-      driver.start()
+      nextTick(()=> {
+          isNew.value = false;
+          console.log(123);
+          driver.defineSteps(steps)
+          driver.start()
+        })
     }
-    onMounted(() => {
-      console.log(123123);
-      guide()
-    })
-    // 新手指南-end
+    async function changeOldUser() {
+      await changeUserState(false)
+      store.commit('setIsNew', false)
+      console.log(store.state.currentUserInfo.isNews);
+      isNew.value = false;
+    }
 
     // useRequest钩子
     const {
@@ -400,6 +411,9 @@ export default defineComponent({
      */
     const close = () => {
       isTaskOpen.value = false;
+    };
+    const closeNew = () => {
+      isNew.value = false;
     };
 
     /**
@@ -760,12 +774,9 @@ export default defineComponent({
       //保存当前打开的task状态
       currentCardId.value = cardId;
       currentColumnId.value = column.listId;
-
       taskClickId.value = cardId;
       columnName.value = column.listName;
       isTaskOpen.value = true;
-      console.log('column', column);
-      
     };
 
     //计算属性记录currentTask
@@ -1050,13 +1061,27 @@ export default defineComponent({
       updateCard,
       changeListName,
       currentTask,
+      isNew,
+      closeNew,
+      guide,
+      changeOldUser
     };
   },
 });
 </script>
 <style lang="less" scoped>
 @import url("@/components/card/scrollCss/scroll.scss");
-
+.cardNew {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -100%);
+  .cardButtons{
+    padding: 20px;
+    display: flex;
+    justify-content: space-evenly;
+  }
+}
 .card-wrapper {
   width: max-content;
   height: 100%;
