@@ -1,7 +1,7 @@
 <template>
   <div class="small-bar">
     <!-- 第二个菜单栏 -->
-    <div class="second-bar"  id="new1">
+    <div class="second-bar" id="new1">
       <input
         class="product-name"
         style="margin-right: 1vw"
@@ -9,11 +9,7 @@
         @change="changeItem($event)"
       />
       <Avatar />
-      <div
-        class="inviteUser"
-        v-show="showInviteButton"
-        @click="inviteShow"
-      >
+      <div class="inviteUser" v-show="showInviteButton" @click="inviteShow">
         <icon-user class="icon-user" />
         <div>邀请朋友</div>
       </div>
@@ -132,7 +128,6 @@ export default defineComponent({
     const store = useStore();
     const isDark = ref(false);
     isDark.value = store.state.isDark;
-    console.log("isDark.value", isDark.value);
     let name = ref(null);
     let kick = ref("");
     const themeText = isDark.value ? "切换默认模式" : "切换夜间模式";
@@ -299,7 +294,7 @@ export default defineComponent({
         router.push("/Layout/WorkPlace");
       } catch {}
     };
-    let memberList = inject("Member");
+
     return {
       changeTheme,
       store,
@@ -321,7 +316,6 @@ export default defineComponent({
       changeItem,
       kick,
       quit,
-      memberList,
     };
   },
 });

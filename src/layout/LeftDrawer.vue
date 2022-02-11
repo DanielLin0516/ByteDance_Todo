@@ -7,7 +7,6 @@
     />
   </div>
   <a-drawer
-    id="new2"
     popup-container="#parentNode"
     :visible="visible"
     @ok="handleOk"

@@ -779,7 +779,6 @@ export default defineComponent({
      */
     const updateList = (message: NotifyMessage) => {
       const detail = message.detail;
-      console.log(detail);
       switch (message.event) {
         case "updateModels":
           lists.forEach((list) => {

@@ -1,5 +1,5 @@
 <template>
-  <LeftDrawer id="new2"></LeftDrawer>
+  <LeftDrawer></LeftDrawer>
   <div class="main-area">
     <div class="right">
       <div class="loading" v-show="loading">
@@ -19,10 +19,7 @@
 import LeftDrawer from "@/layout/LeftDrawer.vue";
 import MainCard from "@/components/card/MainCard.vue";
 import SmallBar from "@/layout/SmallBar.vue";
-import {
-  defineComponent,
-  ref,
-} from "vue";
+import { defineComponent, ref } from "vue";
 import { setTheme } from "@/theme/theme";
 export default defineComponent({
   name: "Board",
@@ -58,12 +55,12 @@ export default defineComponent({
 .main-area {
   position: relative;
   display: flex;
-  z-index:1;
+  z-index: 1;
   .right {
     position: relative;
     height: calc(100vh - 80px);
     width: 100%;
-      z-index:-1;
+    z-index: -1;
     .loading {
       position: absolute;
       display: flex;

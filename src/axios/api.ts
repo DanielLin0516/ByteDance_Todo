@@ -281,8 +281,6 @@ export function createNewCard(newCardData: {
   pos: number;
   productId: number;
 }> {
-  console.log(123123123);
-  
   return instance.post(`/cards/create`, newCardData);
 }
 /**
@@ -403,7 +401,9 @@ export function itemName(productId: number, productName: string) {
  * @param productId
  * @returns
  */
-export function getMemberListByProductId(productId: string):Promise<UserElement[]> {
+export function getMemberListByProductId(
+  productId: string
+): Promise<UserElement[]> {
   return instance.get(`/product/getMemberList/${productId}`);
 }
 /**
@@ -412,7 +412,7 @@ export function getMemberListByProductId(productId: string):Promise<UserElement[
  * @param userId
  * @returns
  */
-export function quitMember(productId:number,userId:number) {
+export function quitMember(productId: number, userId: number) {
   return instance.post(`/product/quitProduct/${productId}/${userId}`);
 }
 /**
@@ -421,10 +421,10 @@ export function quitMember(productId:number,userId:number) {
  *  @param userId
  * @returns
  */
-export function kickMember(productId:number,userId:number) {
+export function kickMember(productId: number, userId: number) {
   return instance.post(`/product/kickOutMember/${productId}/${userId}`);
 }
 
-export function changeUserState(isNews:boolean) {
+export function changeUserState(isNews: boolean) {
   return instance.post(`/users/setNewUserStatus/?isNews=${isNews}`);
 }

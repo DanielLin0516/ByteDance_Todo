@@ -1,14 +1,27 @@
 <template>
-  <div :class="{ darkTheme: isDark, bgc: true }" :style="{ background: background }">
+  <div
+    :class="{ darkTheme: isDark, bgc: true }"
+    :style="{ background: background }"
+  >
     <!-- <transition :name="route.meta.transition || 'fade'" mode="out-in"> -->
-      <router-view v-slot="{ Component, route }"></router-view>
+    <router-view v-slot="{ Component, route }"></router-view>
     <!-- </transition> -->
   </div>
 </template>
 
 <script lang="ts">
 import TopBar from "@/layout/TopBar.vue";
-import { defineComponent, onMounted, computed, watch, ComputedRef, ReactiveEffect, ref, provide, Transition } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  computed,
+  watch,
+  ComputedRef,
+  ReactiveEffect,
+  ref,
+  provide,
+  Transition,
+} from "vue";
 import { setTheme } from "@/theme/theme";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
@@ -16,20 +29,19 @@ export default defineComponent({
   name: "App",
   components: {
     TopBar,
-    Transition
+    Transition,
   },
   setup() {
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
-    let isDark = ref(false)
-    console.log(isDark.value);
+    let isDark = ref(false);
 
     // 传给孙组件的空函数
     const sendIsDarkToApp = function (value: boolean) {
-      isDark.value = value
-    }
-    provide('sendIsDarkToApp', sendIsDarkToApp)
+      isDark.value = value;
+    };
+    provide("sendIsDarkToApp", sendIsDarkToApp);
 
     const init = () => {
       setTheme("default");
@@ -50,7 +62,7 @@ export default defineComponent({
       store,
       background,
       isDark,
-      route
+      route,
     };
   },
 });
