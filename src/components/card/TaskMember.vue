@@ -15,7 +15,9 @@
       <!-- <div ref="addSpan"> -->
       <div v-show="isSuggest">
         <h3>建议的成员</h3>
-        <p @click="suggestMember" class="new_label">{{ currentUser.fullname }}</p>
+        <p @click="suggestMember" class="new_label">
+          {{ currentUser.fullname }}
+        </p>
       </div>
       <h3>看板成员</h3>
       <div class="members">
@@ -27,7 +29,9 @@
           :class="{ choosed: user.isChoosed }"
           :key="user.userId + index"
           @click="clickMember(user, index)"
-        >{{ user.fullname }}</div>
+        >
+          {{ user.fullname }}
+        </div>
       </div>
     </div>
   </div>
@@ -45,7 +49,14 @@ import {
   deleteExecutorApi,
 } from "@/axios/labelApi";
 import { CardElement, UserElement } from "@/axios/globalInterface";
-import { defineComponent, inject, ref, reactive, computed, ComputedRef } from "vue";
+import {
+  defineComponent,
+  inject,
+  ref,
+  reactive,
+  computed,
+  ComputedRef,
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 export default defineComponent({
@@ -65,10 +76,11 @@ export default defineComponent({
     const isSuggest = ref(true);
     const currentUser = store.state.currentUserInfo;
     const productId = ref(Number(route.params.productId));
-    const task: ComputedRef<CardElement> =computed(()=>{
-      return context.attrs.taskInfo as CardElement
-    }) ;
-    const currentMembers: UserElement[] = task.value == null ? [] : task.value.executorList;
+    const task: ComputedRef<CardElement> = computed(() => {
+      return context.attrs.taskInfo as CardElement;
+    });
+    const currentMembers: UserElement[] =
+      task.value == null ? [] : task.value.executorList;
     const searchValue = ref("");
     const cardId: number = inject("cardId") as number;
 
@@ -183,9 +195,10 @@ export default defineComponent({
   flex-direction: column;
 
   border-radius: 5px;
-  background-color: white;
+  background-color: rgba(@cardColorMain, 1);
+  color: rgba(@cardTextColorMain, 0.5);
   box-shadow: 0px 0px 6px gray;
-  // border-left: 1px solid rgba(0, 0, 0, 0.3);
+  z-index: 999;
 
   .header {
     position: relative;
@@ -202,9 +215,13 @@ export default defineComponent({
 
     h2 {
       grid-column: 2 / 3;
-      color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(@cardColorMain, 1);
+      color: rgba(@cardTextColorMain, 0.7);
     }
 
+    h3 {
+      font-size: smaller;
+    }
     .icon-close {
       position: absolute;
       right: 0;
@@ -286,9 +303,5 @@ export default defineComponent({
     background-color: rgba(0, 0, 0, 0.1);
     cursor: pointer;
   }
-}
-h3 {
-  color: rgba(0, 0, 0, 0.7);
-  font-size: smaller;
 }
 </style>

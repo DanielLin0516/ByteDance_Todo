@@ -9,7 +9,12 @@
         @change="changeItem($event)"
       />
       <Avatar />
-      <div class="inviteUser" id="new1" v-show="showInviteButton" @click="inviteShow">
+      <div
+        class="inviteUser"
+        id="new1"
+        v-show="showInviteButton"
+        @click="inviteShow"
+      >
         <icon-user class="icon-user" />
         <div>邀请朋友</div>
       </div>
@@ -127,18 +132,18 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const isDark = ref(false);
-    isDark.value = store.state.isDark
-    console.log('isDark.value', isDark.value);
+    isDark.value = store.state.isDark;
+    console.log("isDark.value", isDark.value);
     let name = ref(null);
     let kick = ref("");
-    const themeText = isDark.value ? '切换默认模式' : '切换夜间模式';
+    const themeText = isDark.value ? "切换默认模式" : "切换夜间模式";
     const inviteCard = ref(false);
     let upSquare = ref(String("#0079BF"));
     const route = useRoute();
     const router = useRouter();
     let inviteCodeData = ref(null);
     let link = ref(String(null));
-    
+
     const userId = computed(() => {
       return store.state.currentUserInfo.userId;
     });
@@ -152,7 +157,7 @@ export default defineComponent({
       if (store.state.showInviteButton) {
         kick.value = "踢人";
       } else {
-        kick.value = "退出项目"
+        kick.value = "退出项目";
       }
       return store.state.showInviteButton;
     });
@@ -292,13 +297,10 @@ export default defineComponent({
       try {
         await quitMember(productId.value, userId.value);
         Message.success({ content: "你已经退出该项目" });
-        router.push("/Layout/WorkPlace")
-      } catch {
-
-      }
-
-    }
-    let memberList = inject('Member');
+        router.push("/Layout/WorkPlace");
+      } catch {}
+    };
+    let memberList = inject("Member");
     return {
       changeTheme,
       store,
@@ -320,7 +322,7 @@ export default defineComponent({
       changeItem,
       kick,
       quit,
-      memberList
+      memberList,
     };
   },
 });

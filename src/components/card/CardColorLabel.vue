@@ -117,7 +117,7 @@ import {
   IconLeft,
 } from "@arco-design/web-vue/es/icon";
 import { Message } from "@arco-design/web-vue";
-import { defineComponent, inject, ref, reactive, computed ,watch} from "vue";
+import { defineComponent, inject, ref, reactive, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import { TagElement, CardElement, webLabel } from "@/axios/globalInterface";
@@ -192,11 +192,15 @@ export default defineComponent({
       tagName: "",
       productId: parseInt(productId.value as string),
     });
-    watch(() => [newLabelData.tagName],() => {
-      if(newLabelData.tagName.length >= 14){
-        Message.error({content:"标签名字最大长度不能超过15！"})
-      }
-    },{deep:true})
+    watch(
+      () => [newLabelData.tagName],
+      () => {
+        if (newLabelData.tagName.length >= 14) {
+          Message.error({ content: "标签名字最大长度不能超过15！" });
+        }
+      },
+      { deep: true }
+    );
 
     const close = () => {
       context.emit("close");
@@ -287,7 +291,7 @@ export default defineComponent({
       if (!newLabelData.color || !newLabelData.tagName) {
         Message.error("请确定颜色与标签名是否完整");
         return;
-      }else if(newLabelData.tagName.length >=14) {
+      } else if (newLabelData.tagName.length >= 14) {
         Message.error("标签名不能超过15个字符！");
         return;
       }
@@ -412,12 +416,12 @@ export default defineComponent({
   flex-direction: column;
 
   border-radius: 5px;
-  background-color: white;
+  background-color: rgba(@cardColorMain, 1);
+  color: rgba(@cardTextColorMain, 0.5);
   box-shadow: 0px 0px 6px gray;
-  // border-left: 1px solid rgba(0, 0, 0, 0.3);
+  z-index: 999;
 
   h3 {
-    color: rgba(0, 0, 0, 0.7);
     font-size: smaller;
   }
   .header {
@@ -432,10 +436,9 @@ export default defineComponent({
     justify-items: center;
     align-items: center;
     align-content: stretch;
-
     h2 {
       grid-column: 2 / 3;
-      color: rgba(0, 0, 0, 0.7);
+      color: rgba(@cardTextColorMain, 0.7);
     }
 
     .icon-close,
