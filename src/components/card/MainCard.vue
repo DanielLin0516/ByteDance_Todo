@@ -116,7 +116,7 @@
         :taskInfo="currentTask"
       ></Task>
     </div>
-    <div class="task-bg" v-if="curisNew" @click.self="closeNew">
+    <div class="task-bg" v-if="curisNew">
       <div class="cardNew">
         <a-card :style="{ width: '360px' }" title="新手指南">
           <div class="cardButtons">
