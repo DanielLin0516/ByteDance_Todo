@@ -8,7 +8,10 @@
     <icon-close-circle class="icon-close-circle" @click.stop="close" />
     <div class="scroll">
       <div class="header">
-        <icon-robot :style="{ fontSize: '1.2em', margin: '0 10px' }" class="robot" />
+        <icon-robot
+          :style="{ fontSize: '1.2em', margin: '0 10px' }"
+          class="robot"
+        />
         <input
           type="text"
           v-model="task.cardname"
@@ -17,7 +20,8 @@
         />
         <div class="listName">
           在列表
-          <span class="listNameSpan">{{ columnName }}</span>中
+          <span class="listNameSpan">{{ columnName }}</span
+          >中
         </div>
       </div>
       <div class="member_content" v-if="task.tagList[0]">
@@ -28,11 +32,14 @@
             v-for="(item, index) in task.tagList"
             :key="index"
             :style="{ backgroundColor: item.color }"
-          >{{ item.tagName }}</div>
+          >
+            {{ item.tagName }}
+          </div>
         </div>
       </div>
       <div class="member_content" v-if="task.executorList[0]">
         <h3>成员</h3>
+
         <div class="member_items">
           <a-space :size="32">
             <a-avatar-group>
@@ -52,19 +59,23 @@
                           <span>账号</span>
                         </div>
                         <div class="center">
-                          <a-avatar :style="{ backgroundColor: user.avatar }" class="info">
+                          <a-avatar
+                            :style="{ backgroundColor: user.avatar }"
+                            class="info"
+                          >
                             <IconUser />
                           </a-avatar>
-                          <div style="
-                          ">
+                          <div style="">
                             <div>{{ user.fullname }}</div>
                             <div
                               style="
-                        color: rgb(197, 202, 210);
-                        font-size: 12px;
-                        margin-top: 0.5vw;
-                      "
-                            >{{ user.username }}</div>
+                                color: rgb(197, 202, 210);
+                                font-size: 12px;
+                                margin-top: 0.5vw;
+                              "
+                            >
+                              {{ user.username }}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -79,16 +90,25 @@
       <div class="date" v-if="task.begintime">
         <h3>日期</h3>
         <div class="box">
-          <input type="checkbox" v-model="task.completed" @click="showsome(task)" />
+          <input
+            type="checkbox"
+            v-model="task.completed"
+            @click="showsome(task)"
+          />
           <div class="time" :class="{ timedone: task.completed }">
             {{ dayjs(task.begintime).format("YYYY-MM-DD") }} ~
             {{ dayjs(task.deadline).format("YYYY-MM-DD") }}
-            <div class="done" :class="{ undone: !task.completed }">{{ done }}</div>
+            <div class="done" :class="{ undone: !task.completed }">
+              {{ done }}
+            </div>
           </div>
         </div>
       </div>
       <div class="des">
-        <icon-align-left class="icon-left" :style="{ fontSize: '1.2em', margin: '0 10px' }" />
+        <icon-align-left
+          class="icon-left"
+          :style="{ fontSize: '1.2em', margin: '0 10px' }"
+        />
         <h3 class="desc">描述</h3>
       </div>
       <a-textarea
@@ -107,13 +127,18 @@
         :id="id"
         :columnName="columnName"
       ></CardDetailFuction>
-      <a-popconfirm content="将此任务删除？" okText="确认" cancelText="取消" @ok="deleteOneTask()">
+      <a-popconfirm
+        content="将此任务删除？"
+        okText="确认"
+        cancelText="取消"
+        @ok="deleteOneTask()"
+      >
         <a-button status="danger" class="deleteButton" shape="round">
           <template #icon>
             <icon-delete />
           </template>
-          <template #default>删除任务</template>
-        </a-button>/>
+          <template #default>删除任务</template> </a-button
+        >/>
       </a-popconfirm>
     </div>
   </div>
@@ -235,7 +260,7 @@ export default defineComponent({
     });
     const getTaskInfo = async () => {
       await getCardInfo(id).then((res) => {
-        console.log('res', res);
+        console.log("res", res);
         task.cardname = res.cardname;
         task.description = res.description;
         Object.assign(task, res);
@@ -304,6 +329,7 @@ export default defineComponent({
   }
   .scroll {
     overflow-y: auto;
+    padding-left: 10px;
     .header {
       // display: flex;
       align-items: center;
