@@ -116,9 +116,9 @@
         :taskInfo="currentTask"
       ></Task>
     </div>
-    <div class="task-bg" v-if="true">
+    <div class="task-bg" v-if="curisNew">
       <div class="cardNew">
-        <a-card :style="{ width: '360px', background:'rgb(233, 237, 236)'}" title="新手指南">
+        <a-card :style="{ width: '360px' }" title="新手指南">
           <div class="cardButtons">
             <a-button type="primary" @click="changeOldUser">不再提示</a-button>
             <a-button type="outline" @click="guide">开启新手指南</a-button>
@@ -136,6 +136,7 @@
 </template>
 
 <script lang="ts">
+
 import "animate.css";
 import {
   PosType,
@@ -181,14 +182,14 @@ import {
   createNewCard,
   moveList,
   moveCard,
-  changeUserState,
+  changeUserState
 } from "@/axios/api";
 import { Message } from "@arco-design/web-vue";
 import CardItem from "@/components/card/CardItem.vue";
 import Task from "@/components/card/Task.vue";
 import Websocket from "@/components/websocket/Websocket.vue";
-import Driver from "driver.js"; // import driver.js
-import "driver.js/dist/driver.min.css"; // import driver.js css
+import Driver from 'driver.js' // import driver.js
+import 'driver.js/dist/driver.min.css' // import driver.js css
 
 export default defineComponent({
   name: "MainCard",
@@ -251,70 +252,70 @@ export default defineComponent({
     });
     // 新手指南：steps
     const steps = [
-      {
-        element: "#new1",
-        popover: {
-          title: "编辑项目",
-          description:
-            "在此导航栏，您可以邀请朋友一起使用项目，修改项目名称，项目颜色",
-          position: "bottom",
-        },
-        padding: 0,
-        onNext: () => {
-          driver.preventMove();
-          newColumnName.value = "Test";
-          async function createTestColumn() {
-            const res = await createColumn();
-            await createNewCard({
-              cardname: "test-card",
-              listId: (await res).id,
-              pos: 12002,
-              productId: (await res).productId,
-            });
-          }
-          createTestColumn();
-          setTimeout(() => {
-            driver.moveNext();
-          }, 0);
-        },
+    {
+       element: '#new1',
+       popover: {
+         title: '编辑项目',
+         description: '在此导航栏，您可以邀请朋友一起使用项目，修改项目名称，项目颜色',
+         position: 'bottom'
       },
-      {
-        element: "#new2",
-        popover: {
-          title: "用户信息",
-          description: "在此处查看当前用户信息", //o
-          position: "left",
-        },
+      padding:0,
+      onNext: () => {
+        driver.preventMove();
+        newColumnName.value = 'Test';
+        async function createTestColumn() {
+          const res = await createColumn()
+          await createNewCard({
+            cardname: 'test-card',
+            listId: (await res).id,
+            pos: 12002,
+            productId: (await res).productId
+          })
+        }
+        createTestColumn()
+        setTimeout(() => {
+          driver.moveNext();
+        }, 0);
+      }
+    },
+    {
+       element: '#new2',
+       popover: {
+         title: '用户信息',
+         description: '在此处查看当前用户信息',//o
+         position: 'left'
       },
-      {
-        element: "#new3",
-        popover: {
-          title: "工作区",
-          description: "在此块开始创建您的项目，我们已为您创建一个示例",
-          position: "right",
-        },
-        padding: 0,
+    },
+    {
+        element: '#new3',
+       popover: {
+         title: '工作区',
+         description: '在此块开始创建您的项目，我们已为您创建一个示例',
+         position: 'right'
       },
-    ];
+      padding:0,
+    },
+   ]
     // 新手指南
     const driver = new Driver({
-      stageBackground: "rgba(100,100,100,0.3",
+      stageBackground:'rgba(100,100,100,0.3',
       opacity: 0.7,
       animate: true,
-      doneBtnText: "我知道了",
-      closeBtnText: "跳过",
-      nextBtnText: "下一步",
-      prevBtnText: "上一步",
-    });
-    async function guide() {
-      await changeUserState(false);
-      store.commit("setIsNew", false);
-      driver.defineSteps(steps);
-      driver.start();
+      doneBtnText: '我知道了',
+      closeBtnText: '跳过', 
+      nextBtnText: '下一步', 
+      prevBtnText: '上一步', 
+    })
+    async function guide () {
+      await changeUserState(false)
+      store.commit('setIsNew', false)
+      driver.defineSteps(steps)
+      driver.start()
     }
     async function changeOldUser() {
-      await changeUserState(false);
-      store.commit("setIsNew", false);
+      await changeUserState(false)
+      console.log('changeOldUser');
+      store.commit('setIsNew', false)
     }
 
     // useRequest钩子
@@ -401,9 +402,9 @@ export default defineComponent({
 
     /**
      * 更改列名
-     * @param listId
-     * @param index
-     * @param e
+     * @param listId 
+     * @param index 
+     * @param e 
      */
     const changeListName = async (listId: number, index: number, e: any) => {
       const inputEvent = e.target as HTMLInputElement;
@@ -423,10 +424,10 @@ export default defineComponent({
     const createTask = async (
       e: KeyboardEvent,
       tasks: CardElement[],
-      listId: number
+      listId: number,
     ) => {
       console.log(e);
-
+      
       const el = e.target as HTMLInputElement;
       if (!el.value) {
         Message.error("请输入卡片名~");
@@ -459,7 +460,7 @@ export default defineComponent({
         pos: maxPos + 60000,
       });
       newColumnName.value = "";
-      return res;
+      return res
     };
 
     /**
@@ -1058,7 +1059,7 @@ export default defineComponent({
   left: 50%;
   top: 50%;
   transform: translate(-50%, -100%);
-  .cardButtons {
+  .cardButtons{
     padding: 20px;
     display: flex;
     justify-content: space-evenly;
