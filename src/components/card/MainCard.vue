@@ -254,15 +254,13 @@ export default defineComponent({
     const productId: ComputedRef<string> = computed(() => {
       return route.params.productId as string;
     });
-    console.log('productId',productId);
     const curisNew: ComputedRef<boolean> = computed(() => {
-
       return store.state.currentUserInfo.isNews;
     });
-    console.log('curisNew',curisNew);
+    console.log('curisNew.value',curisNew.value);
     
     // 获取当前用户信息
-    if(curisNew.value) {
+    if(curisNew) {
       isNew.value = true
     }
     // steps
