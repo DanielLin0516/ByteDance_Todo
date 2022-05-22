@@ -2,6 +2,7 @@
 ```js
 npm i
 npm run dev
+```
 
 # 实现功能
 - 看板拖拽
