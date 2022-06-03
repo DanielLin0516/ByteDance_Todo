@@ -1,4 +1,5 @@
 # 启动项目
+该项目利用vue3+vite+typescript仿照trello的一个团队合作的项目
 ```js
 npm i
 npm run dev
